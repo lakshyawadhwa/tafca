@@ -217,13 +217,116 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmap) | | |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 1 | Pending |
+| FOUND-04 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Pending |
+| FOUND-06 | Phase 1 | Pending |
+| FOUND-07 | Phase 1 | Pending |
+| FOUND-08 | Phase 1 | Pending |
+| TENANT-01 | Phase 1 | Pending |
+| TENANT-02 | Phase 1 | Pending |
+| TENANT-03 | Phase 1 | Pending |
+| TENANT-04 | Phase 1 | Pending |
+| ERR-01 | Phase 1 | Pending |
+| ERR-02 | Phase 1 | Pending |
+| ERR-03 | Phase 1 | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| AUTH-05 | Phase 2 | Pending |
+| AUTH-06 | Phase 2 | Pending |
+| AUTH-07 | Phase 2 | Pending |
+| AUTH-08 | Phase 2 | Pending |
+| AUTH-09 | Phase 2 | Pending |
+| USER-01 | Phase 2 | Pending |
+| USER-02 | Phase 2 | Pending |
+| USER-03 | Phase 2 | Pending |
+| USER-04 | Phase 2 | Pending |
+| USER-05 | Phase 2 | Pending |
+| AUDIT-01 | Phase 2 | Pending |
+| AUDIT-02 | Phase 2 | Pending |
+| AUDIT-03 | Phase 2 | Pending |
+| AUDIT-04 | Phase 2 | Pending |
+| AUDIT-05 | Phase 2 | Pending |
+| SHELL-01 | Phase 3 | Pending |
+| SHELL-02 | Phase 3 | Pending |
+| SHELL-03 | Phase 3 | Pending |
+| SHELL-04 | Phase 3 | Pending |
+| SHELL-05 | Phase 3 | Pending |
+| SHELL-06 | Phase 3 | Pending |
+| SHELL-07 | Phase 3 | Pending |
+| SHELL-08 | Phase 3 | Pending |
+| COMP-01 | Phase 3 | Pending |
+| COMP-02 | Phase 3 | Pending |
+| COMP-03 | Phase 3 | Pending |
+| COMP-04 | Phase 3 | Pending |
+| COMP-05 | Phase 3 | Pending |
+| COMP-06 | Phase 3 | Pending |
+| COMP-07 | Phase 3 | Pending |
+| COMP-08 | Phase 3 | Pending |
+| COMP-09 | Phase 3 | Pending |
+| CLIENT-01 | Phase 4 | Pending |
+| CLIENT-02 | Phase 4 | Pending |
+| CLIENT-03 | Phase 4 | Pending |
+| CLIENT-04 | Phase 4 | Pending |
+| CLIENT-05 | Phase 4 | Pending |
+| CLIENT-06 | Phase 4 | Pending |
+| CLIENT-07 | Phase 4 | Pending |
+| CLIENT-08 | Phase 4 | Pending |
+| CLIENT-09 | Phase 4 | Pending |
+| ENG-01 | Phase 4 | Pending |
+| ENG-02 | Phase 4 | Pending |
+| ENG-03 | Phase 4 | Pending |
+| ENG-04 | Phase 4 | Pending |
+| ENG-05 | Phase 4 | Pending |
+| ENG-06 | Phase 4 | Pending |
+| ENG-07 | Phase 4 | Pending |
+| ENG-08 | Phase 4 | Pending |
+| PAGE-01 | Phase 4 | Pending |
+| PAGE-02 | Phase 4 | Pending |
+| PAGE-03 | Phase 4 | Pending |
+| TASK-01 | Phase 5 | Pending |
+| TASK-02 | Phase 5 | Pending |
+| TASK-03 | Phase 5 | Pending |
+| TASK-04 | Phase 5 | Pending |
+| TASK-05 | Phase 5 | Pending |
+| TASK-06 | Phase 5 | Pending |
+| TASK-07 | Phase 5 | Pending |
+| TASK-08 | Phase 5 | Pending |
+| TASK-09 | Phase 5 | Pending |
+| TASK-10 | Phase 5 | Pending |
+| TASK-11 | Phase 5 | Pending |
+| TASK-12 | Phase 5 | Pending |
+| TASK-13 | Phase 5 | Pending |
+| PAGE-04 | Phase 5 | Pending |
+| PAGE-05 | Phase 5 | Pending |
+| NOTIF-01 | Phase 6 | Pending |
+| NOTIF-02 | Phase 6 | Pending |
+| NOTIF-03 | Phase 6 | Pending |
+| NOTIF-04 | Phase 6 | Pending |
+| TEAM-01 | Phase 6 | Pending |
+| TEAM-02 | Phase 6 | Pending |
+| TEAM-03 | Phase 6 | Pending |
+| TEAM-04 | Phase 6 | Pending |
+| DEL-01 | Phase 6 | Pending |
+| DEL-02 | Phase 6 | Pending |
+| DEL-03 | Phase 6 | Pending |
+| PAGE-06 | Phase 6 | Pending |
+| PAGE-07 | Phase 6 | Pending |
+| PAGE-08 | Phase 6 | Pending |
+| PAGE-09 | Phase 6 | Pending |
+| PAGE-10 | Phase 6 | Pending |
+| PAGE-11 | Phase 6 | Pending |
+| PAGE-12 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 85 total
-- Mapped to phases: 0
-- Unmapped: 85
+- v1 requirements: 104 total
+- Mapped to phases: 104
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-27*
-*Last updated: 2026-03-27 after initial definition*
+*Last updated: 2026-03-27 after roadmap creation*
