@@ -1,0 +1,7 @@
+export enum Recurrence {
+  ONE_OFF = 'ONE_OFF',
+  MONTHLY = 'MONTHLY',
+  QUARTERLY = 'QUARTERLY',
+  HALF_YEARLY = 'HALF_YEARLY',
+  ANNUALLY = 'ANNUALLY',
+}

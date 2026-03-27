@@ -1,0 +1,19 @@
+{
+  "name": "ca-practice-os",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:api": "turbo run dev --filter=api",
+    "dev:web": "turbo run dev --filter=web",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "db:migrate": "turbo run db:migrate --filter=api",
+    "db:seed": "turbo run db:seed --filter=api"
+  },
+  "devDependencies": {
+    "turbo": "^2.x",
+    "typescript": "^5.x"
+  },
+  "packageManager": "pnpm@9.x"
+}

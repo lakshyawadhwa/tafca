@@ -1,0 +1,8 @@
+export enum LeaveType {
+  CASUAL = 'CASUAL',
+  SICK = 'SICK',
+  EXAM = 'EXAM',
+  TRAINING = 'TRAINING',
+  PUBLIC_HOLIDAY = 'PUBLIC_HOLIDAY',
+  OTHER = 'OTHER',
+}

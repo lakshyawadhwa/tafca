@@ -1,0 +1,5 @@
+export enum DocumentSource {
+  TEAM_UPLOAD = 'TEAM_UPLOAD',
+  CLIENT_UPLOAD = 'CLIENT_UPLOAD',
+  AUTO_GENERATED = 'AUTO_GENERATED',
+}

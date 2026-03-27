@@ -1,0 +1,7 @@
+export enum ComplianceEntryStatus {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  FILED = 'FILED',
+  MISSED = 'MISSED',
+  NOT_APPLICABLE = 'NOT_APPLICABLE',
+}

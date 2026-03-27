@@ -1,0 +1,7 @@
+export enum ChecklistItemStatus {
+  PENDING = 'PENDING',
+  REQUESTED = 'REQUESTED',
+  RECEIVED = 'RECEIVED',
+  VERIFIED = 'VERIFIED',
+  WAIVED = 'WAIVED',
+}

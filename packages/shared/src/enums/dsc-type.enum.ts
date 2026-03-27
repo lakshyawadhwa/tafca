@@ -1,0 +1,5 @@
+export enum DscType {
+  INDIVIDUAL = 'INDIVIDUAL',
+  ORGANISATION = 'ORGANISATION',
+  DGFT = 'DGFT',
+}

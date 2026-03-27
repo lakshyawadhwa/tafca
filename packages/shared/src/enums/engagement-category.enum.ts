@@ -1,0 +1,11 @@
+export enum EngagementCategory {
+  GST = 'GST',
+  INCOME_TAX = 'INCOME_TAX',
+  TDS = 'TDS',
+  ROC = 'ROC',
+  AUDIT = 'AUDIT',
+  ACCOUNTING = 'ACCOUNTING',
+  ADVISORY = 'ADVISORY',
+  REGISTRATION = 'REGISTRATION',
+  OTHER = 'OTHER',
+}
