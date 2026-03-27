@@ -13,17 +13,17 @@ Requirements for initial release. Task tracking + client/engagement management i
 - [x] **FOUND-02**: Shared package exports enums, DTOs, and constants importable by both apps
 - [x] **FOUND-03**: Docker Compose runs PostgreSQL 16, Redis 7, and MinIO locally
 - [x] **FOUND-04**: Environment variables validated on startup with clear error messages
-- [ ] **FOUND-05**: All tables use UUID v4 primary keys
-- [ ] **FOUND-06**: Every table has audit fields (created_at, updated_at, created_by, updated_by)
-- [ ] **FOUND-07**: Soft deletes on all user-facing entities (deleted_at, deleted_by)
+- [x] **FOUND-05**: All tables use UUID v4 primary keys
+- [x] **FOUND-06**: Every table has audit fields (created_at, updated_at, created_by, updated_by)
+- [x] **FOUND-07**: Soft deletes on all user-facing entities (deleted_at, deleted_by)
 - [ ] **FOUND-08**: Health check endpoint returns DB + Redis connectivity status
 
 ### Multi-Tenancy
 
-- [ ] **TENANT-01**: Every data table scoped by firm_id
-- [ ] **TENANT-02**: Prisma $extends client extension auto-injects firm_id WHERE clause on all queries
-- [ ] **TENANT-03**: FirmScopedService base class provides getFirmId() from AsyncLocalStorage
-- [ ] **TENANT-04**: Cross-tenant data access returns empty/404 (never leaks data)
+- [x] **TENANT-01**: Every data table scoped by firm_id
+- [x] **TENANT-02**: Prisma $extends client extension auto-injects firm_id WHERE clause on all queries
+- [x] **TENANT-03**: FirmScopedService base class provides getFirmId() from AsyncLocalStorage
+- [x] **TENANT-04**: Cross-tenant data access returns empty/404 (never leaks data)
 
 ### Authentication
 
@@ -221,14 +221,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-02 | Phase 1 | Complete |
 | FOUND-03 | Phase 1 | Complete |
 | FOUND-04 | Phase 1 | Complete |
-| FOUND-05 | Phase 1 | Pending |
-| FOUND-06 | Phase 1 | Pending |
-| FOUND-07 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Complete |
+| FOUND-06 | Phase 1 | Complete |
+| FOUND-07 | Phase 1 | Complete |
 | FOUND-08 | Phase 1 | Pending |
-| TENANT-01 | Phase 1 | Pending |
-| TENANT-02 | Phase 1 | Pending |
-| TENANT-03 | Phase 1 | Pending |
-| TENANT-04 | Phase 1 | Pending |
+| TENANT-01 | Phase 1 | Complete |
+| TENANT-02 | Phase 1 | Complete |
+| TENANT-03 | Phase 1 | Complete |
+| TENANT-04 | Phase 1 | Complete |
 | ERR-01 | Phase 1 | Pending |
 | ERR-02 | Phase 1 | Pending |
 | ERR-03 | Phase 1 | Pending |

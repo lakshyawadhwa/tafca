@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01: Monorepo scaffolding and Docker infrastructure
-- [ ] 01-02: Prisma schema and multi-tenancy extension
+- [x] 01-02: Prisma schema and multi-tenancy extension
 - [ ] 01-03: Error handling, request logging, and health check
 
 ### Phase 2: Authentication & Core Backend Services

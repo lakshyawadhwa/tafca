@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-01-PLAN.md (monorepo scaffold)
-last_updated: "2026-03-27T06:16:24.555Z"
+stopped_at: Completed 01-02-PLAN.md (Prisma schema + multi-tenancy)
+last_updated: "2026-03-27T06:30:30.978Z"
 last_activity: 2026-03-27
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 ## Current Position
 
 Phase: 01 (Foundation & Infrastructure) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-03-27
 
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01 P01 | 7min | 2 tasks | 65 files |
+| Phase 01 P02 | 9min | 2 tasks | 26 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,10 @@ Recent decisions affecting current work:
 - [Phase 01]: Shared package uses source-level imports (main/types point to src/index.ts) - no build step needed for dev
 - [Phase 01]: NestJS env validation via class-validator ensures startup fails fast with descriptive errors
 - [Phase 01]: TailwindCSS v4 with @tailwindcss/vite plugin (config-free, CSS @import approach)
+- [Phase 01]: Prisma multi-file schema using prismaSchemaFolder preview feature (13 files, 33 models)
+- [Phase 01]: Prisma $extends with $allOperations for automatic firm_id injection on all queries
+- [Phase 01]: AsyncLocalStorage carries firmId/userId/requestId through request lifecycle
+- [Phase 01]: FirmScopedService abstract base class - all domain services extend this for automatic tenant isolation
 
 ### Pending Todos
 
@@ -78,6 +83,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-27T06:16:24.553Z
-Stopped at: Completed 01-01-PLAN.md (monorepo scaffold)
+Last session: 2026-03-27T06:30:30.976Z
+Stopped at: Completed 01-02-PLAN.md (Prisma schema + multi-tenancy)
 Resume file: None
