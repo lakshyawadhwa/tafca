@@ -16,7 +16,7 @@ Requirements for initial release. Task tracking + client/engagement management i
 - [x] **FOUND-05**: All tables use UUID v4 primary keys
 - [x] **FOUND-06**: Every table has audit fields (created_at, updated_at, created_by, updated_by)
 - [x] **FOUND-07**: Soft deletes on all user-facing entities (deleted_at, deleted_by)
-- [ ] **FOUND-08**: Health check endpoint returns DB + Redis connectivity status
+- [x] **FOUND-08**: Health check endpoint returns DB + Redis connectivity status
 
 ### Multi-Tenancy
 
@@ -152,9 +152,9 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Error Handling
 
-- [ ] **ERR-01**: Global exception filter returns consistent JSON format (statusCode, message, error, request_id)
-- [ ] **ERR-02**: Validation pipe with descriptive error messages
-- [ ] **ERR-03**: Request correlation ID (request_id) propagated across all log entries
+- [x] **ERR-01**: Global exception filter returns consistent JSON format (statusCode, message, error, request_id)
+- [x] **ERR-02**: Validation pipe with descriptive error messages
+- [x] **ERR-03**: Request correlation ID (request_id) propagated across all log entries
 
 ## v2 Requirements
 
@@ -224,14 +224,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-05 | Phase 1 | Complete |
 | FOUND-06 | Phase 1 | Complete |
 | FOUND-07 | Phase 1 | Complete |
-| FOUND-08 | Phase 1 | Pending |
+| FOUND-08 | Phase 1 | Complete |
 | TENANT-01 | Phase 1 | Complete |
 | TENANT-02 | Phase 1 | Complete |
 | TENANT-03 | Phase 1 | Complete |
 | TENANT-04 | Phase 1 | Complete |
-| ERR-01 | Phase 1 | Pending |
-| ERR-02 | Phase 1 | Pending |
-| ERR-03 | Phase 1 | Pending |
+| ERR-01 | Phase 1 | Complete |
+| ERR-02 | Phase 1 | Complete |
+| ERR-03 | Phase 1 | Complete |
 | AUTH-01 | Phase 2 | Pending |
 | AUTH-02 | Phase 2 | Pending |
 | AUTH-03 | Phase 2 | Pending |
