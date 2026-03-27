@@ -9,10 +9,10 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Foundation
 
-- [ ] **FOUND-01**: Developer can start the full stack with `pnpm dev` (NestJS API + SvelteKit web)
-- [ ] **FOUND-02**: Shared package exports enums, DTOs, and constants importable by both apps
-- [ ] **FOUND-03**: Docker Compose runs PostgreSQL 16, Redis 7, and MinIO locally
-- [ ] **FOUND-04**: Environment variables validated on startup with clear error messages
+- [x] **FOUND-01**: Developer can start the full stack with `pnpm dev` (NestJS API + SvelteKit web)
+- [x] **FOUND-02**: Shared package exports enums, DTOs, and constants importable by both apps
+- [x] **FOUND-03**: Docker Compose runs PostgreSQL 16, Redis 7, and MinIO locally
+- [x] **FOUND-04**: Environment variables validated on startup with clear error messages
 - [ ] **FOUND-05**: All tables use UUID v4 primary keys
 - [ ] **FOUND-06**: Every table has audit fields (created_at, updated_at, created_by, updated_by)
 - [ ] **FOUND-07**: Soft deletes on all user-facing entities (deleted_at, deleted_by)
@@ -217,10 +217,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 1 | Pending |
-| FOUND-02 | Phase 1 | Pending |
-| FOUND-03 | Phase 1 | Pending |
-| FOUND-04 | Phase 1 | Pending |
+| FOUND-01 | Phase 1 | Complete |
+| FOUND-02 | Phase 1 | Complete |
+| FOUND-03 | Phase 1 | Complete |
+| FOUND-04 | Phase 1 | Complete |
 | FOUND-05 | Phase 1 | Pending |
 | FOUND-06 | Phase 1 | Pending |
 | FOUND-07 | Phase 1 | Pending |

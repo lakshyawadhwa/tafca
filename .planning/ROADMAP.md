@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: TBD
 
 Plans:
-- [ ] 01-01: Monorepo scaffolding and Docker infrastructure
+- [x] 01-01: Monorepo scaffolding and Docker infrastructure
 - [ ] 01-02: Prisma schema and multi-tenancy extension
 - [ ] 01-03: Error handling, request logging, and health check
 
