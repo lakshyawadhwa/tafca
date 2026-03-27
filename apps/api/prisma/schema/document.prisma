@@ -1,0 +1,161 @@
+model Document {
+  id               String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId           String         @map("firm_id") @db.Uuid
+  clientId         String?        @map("client_id") @db.Uuid
+  engagementId     String?        @map("engagement_id") @db.Uuid
+  taskId           String?        @map("task_id") @db.Uuid
+  name             String         @db.VarChar(300)
+  description      String?        @db.Text
+  documentType     DocumentType   @default(GENERAL) @map("document_type")
+  storageKey       String         @map("storage_key") @db.VarChar(500)
+  storageBucket    String         @map("storage_bucket") @db.VarChar(100)
+  mimeType         String         @map("mime_type") @db.VarChar(100)
+  fileSizeBytes    BigInt         @map("file_size_bytes")
+  checksumSha256   String         @map("checksum_sha256") @db.VarChar(64)
+  version          Int            @default(1) @db.SmallInt
+  versionOfId      String?        @map("version_of_id") @db.Uuid
+  uploadedBy       String         @map("uploaded_by") @db.Uuid
+  source           DocumentSource @default(TEAM_UPLOAD)
+  tags             String[]       @default([]) @db.VarChar(50)
+  customFields     Json           @default("{}") @map("custom_fields") @db.JsonB
+  isClientVisible  Boolean        @default(false) @map("is_client_visible")
+  expiresAt        DateTime?      @map("expires_at") @db.Date
+
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt        DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy        String         @map("created_by") @db.Uuid
+  updatedBy        String         @map("updated_by") @db.Uuid
+  deletedAt        DateTime?      @map("deleted_at") @db.Timestamptz()
+  deletedBy        String?        @map("deleted_by") @db.Uuid
+
+  // Relations
+  firm             Firm           @relation(fields: [firmId], references: [id])
+  client           Client?        @relation(fields: [clientId], references: [id])
+  engagement       Engagement?    @relation(fields: [engagementId], references: [id])
+  task             Task?          @relation(fields: [taskId], references: [id])
+
+  @@index([firmId])
+  @@index([clientId])
+  @@index([engagementId])
+  @@index([taskId])
+  @@map("documents")
+}
+
+model DocumentRequest {
+  id                     String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId                 String                @map("firm_id") @db.Uuid
+  clientId               String                @map("client_id") @db.Uuid
+  engagementId           String?               @map("engagement_id") @db.Uuid
+  taskId                 String?               @map("task_id") @db.Uuid
+  requestedBy            String                @map("requested_by") @db.Uuid
+  title                  String                @db.VarChar(300)
+  description            String?               @db.Text
+  status                 DocumentRequestStatus @default(PENDING)
+  dueDate                DateTime?             @map("due_date") @db.Date
+  uploadToken            String                @default(dbgenerated("gen_random_uuid()")) @unique @map("upload_token") @db.Uuid
+  uploadTokenExpiresAt   DateTime              @map("upload_token_expires_at") @db.Timestamptz()
+  reminderSentCount      Int                   @default(0) @map("reminder_sent_count") @db.SmallInt
+  lastReminderSentAt     DateTime?             @map("last_reminder_sent_at") @db.Timestamptz()
+  fulfilledByDocumentId  String?               @map("fulfilled_by_document_id") @db.Uuid
+  fulfilledAt            DateTime?             @map("fulfilled_at") @db.Timestamptz()
+
+  createdAt              DateTime              @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt              DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy              String                @map("created_by") @db.Uuid
+  updatedBy              String                @map("updated_by") @db.Uuid
+  deletedAt              DateTime?             @map("deleted_at") @db.Timestamptz()
+  deletedBy              String?               @map("deleted_by") @db.Uuid
+
+  @@index([firmId])
+  @@index([clientId])
+  @@map("document_requests")
+}
+
+model DocumentChecklistTemplate {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId           String?   @map("firm_id") @db.Uuid
+  engagementTypeId String    @map("engagement_type_id") @db.Uuid
+  name             String    @db.VarChar(200)
+  isActive         Boolean   @default(true) @map("is_active")
+
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy        String    @map("created_by") @db.Uuid
+  updatedBy        String    @map("updated_by") @db.Uuid
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedBy        String?   @map("deleted_by") @db.Uuid
+
+  // Relations
+  items            DocumentChecklistTemplateItem[]
+  instances        DocumentChecklistInstance[]
+
+  @@map("document_checklist_templates")
+}
+
+model DocumentChecklistTemplateItem {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId   String       @map("template_id") @db.Uuid
+  label        String       @db.VarChar(300)
+  description  String?      @db.Text
+  documentType DocumentType? @map("document_type")
+  isRequired   Boolean      @default(true) @map("is_required")
+  displayOrder Int          @default(0) @map("display_order") @db.SmallInt
+  customFields Json         @default("{}") @map("custom_fields") @db.JsonB
+
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  // Relations
+  template     DocumentChecklistTemplate @relation(fields: [templateId], references: [id])
+
+  @@index([templateId])
+  @@map("document_checklist_template_items")
+}
+
+model DocumentChecklistInstance {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId       String   @map("firm_id") @db.Uuid
+  engagementId String   @unique @map("engagement_id") @db.Uuid
+  templateId   String?  @map("template_id") @db.Uuid
+
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  // Relations
+  template     DocumentChecklistTemplate? @relation(fields: [templateId], references: [id])
+  items        DocumentChecklistInstanceItem[]
+
+  @@index([firmId])
+  @@map("document_checklist_instances")
+}
+
+model DocumentChecklistInstanceItem {
+  id                  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  checklistInstanceId String              @map("checklist_instance_id") @db.Uuid
+  firmId              String              @map("firm_id") @db.Uuid
+  label               String              @db.VarChar(300)
+  description         String?             @db.Text
+  documentType        DocumentType?       @map("document_type")
+  isRequired          Boolean             @default(true) @map("is_required")
+  status              ChecklistItemStatus @default(PENDING)
+  documentId          String?             @map("document_id") @db.Uuid
+  documentRequestId   String?             @map("document_request_id") @db.Uuid
+  waivedReason        String?             @map("waived_reason") @db.Text
+  waivedBy            String?             @map("waived_by") @db.Uuid
+  displayOrder        Int                 @default(0) @map("display_order") @db.SmallInt
+  notes               String?             @db.Text
+  customFields        Json                @default("{}") @map("custom_fields") @db.JsonB
+
+  createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt           DateTime            @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy           String              @map("created_by") @db.Uuid
+  updatedBy           String              @map("updated_by") @db.Uuid
+  deletedAt           DateTime?           @map("deleted_at") @db.Timestamptz()
+  deletedBy           String?             @map("deleted_by") @db.Uuid
+
+  // Relations
+  checklistInstance   DocumentChecklistInstance @relation(fields: [checklistInstanceId], references: [id])
+
+  @@index([checklistInstanceId])
+  @@map("document_checklist_instance_items")
+}

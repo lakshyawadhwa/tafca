@@ -1,0 +1,25 @@
+model Notification {
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId       String             @map("firm_id") @db.Uuid
+  recipientId  String             @map("recipient_id") @db.Uuid
+  type         NotificationType
+  title        String             @db.VarChar(200)
+  body         String             @db.Text
+  entityType   String?            @map("entity_type") @db.VarChar(50)
+  entityId     String?            @map("entity_id") @db.Uuid
+  channel      NotificationChannel
+  status       NotificationStatus @default(PENDING)
+  sentAt       DateTime?          @map("sent_at") @db.Timestamptz()
+  readAt       DateTime?          @map("read_at") @db.Timestamptz()
+  failedReason String?            @map("failed_reason") @db.Text
+  retryCount   Int                @default(0) @map("retry_count") @db.SmallInt
+
+  createdAt    DateTime           @default(now()) @map("created_at") @db.Timestamptz()
+
+  // Relations
+  firm         Firm               @relation(fields: [firmId], references: [id])
+
+  @@index([recipientId, status, createdAt(sort: Desc)])
+  @@index([firmId])
+  @@map("notifications")
+}

@@ -1,0 +1,89 @@
+model EngagementType {
+  id                      String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId                  String?            @map("firm_id") @db.Uuid
+  name                    String             @db.VarChar(100)
+  code                    String             @db.VarChar(50)
+  category                EngagementCategory
+  recurrence              RecurrenceType     @default(ONE_OFF)
+  defaultTaskTemplateId   String?            @map("default_task_template_id") @db.Uuid
+  requiresPartnerApproval Boolean            @default(false) @map("requires_partner_approval")
+  isActive                Boolean            @default(true) @map("is_active")
+  description             String?            @db.Text
+
+  createdAt               DateTime           @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt               DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy               String             @map("created_by") @db.Uuid
+  updatedBy               String             @map("updated_by") @db.Uuid
+  deletedAt               DateTime?          @map("deleted_at") @db.Timestamptz()
+  deletedBy               String?            @map("deleted_by") @db.Uuid
+
+  // Relations
+  firm                    Firm?              @relation(fields: [firmId], references: [id])
+  engagements             Engagement[]
+  customFieldDefinitions  EngagementCustomFieldDefinition[]
+
+  @@index([firmId])
+  @@map("engagement_types")
+}
+
+model Engagement {
+  id                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId              String           @map("firm_id") @db.Uuid
+  clientId            String           @map("client_id") @db.Uuid
+  engagementTypeId    String           @map("engagement_type_id") @db.Uuid
+  name                String           @db.VarChar(200)
+  status              EngagementStatus @default(ACTIVE)
+  periodLabel         String?          @map("period_label") @db.VarChar(50)
+  periodStart         DateTime?        @map("period_start") @db.Date
+  periodEnd           DateTime?        @map("period_end") @db.Date
+  assignedPartnerId   String?          @map("assigned_partner_id") @db.Uuid
+  assignedManagerId   String?          @map("assigned_manager_id") @db.Uuid
+  assignedTeam        String[]         @default([]) @map("assigned_team") @db.Uuid
+  feeAmount           Decimal?         @map("fee_amount") @db.Decimal(12, 2)
+  feeCurrency         String           @default("INR") @map("fee_currency") @db.VarChar(3)
+  notes               String?          @db.Text
+  customFields        Json             @default("{}") @map("custom_fields") @db.JsonB
+  completedAt         DateTime?        @map("completed_at") @db.Timestamptz()
+
+  createdAt           DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt           DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy           String           @map("created_by") @db.Uuid
+  updatedBy           String           @map("updated_by") @db.Uuid
+  deletedAt           DateTime?        @map("deleted_at") @db.Timestamptz()
+  deletedBy           String?          @map("deleted_by") @db.Uuid
+
+  // Relations
+  firm                Firm             @relation(fields: [firmId], references: [id])
+  client              Client           @relation(fields: [clientId], references: [id])
+  engagementType      EngagementType   @relation(fields: [engagementTypeId], references: [id])
+  tasks               Task[]
+  documents           Document[]
+
+  @@index([firmId])
+  @@index([clientId])
+  @@map("engagements")
+}
+
+model EngagementCustomFieldDefinition {
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId           String          @map("firm_id") @db.Uuid
+  engagementTypeId String          @map("engagement_type_id") @db.Uuid
+  fieldKey         String          @map("field_key") @db.VarChar(50)
+  label            String          @db.VarChar(100)
+  fieldType        CustomFieldType @map("field_type")
+  isRequired       Boolean         @default(false) @map("is_required")
+  options          String[]        @default([]) @db.VarChar(100)
+  displayOrder     Int             @default(0) @map("display_order") @db.SmallInt
+
+  createdAt        DateTime        @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt        DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy        String          @map("created_by") @db.Uuid
+  updatedBy        String          @map("updated_by") @db.Uuid
+
+  // Relations
+  engagementType   EngagementType  @relation(fields: [engagementTypeId], references: [id])
+
+  @@unique([engagementTypeId, fieldKey])
+  @@index([firmId])
+  @@map("engagement_custom_field_definitions")
+}

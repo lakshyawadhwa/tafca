@@ -1,0 +1,28 @@
+model DscRecord {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId          String        @map("firm_id") @db.Uuid
+  holderType      DscHolderType @map("holder_type")
+  clientId        String?       @map("client_id") @db.Uuid
+  userId          String?       @map("user_id") @db.Uuid
+  holderName      String        @map("holder_name") @db.VarChar(200)
+  class           DscClass
+  type            DscType
+  issuedBy        String?       @map("issued_by") @db.VarChar(200)
+  serialNumber    String?       @map("serial_number") @db.VarChar(100)
+  validFrom       DateTime      @map("valid_from") @db.Date
+  validUntil      DateTime      @map("valid_until") @db.Date
+  status          DscStatus     @default(ACTIVE)
+  renewedById     String?       @map("renewed_by_id") @db.Uuid
+  storageLocation String?       @map("storage_location") @db.VarChar(300)
+  notes           String?       @db.Text
+
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy       String        @map("created_by") @db.Uuid
+  updatedBy       String        @map("updated_by") @db.Uuid
+  deletedAt       DateTime?     @map("deleted_at") @db.Timestamptz()
+  deletedBy       String?       @map("deleted_by") @db.Uuid
+
+  @@index([firmId])
+  @@map("dsc_records")
+}

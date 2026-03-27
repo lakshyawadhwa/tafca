@@ -1,0 +1,279 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ENUMS ───────────────────────────────────────────
+
+enum UserRole {
+  PARTNER
+  MANAGER
+  JUNIOR_CA
+  ARTICLE
+  ADMIN
+}
+
+enum SubscriptionTier {
+  FREE
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum EntityType {
+  INDIVIDUAL
+  HUF
+  PARTNERSHIP_FIRM
+  LLP
+  PRIVATE_LIMITED
+  PUBLIC_LIMITED
+  TRUST
+  SOCIETY
+  AOP
+  BOI
+  OTHER
+}
+
+enum ConstitutionType {
+  PROPRIETORSHIP
+  PARTNERSHIP
+  COMPANY
+  LLP
+  TRUST
+  SOCIETY
+  OTHER
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  PROSPECT
+}
+
+enum GstRegistrationType {
+  REGULAR
+  COMPOSITION
+  CASUAL
+  SEZ
+  ISD
+}
+
+enum CustomFieldType {
+  TEXT
+  NUMBER
+  DATE
+  DROPDOWN
+  BOOLEAN
+  URL
+}
+
+enum EngagementCategory {
+  GST
+  INCOME_TAX
+  TDS
+  ROC_COMPLIANCE
+  AUDIT
+  PAYROLL
+  ADVISORY
+  ACCOUNTING
+  OTHER
+}
+
+enum RecurrenceType {
+  ONE_OFF
+  MONTHLY
+  QUARTERLY
+  HALF_YEARLY
+  ANNUALLY
+}
+
+enum EngagementStatus {
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskStatus {
+  TO_DO
+  IN_PROGRESS
+  AWAITING_CLIENT
+  UNDER_REVIEW
+  PARTNER_APPROVAL
+  DONE
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskAction {
+  CREATED
+  STATUS_CHANGED
+  ASSIGNEE_CHANGED
+  REVIEWER_CHANGED
+  DUE_DATE_CHANGED
+  PRIORITY_CHANGED
+  CHECKLIST_ITEM_COMPLETED
+  CHECKLIST_ITEM_UNCOMPLETED
+  COMMENT_ADDED
+  ATTACHMENT_ADDED
+  ATTACHMENT_REMOVED
+  DEPENDENCY_ADDED
+  DEPENDENCY_REMOVED
+  RECURRING_INSTANCE_CREATED
+}
+
+enum DocumentType {
+  GENERAL
+  CLIENT_PROVIDED
+  WORKING_PAPER
+  FILED_RETURN
+  ACKNOWLEDGEMENT
+  ENGAGEMENT_LETTER
+  INVOICE
+  BANK_STATEMENT
+  FORM_26AS
+  AIS
+  SALARY_REGISTER
+  PURCHASE_REGISTER
+  SALES_REGISTER
+  BALANCE_SHEET
+  PROFIT_LOSS
+  AUDIT_REPORT
+  OTHER
+}
+
+enum DocumentSource {
+  TEAM_UPLOAD
+  CLIENT_UPLOAD
+  AUTO_GENERATED
+}
+
+enum DocumentRequestStatus {
+  PENDING
+  REMINDED
+  FULFILLED
+  CANCELLED
+}
+
+enum ChecklistItemStatus {
+  PENDING
+  REQUESTED
+  RECEIVED
+  VERIFIED
+  WAIVED
+}
+
+enum PortalType {
+  GST
+  INCOME_TAX
+  MCA
+  TRACES
+  TDS_CPC
+  EPFO
+  ESIC
+  DGFT
+  CUSTOMS
+  RBI
+  SEBI
+  OTHER
+}
+
+enum CredentialAction {
+  VIEWED
+  COPIED
+  UPDATED
+  CREATED
+}
+
+enum DscClass {
+  CLASS_2
+  CLASS_3
+}
+
+enum DscType {
+  INDIVIDUAL
+  ORGANISATION
+  DGFT
+}
+
+enum DscStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+  RENEWED
+}
+
+enum DscHolderType {
+  CLIENT
+  PARTNER
+}
+
+enum LeaveType {
+  CASUAL
+  SICK
+  EXAM
+  TRAINING
+  PUBLIC_HOLIDAY
+  OTHER
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_OVERDUE
+  TASK_STUCK
+  TASK_DEPENDENCY_UNBLOCKED
+  TASK_REVIEW_REQUESTED
+  TASK_APPROVAL_REQUESTED
+  TASK_SENT_BACK
+  COMMENT_MENTION
+  DOCUMENT_REQUEST_SENT
+  DOCUMENT_REQUEST_FULFILLED
+  DOCUMENT_REQUEST_OVERDUE
+  DOCUMENT_REQUEST_REMINDER
+  DSC_EXPIRY_ALERT_30
+  DSC_EXPIRY_ALERT_15
+  DSC_EXPIRY_ALERT_7
+  COMPLIANCE_DEADLINE_APPROACHING
+  COMPLIANCE_DEADLINE_MISSED
+  USER_DEACTIVATED_WITH_OPEN_TASKS
+  ASSIGNEE_ON_LEAVE
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  WHATSAPP
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  READ
+}
+
+enum ComplianceEntryStatus {
+  PENDING
+  IN_PROGRESS
+  FILED
+  MISSED
+  NOT_APPLICABLE
+}

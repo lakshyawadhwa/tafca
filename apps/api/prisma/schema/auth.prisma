@@ -1,0 +1,64 @@
+model User {
+  id                       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId                   String    @map("firm_id") @db.Uuid
+  email                    String    @db.VarChar(255)
+  phone                    String?   @db.VarChar(15)
+  fullName                 String    @map("full_name") @db.VarChar(100)
+  role                     UserRole
+  passwordHash             String    @map("password_hash") @db.VarChar(255)
+  isActive                 Boolean   @default(true) @map("is_active")
+  lastLoginAt              DateTime? @map("last_login_at") @db.Timestamptz()
+  avatarUrl                String?   @map("avatar_url") @db.VarChar(500)
+  whatsappNumber           String?   @map("whatsapp_number") @db.VarChar(15)
+  notificationPreferences  Json      @default("{}") @map("notification_preferences") @db.JsonB
+
+  createdAt                DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt                DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy                String    @map("created_by") @db.Uuid
+  updatedBy                String    @map("updated_by") @db.Uuid
+  deletedAt                DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedBy                String?   @map("deleted_by") @db.Uuid
+
+  // Relations
+  firm                     Firm      @relation(fields: [firmId], references: [id])
+  sessions                 Session[]
+  roleHistory              UserRoleHistory[]
+
+  @@unique([firmId, email], map: "idx_users_email_firm")
+  @@index([firmId])
+  @@map("users")
+}
+
+model Session {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  tokenHash  String   @unique @map("token_hash") @db.VarChar(255)
+  expiresAt  DateTime @map("expires_at") @db.Timestamptz()
+  ipAddress  String?  @map("ip_address") @db.VarChar(45)
+  userAgent  String?  @map("user_agent") @db.VarChar(500)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  // Relations
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("sessions")
+}
+
+model UserRoleHistory {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId    String   @map("firm_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  oldRole   UserRole @map("old_role")
+  newRole   UserRole @map("new_role")
+  changedBy String   @map("changed_by") @db.Uuid
+  changedAt DateTime @default(now()) @map("changed_at") @db.Timestamptz()
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([firmId])
+  @@index([userId])
+  @@map("user_role_history")
+}

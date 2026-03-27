@@ -1,0 +1,24 @@
+model LeaveRecord {
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId     String      @map("firm_id") @db.Uuid
+  userId     String      @map("user_id") @db.Uuid
+  leaveType  LeaveType   @map("leave_type")
+  startDate  DateTime    @map("start_date") @db.Date
+  endDate    DateTime    @map("end_date") @db.Date
+  isHalfDay  Boolean     @default(false) @map("is_half_day")
+  reason     String?     @db.VarChar(500)
+  status     LeaveStatus @default(PENDING)
+  approvedBy String?     @map("approved_by") @db.Uuid
+  approvedAt DateTime?   @map("approved_at") @db.Timestamptz()
+
+  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt  DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy  String      @map("created_by") @db.Uuid
+  updatedBy  String      @map("updated_by") @db.Uuid
+  deletedAt  DateTime?   @map("deleted_at") @db.Timestamptz()
+  deletedBy  String?     @map("deleted_by") @db.Uuid
+
+  @@index([firmId])
+  @@index([userId])
+  @@map("leave_records")
+}
