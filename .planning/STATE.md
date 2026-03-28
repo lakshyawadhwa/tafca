@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 01-03-PLAN.md (Error handling, logging, health check)
-last_updated: "2026-03-27T06:43:19.054Z"
-last_activity: 2026-03-27
+status: executing
+stopped_at: Completed 02-01-PLAN.md (Authentication system)
+last_updated: "2026-03-28T18:46:24.970Z"
+last_activity: 2026-03-28
 progress:
   total_phases: 6
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 5
+  completed_plans: 4
   percent: 0
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-27)
 
 **Core value:** Every person in the firm knows exactly what to work on, every deadline is visible, and no client falls through the cracks.
-**Current focus:** Phase 01 — Foundation & Infrastructure
+**Current focus:** Phase 02 — Authentication & Core Backend Services
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
-Status: Phase complete — ready for verification
-Last activity: 2026-03-27
+Phase: 02 (Authentication & Core Backend Services) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-03-28
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P01 | 7min | 2 tasks | 65 files |
 | Phase 01 P02 | 9min | 2 tasks | 26 files |
 | Phase 01 P03 | 3min | 2 tasks | 10 files |
+| Phase 02 P01 | 50min | 2 tasks | 33 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,11 @@ Recent decisions affecting current work:
 - [Phase 01]: Global API prefix /api set via setGlobalPrefix - all routes under /api/*
 - [Phase 01]: Redis provider uses lazyConnect:true to avoid blocking startup, global module for injection anywhere
 - [Phase 01]: Error response format standardized: { statusCode, message, error, request_id } on all exceptions
+- [Phase 02]: Dual-token flow: 15m access token + 7d refresh token via HTTP-only cookie instead of single 365d token
+- [Phase 02]: Auth service uses prisma.unscoped for all operations since auth happens outside firm context
+- [Phase 02]: Rate limiting via custom Redis-based ThrottleGuard factory instead of @nestjs/throttler
+- [Phase 02]: RequestContextMiddleware decodes JWT pre-guard to populate AsyncLocalStorage for Prisma extension
+- [Phase 02]: Deactivated user detection does two-step query: first find user, then check isActive for 403 vs 401
 
 ### Pending Todos
 
@@ -87,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-27T06:37:23.167Z
-Stopped at: Completed 01-03-PLAN.md (Error handling, logging, health check)
+Last session: 2026-03-28T18:46:24.968Z
+Stopped at: Completed 02-01-PLAN.md (Authentication system)
 Resume file: None

@@ -27,15 +27,15 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can register a new firm with email, password, firm name, and full name
-- [ ] **AUTH-02**: User can log in with email/password and receive JWT access token
-- [ ] **AUTH-03**: Access token expires in 15 minutes, refresh token in HTTP-only cookie (7 days)
-- [ ] **AUTH-04**: User can refresh access token via cookie-based refresh endpoint
-- [ ] **AUTH-05**: User can log out (session deleted, cookie cleared)
-- [ ] **AUTH-06**: Max 5 concurrent sessions per user; 6th login evicts oldest
-- [ ] **AUTH-07**: Deactivated users receive 403 on login attempt
-- [ ] **AUTH-08**: Login rate limited to 5 req/min per IP; register to 3 req/min per IP
-- [ ] **AUTH-09**: GET /api/auth/me returns current user profile and firm details
+- [x] **AUTH-01**: User can register a new firm with email, password, firm name, and full name
+- [x] **AUTH-02**: User can log in with email/password and receive JWT access token
+- [x] **AUTH-03**: Access token expires in 15 minutes, refresh token in HTTP-only cookie (7 days)
+- [x] **AUTH-04**: User can refresh access token via cookie-based refresh endpoint
+- [x] **AUTH-05**: User can log out (session deleted, cookie cleared)
+- [x] **AUTH-06**: Max 5 concurrent sessions per user; 6th login evicts oldest
+- [x] **AUTH-07**: Deactivated users receive 403 on login attempt
+- [x] **AUTH-08**: Login rate limited to 5 req/min per IP; register to 3 req/min per IP
+- [x] **AUTH-09**: GET /api/auth/me returns current user profile and firm details
 
 ### Users
 
@@ -232,15 +232,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ERR-01 | Phase 1 | Complete |
 | ERR-02 | Phase 1 | Complete |
 | ERR-03 | Phase 1 | Complete |
-| AUTH-01 | Phase 2 | Pending |
-| AUTH-02 | Phase 2 | Pending |
-| AUTH-03 | Phase 2 | Pending |
-| AUTH-04 | Phase 2 | Pending |
-| AUTH-05 | Phase 2 | Pending |
-| AUTH-06 | Phase 2 | Pending |
-| AUTH-07 | Phase 2 | Pending |
-| AUTH-08 | Phase 2 | Pending |
-| AUTH-09 | Phase 2 | Pending |
+| AUTH-01 | Phase 2 | Complete |
+| AUTH-02 | Phase 2 | Complete |
+| AUTH-03 | Phase 2 | Complete |
+| AUTH-04 | Phase 2 | Complete |
+| AUTH-05 | Phase 2 | Complete |
+| AUTH-06 | Phase 2 | Complete |
+| AUTH-07 | Phase 2 | Complete |
+| AUTH-08 | Phase 2 | Complete |
+| AUTH-09 | Phase 2 | Complete |
 | USER-01 | Phase 2 | Pending |
 | USER-02 | Phase 2 | Pending |
 | USER-03 | Phase 2 | Pending |

@@ -31,7 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A query through the Prisma client for Firm A never returns data belonging to Firm B
   4. Any API error returns a consistent JSON response with statusCode, message, error, and request_id
   5. `GET /api/health` returns 200 with DB and Redis connectivity status
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 - [x] 01-01: Monorepo scaffolding and Docker infrastructure
@@ -48,11 +48,11 @@ Plans:
   3. An Admin or Partner can create, list, update, and deactivate users within their firm
   4. Every POST/PATCH/PUT/DELETE request creates an immutable audit log entry without blocking the response
   5. A Partner or Admin can view the audit log filtered by user, entity type, action, and date range
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: Auth module (register, login, JWT, sessions, refresh, logout)
-- [ ] 02-02: User management and action logging interceptor
+- [x] 02-01-PLAN.md -- Auth module: register, login, JWT with session kill-switch, refresh tokens, logout, max 5 sessions, rate limiting, GET /me
+- [ ] 02-02-PLAN.md -- User management (list, create, update, deactivate) and action logging interceptor with audit log query endpoint
 
 ### Phase 3: Frontend Foundation
 **Goal**: The SvelteKit app has a complete authenticated shell (login, register, sidebar, topbar, breadcrumbs) and a library of reusable UI components ready for feature pages
