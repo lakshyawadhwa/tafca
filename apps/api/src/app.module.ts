@@ -14,6 +14,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
 import { FirmScopeGuard } from './auth/guards/firm-scope.guard';
 import { RequestContextMiddleware } from './common/context/request-context.middleware';
 import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { RequestLoggingMiddleware } from './common/middleware/request-logging.mi
     HealthModule,
     SessionModule,
     AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
