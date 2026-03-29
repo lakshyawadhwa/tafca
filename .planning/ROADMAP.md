@@ -52,7 +52,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md -- Auth module: register, login, JWT with session kill-switch, refresh tokens, logout, max 5 sessions, rate limiting, GET /me
-- [ ] 02-02-PLAN.md -- User management (list, create, update, deactivate) and action logging interceptor with audit log query endpoint
+- [x] 02-02-PLAN.md -- User management (list, create, update, deactivate) and action logging interceptor with audit log query endpoint
 
 ### Phase 3: Frontend Foundation
 **Goal**: The SvelteKit app has a complete authenticated shell (login, register, sidebar, topbar, breadcrumbs) and a library of reusable UI components ready for feature pages
