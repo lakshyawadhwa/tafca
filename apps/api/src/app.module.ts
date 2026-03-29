@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validate } from './config/env.validation';
@@ -15,6 +15,8 @@ import { FirmScopeGuard } from './auth/guards/firm-scope.guard';
 import { RequestContextMiddleware } from './common/context/request-context.middleware';
 import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
 import { UserModule } from './user/user.module';
+import { ActionLogModule } from './action-log/action-log.module';
+import { ActionLogInterceptor } from './action-log/action-log.interceptor';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { UserModule } from './user/user.module';
     SessionModule,
     AuthModule,
     UserModule,
+    ActionLogModule,
   ],
   controllers: [AppController],
   providers: [
