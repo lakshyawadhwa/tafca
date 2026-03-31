@@ -38,6 +38,7 @@ import { ActionLogInterceptor } from './action-log/action-log.interceptor';
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_GUARD, useClass: FirmScopeGuard },
+    { provide: APP_INTERCEPTOR, useClass: ActionLogInterceptor },
   ],
 })
 export class AppModule implements NestModule {
