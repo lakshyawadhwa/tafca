@@ -56,15 +56,15 @@ Exceptions:
 | Role | Size | Weight | Line Height | Tailwind Class |
 |------|------|--------|-------------|----------------|
 | Body | 14px | 400 (regular) | 1.5 (21px) | `text-sm font-normal leading-relaxed` |
-| Label | 14px | 500 (medium) | 1.4 (19.6px) | `text-sm font-medium leading-snug` |
+| Label | 14px | 600 (semibold) | 1.4 (19.6px) | `text-sm font-semibold leading-snug` |
 | Heading | 20px | 600 (semibold) | 1.2 (24px) | `text-xl font-semibold leading-tight` |
-| Display | 28px | 700 (bold) | 1.2 (33.6px) | `text-2xl font-bold leading-tight` |
+| Display | 28px | 600 (semibold) | 1.2 (33.6px) | `text-2xl font-semibold leading-tight` |
 
-**Rationale:** 14px body is standard for data-dense SaaS dashboards -- maximizes information density while remaining readable. Inter's x-height makes 14px feel roomy. Display (28px) used only for auth page headings and marketing-style hero text.
+**Rationale:** 14px body is standard for data-dense SaaS dashboards -- maximizes information density while remaining readable. Inter's x-height makes 14px feel roomy. Display (28px) used only for auth page headings and marketing-style hero text. Two weights only (400, 600) -- Inter's 600 provides sufficient contrast for headings and labels.
 
 **Font loading:** `<link>` in `app.html` head:
 ```
-Inter weights 400, 500, 600, 700 — subset: latin, latin-ext
+Inter weights 400, 600 — subset: latin, latin-ext
 ```
 
 **Fallback stack:** `'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif`
