@@ -99,13 +99,13 @@ Plans:
   3. User can view the task list in both table view (sortable, filterable by assignee/client/status/priority/due date/overdue) and Kanban view (drag-to-change-status)
   4. Task detail page shows status controls, editable fields, checklist with toggle, dependencies, threaded comments with @mentions, and activity timeline
   5. Every task mutation is recorded in the activity log with actor, old/new values, and timestamp
-**Plans**: TBD
+**Plans**: 3 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 05-01: Task backend (CRUD, status machine, internal due dates)
-- [ ] 05-02: Task sub-resources (checklists, dependencies, comments, activity log)
-- [ ] 05-03: Task frontend (list with table/Kanban views, detail page)
+- [ ] 05-01-PLAN.md -- Task backend: CRUD, status machine with transition gates, internal due date auto-computation, subtask depth enforcement, list with full filter set, activity logging, notification stubs
+- [ ] 05-02-PLAN.md -- Task sub-resources: checklist CRUD with max-30 and toggle tracking, dependency management with BFS cycle detection, threaded comments with @mentions and depth-1 enforcement
+- [ ] 05-03-PLAN.md -- Task frontend: task list page with table/Kanban views, task create form, task detail page with checklist, dependencies, comments, activity timeline, and metadata sidebar
 
 ### Phase 6: Notifications, Team, Dashboard & Admin
 **Goal**: The platform is complete with in-app notifications, team workload visibility, leave management, a dashboard landing page, and admin tools (audit log, recently deleted, settings, user management pages)
