@@ -81,13 +81,13 @@ Plans:
   3. User can view a client detail page with tabs showing overview (with editable fields and GST numbers), engagements, and tasks
   4. User can create an engagement linked to a client and type, with auto-generated name, inherited partner/manager, and optional task chain instantiation from template
   5. Completing an engagement is blocked if open tasks exist; cancelling an engagement auto-cancels its open tasks
-**Plans**: TBD
+**Plans**: 3 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 04-01: Client backend (CRUD, GST numbers, validation)
-- [ ] 04-02: Engagement backend (CRUD, lifecycle, template instantiation)
-- [ ] 04-03: Client and engagement frontend pages
+- [ ] 04-01-PLAN.md -- Client backend: shared enum sync, ENGAGEMENT_STATUS_TRANSITIONS constant, Client CRUD + GST number CRUD + validation + soft delete
+- [ ] 04-02-PLAN.md -- Engagement backend: EngagementType API, Engagement CRUD, status transitions, template task instantiation (two-pass)
+- [ ] 04-03-PLAN.md -- Client and engagement frontend: 7 new UI components, client list/create/detail/edit pages, engagement list page with create modal
 
 ### Phase 5: Task Engine
 **Goal**: Users can manage tasks with enforced status transitions, checklists, dependencies, comments, and activity tracking -- the core value proposition of the platform
