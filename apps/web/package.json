@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@ca-practice-os/shared": "workspace:*",
-    "lucide-svelte": "^1.0.1"
+    "lucide-svelte": "^1.0.1",
+    "svelte-dnd-action": "^0.9.69"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",

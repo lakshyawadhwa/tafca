@@ -18,3 +18,5 @@ export { default as FilterBar } from './FilterBar.svelte';
 export { default as InlineEdit } from './InlineEdit.svelte';
 export { default as TagInput } from './TagInput.svelte';
 export { default as StatusTransitionDropdown } from './StatusTransitionDropdown.svelte';
+export { default as ViewToggle } from './ViewToggle.svelte';
+export { default as MultiSelect } from './MultiSelect.svelte';
