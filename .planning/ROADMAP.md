@@ -63,13 +63,13 @@ Plans:
   2. Authenticated pages show a collapsible sidebar with navigation items and a topbar with user menu and notification bell
   3. The sidebar collapses to icons on mobile viewports and breadcrumbs update based on the current route
   4. All shared components (DataTable, Modal, FormField, StatusBadge, Pickers, DatePicker, Toast, EmptyState, LoadingSkeleton, ConfirmDialog) render correctly and are importable by feature pages
-**Plans**: TBD
+**Plans**: 3 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 03-01: Auth pages (login, register) and SvelteKit auth hooks
-- [ ] 03-02: App shell layout (sidebar, topbar, breadcrumbs, responsive)
-- [ ] 03-03: Shared UI component library
+- [ ] 03-01-PLAN.md -- Auth pages (login, register), SvelteKit auth hooks, design system foundation, stores, API wrapper
+- [ ] 03-02-PLAN.md -- App shell layout (sidebar, topbar, breadcrumbs, user menu, responsive behavior, placeholder pages)
+- [ ] 03-03-PLAN.md -- Shared UI component library (DataTable, Modal, FormField, StatusBadge, Pickers, DatePicker, EmptyState, LoadingSkeleton, ConfirmDialog)
 
 ### Phase 4: Client & Engagement Management
 **Goal**: Users can manage their client base with validated PAN/TAN/CIN/GST data and create engagements that optionally instantiate task chains from templates -- the first real domain workflow
