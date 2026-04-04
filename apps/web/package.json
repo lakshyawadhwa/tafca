@@ -10,7 +10,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@ca-practice-os/shared": "workspace:*"
+    "@ca-practice-os/shared": "workspace:*",
+    "lucide-svelte": "^1.0.1"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
