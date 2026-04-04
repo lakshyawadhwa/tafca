@@ -8,6 +8,7 @@
     disabled?: boolean;
     type?: 'button' | 'submit';
     onclick?: (e: MouseEvent) => void;
+    class?: string;
     children: Snippet;
   }
 
@@ -18,6 +19,7 @@
     disabled = false,
     type = 'button',
     onclick,
+    class: className = '',
     children,
   }: Props = $props();
 
@@ -39,7 +41,7 @@
   {type}
   {onclick}
   disabled={disabled || loading}
-  class="inline-flex cursor-pointer items-center justify-center rounded-md font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 {variantClasses[variant]} {sizeClasses[size]}"
+  class="inline-flex cursor-pointer items-center justify-center rounded-md font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 {variantClasses[variant]} {sizeClasses[size]} {className}"
 >
   {#if loading}
     <svg
