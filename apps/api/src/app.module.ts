@@ -15,6 +15,7 @@ import { FirmScopeGuard } from './auth/guards/firm-scope.guard';
 import { RequestContextMiddleware } from './common/context/request-context.middleware';
 import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
 import { UserModule } from './user/user.module';
+import { ClientModule } from './client/client.module';
 import { ActionLogModule } from './action-log/action-log.module';
 import { ActionLogInterceptor } from './action-log/action-log.interceptor';
 
@@ -30,6 +31,7 @@ import { ActionLogInterceptor } from './action-log/action-log.interceptor';
     SessionModule,
     AuthModule,
     UserModule,
+    ClientModule,
     ActionLogModule,
   ],
   controllers: [AppController],
