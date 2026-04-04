@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-04-04T19:11:42.199Z"
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-04-04T21:26:45.294Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 6
-  completed_phases: 3
-  total_plans: 11
-  completed_plans: 10
+  completed_phases: 4
+  total_plans: 14
+  completed_plans: 12
   percent: 82
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-27)
 
 **Core value:** Every person in the firm knows exactly what to work on, every deadline is visible, and no client falls through the cracks.
-**Current focus:** Phase 04 — Client & Engagement Management
+**Current focus:** Phase 05 — Task Engine
 
 ## Current Position
 
-Phase: 4
-Plan: 2 of 3
-Status: Ready to execute
+Phase: 5
+Plan: 1 of 3
+Status: Executing Phase 5 — Plan 1 complete
 Last activity: 2026-04-04
 
-Progress: [████████░░] 82%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Progress: [████████░░] 82%
 | Phase 03 P02 | 4min | 2 tasks | 15 files |
 | Phase 04 P01 | 17min | 2 tasks | 16 files |
 | Phase 04 P02 | 4min | 1 tasks | 12 files |
+| Phase 05 P01 | 4min | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,11 @@ Recent decisions affecting current work:
 - [Phase 04]: unscopedPrisma for EngagementType and template queries -- platform types have firmId: null
 - [Phase 04]: Template instantiation uses unscopedPrisma.$transaction for two-pass task creation with explicit firmId
 - [Phase 04]: Task progress uses groupBy batch query to avoid N+1 on engagement list views
+- [Phase 05]: Status machine clones engagement pattern: TASK_STATUS_TRANSITIONS lookup + BadRequestException with allowed_transitions array
+- [Phase 05]: DONE gate uses ConflictException (409) with incomplete_required_items count for clear frontend error handling
+- [Phase 05]: Internal due date auto-computed from firm.settings.default_internal_deadline_buffer_days (default 3), overridable per task
+- [Phase 05]: Computed fields (isBlocked, checklistProgress, subtaskCount) in responses to avoid frontend N+1
+- [Phase 05]: Activity and notification writes are fire-and-forget with .catch(() => {}) to never block the main operation
 
 ### Pending Todos
 
@@ -113,6 +119,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T19:11:42.197Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-04-04T21:24:49Z
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None

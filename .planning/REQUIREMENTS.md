@@ -70,19 +70,19 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Tasks
 
-- [ ] **TASK-01**: User can create a task (standalone or engagement-bound) with title, description, priority, assignee, reviewer, due date, tags
-- [ ] **TASK-02**: Task status transitions enforce allowed-transitions matrix; invalid transitions return 400 with allowed_transitions[]
-- [ ] **TASK-03**: DONE transition blocked by incomplete required checklist items
-- [ ] **TASK-04**: completed_at and cancelled_at auto-set on terminal transitions
-- [ ] **TASK-05**: internal_due_date auto-computed from buffer chain (PRD section 13.3)
-- [ ] **TASK-06**: Subtask depth limited to 1 level
-- [ ] **TASK-07**: User can list tasks with filters (assignee, client, engagement, status, priority, due date range, overdue, search)
+- [x] **TASK-01**: User can create a task (standalone or engagement-bound) with title, description, priority, assignee, reviewer, due date, tags
+- [x] **TASK-02**: Task status transitions enforce allowed-transitions matrix; invalid transitions return 400 with allowed_transitions[]
+- [x] **TASK-03**: DONE transition blocked by incomplete required checklist items
+- [x] **TASK-04**: completed_at and cancelled_at auto-set on terminal transitions
+- [x] **TASK-05**: internal_due_date auto-computed from buffer chain (PRD section 13.3)
+- [x] **TASK-06**: Subtask depth limited to 1 level
+- [x] **TASK-07**: User can list tasks with filters (assignee, client, engagement, status, priority, due date range, overdue, search)
 - [ ] **TASK-08**: User can add/edit/toggle/delete checklist items (max 30 per task)
 - [ ] **TASK-09**: User can add task dependencies with cycle detection (circular dependency returns 400)
 - [ ] **TASK-10**: Predecessor completing to DONE emits DEPENDENCY_UNBLOCKED event
 - [ ] **TASK-11**: User can post comments with @mentions (max 10) and threaded replies (depth 1)
-- [ ] **TASK-12**: Task activity log records all mutations with actor, old/new values, timestamp
-- [ ] **TASK-13**: Notifications emitted on status change (TASK_ASSIGNED, REVIEW_REQUESTED, etc.)
+- [x] **TASK-12**: Task activity log records all mutations with actor, old/new values, timestamp
+- [x] **TASK-13**: Notifications emitted on status change (TASK_ASSIGNED, REVIEW_REQUESTED, etc.)
 
 ### Notifications
 
@@ -288,19 +288,19 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAGE-01 | Phase 4 | Pending |
 | PAGE-02 | Phase 4 | Pending |
 | PAGE-03 | Phase 4 | Pending |
-| TASK-01 | Phase 5 | Pending |
-| TASK-02 | Phase 5 | Pending |
-| TASK-03 | Phase 5 | Pending |
-| TASK-04 | Phase 5 | Pending |
-| TASK-05 | Phase 5 | Pending |
-| TASK-06 | Phase 5 | Pending |
-| TASK-07 | Phase 5 | Pending |
+| TASK-01 | Phase 5 | Complete |
+| TASK-02 | Phase 5 | Complete |
+| TASK-03 | Phase 5 | Complete |
+| TASK-04 | Phase 5 | Complete |
+| TASK-05 | Phase 5 | Complete |
+| TASK-06 | Phase 5 | Complete |
+| TASK-07 | Phase 5 | Complete |
 | TASK-08 | Phase 5 | Pending |
 | TASK-09 | Phase 5 | Pending |
 | TASK-10 | Phase 5 | Pending |
 | TASK-11 | Phase 5 | Pending |
-| TASK-12 | Phase 5 | Pending |
-| TASK-13 | Phase 5 | Pending |
+| TASK-12 | Phase 5 | Complete |
+| TASK-13 | Phase 5 | Complete |
 | PAGE-04 | Phase 5 | Pending |
 | PAGE-05 | Phase 5 | Pending |
 | NOTIF-01 | Phase 6 | Pending |
