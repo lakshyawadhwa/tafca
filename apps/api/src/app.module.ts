@@ -20,6 +20,7 @@ import { EngagementTypeModule } from './engagement-type/engagement-type.module';
 import { EngagementModule } from './engagement/engagement.module';
 import { ActionLogModule } from './action-log/action-log.module';
 import { ActionLogInterceptor } from './action-log/action-log.interceptor';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ActionLogInterceptor } from './action-log/action-log.interceptor';
     EngagementTypeModule,
     EngagementModule,
     ActionLogModule,
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [
