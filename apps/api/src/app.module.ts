@@ -16,6 +16,8 @@ import { RequestContextMiddleware } from './common/context/request-context.middl
 import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
 import { UserModule } from './user/user.module';
 import { ClientModule } from './client/client.module';
+import { EngagementTypeModule } from './engagement-type/engagement-type.module';
+import { EngagementModule } from './engagement/engagement.module';
 import { ActionLogModule } from './action-log/action-log.module';
 import { ActionLogInterceptor } from './action-log/action-log.interceptor';
 
@@ -32,6 +34,8 @@ import { ActionLogInterceptor } from './action-log/action-log.interceptor';
     AuthModule,
     UserModule,
     ClientModule,
+    EngagementTypeModule,
+    EngagementModule,
     ActionLogModule,
   ],
   controllers: [AppController],
