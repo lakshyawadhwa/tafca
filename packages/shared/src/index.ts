@@ -1,5 +1,6 @@
 export * from './enums';
 export * from './constants/task-status-transitions';
+export * from './constants/engagement-status-transitions';
 export * from './constants/regex-patterns';
 export * from './constants/limits';
 export * from './constants/mime-types';

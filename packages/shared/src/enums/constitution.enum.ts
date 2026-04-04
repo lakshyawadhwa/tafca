@@ -1,9 +1,9 @@
-export enum Constitution {
+export enum ConstitutionType {
   PROPRIETORSHIP = 'PROPRIETORSHIP',
   PARTNERSHIP = 'PARTNERSHIP',
   COMPANY = 'COMPANY',
   LLP = 'LLP',
   TRUST = 'TRUST',
   SOCIETY = 'SOCIETY',
-  HUF = 'HUF',
+  OTHER = 'OTHER',
 }

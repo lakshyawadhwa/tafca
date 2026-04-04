@@ -1,4 +1,4 @@
-export enum Recurrence {
+export enum RecurrenceType {
   ONE_OFF = 'ONE_OFF',
   MONTHLY = 'MONTHLY',
   QUARTERLY = 'QUARTERLY',
