@@ -67,9 +67,9 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 03-01-PLAN.md -- Auth pages (login, register), SvelteKit auth hooks, design system foundation, stores, API wrapper
+- [x] 03-01-PLAN.md -- Auth pages (login, register), SvelteKit auth hooks, design system foundation, stores, API wrapper
 - [ ] 03-02-PLAN.md -- App shell layout (sidebar, topbar, breadcrumbs, user menu, responsive behavior, placeholder pages)
-- [ ] 03-03-PLAN.md -- Shared UI component library (DataTable, Modal, FormField, StatusBadge, Pickers, DatePicker, EmptyState, LoadingSkeleton, ConfirmDialog)
+- [x] 03-03-PLAN.md -- Shared UI component library (DataTable, Modal, FormField, StatusBadge, Pickers, DatePicker, EmptyState, LoadingSkeleton, ConfirmDialog)
 
 ### Phase 4: Client & Engagement Management
 **Goal**: Users can manage their client base with validated PAN/TAN/CIN/GST data and create engagements that optionally instantiate task chains from templates -- the first real domain workflow
@@ -134,7 +134,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Foundation & Infrastructure | 0/3 | Not started | - |
 | 2. Authentication & Core Backend Services | 0/2 | Not started | - |
-| 3. Frontend Foundation | 0/3 | Not started | - |
+| 3. Frontend Foundation | 2/3 | In Progress|  |
 | 4. Client & Engagement Management | 0/3 | Not started | - |
 | 5. Task Engine | 0/3 | Not started | - |
 | 6. Notifications, Team, Dashboard & Admin | 0/3 | Not started | - |

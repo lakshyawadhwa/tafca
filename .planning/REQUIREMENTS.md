@@ -125,15 +125,15 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Frontend Components
 
-- [ ] **COMP-01**: DataTable component (sortable, paginated, column config)
-- [ ] **COMP-02**: Modal component with form support
-- [ ] **COMP-03**: FormField component (input wrapper with label, error, help text)
-- [ ] **COMP-04**: StatusBadge component (colored pills for task/engagement status)
-- [ ] **COMP-05**: UserPicker and ClientPicker (searchable selectors)
-- [ ] **COMP-06**: DatePicker with calendar popup
-- [ ] **COMP-07**: Toast notifications (success, error, info)
-- [ ] **COMP-08**: EmptyState and LoadingSkeleton components
-- [ ] **COMP-09**: ConfirmDialog for destructive actions
+- [x] **COMP-01**: DataTable component (sortable, paginated, column config)
+- [x] **COMP-02**: Modal component with form support
+- [x] **COMP-03**: FormField component (input wrapper with label, error, help text)
+- [x] **COMP-04**: StatusBadge component (colored pills for task/engagement status)
+- [x] **COMP-05**: UserPicker and ClientPicker (searchable selectors)
+- [x] **COMP-06**: DatePicker with calendar popup
+- [x] **COMP-07**: Toast notifications (success, error, info)
+- [x] **COMP-08**: EmptyState and LoadingSkeleton components
+- [x] **COMP-09**: ConfirmDialog for destructive actions
 
 ### Frontend Pages
 
@@ -259,15 +259,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SHELL-06 | Phase 3 | Pending |
 | SHELL-07 | Phase 3 | Pending |
 | SHELL-08 | Phase 3 | Pending |
-| COMP-01 | Phase 3 | Pending |
-| COMP-02 | Phase 3 | Pending |
-| COMP-03 | Phase 3 | Pending |
-| COMP-04 | Phase 3 | Pending |
-| COMP-05 | Phase 3 | Pending |
-| COMP-06 | Phase 3 | Pending |
-| COMP-07 | Phase 3 | Pending |
-| COMP-08 | Phase 3 | Pending |
-| COMP-09 | Phase 3 | Pending |
+| COMP-01 | Phase 3 | Complete |
+| COMP-02 | Phase 3 | Complete |
+| COMP-03 | Phase 3 | Complete |
+| COMP-04 | Phase 3 | Complete |
+| COMP-05 | Phase 3 | Complete |
+| COMP-06 | Phase 3 | Complete |
+| COMP-07 | Phase 3 | Complete |
+| COMP-08 | Phase 3 | Complete |
+| COMP-09 | Phase 3 | Complete |
 | CLIENT-01 | Phase 4 | Pending |
 | CLIENT-02 | Phase 4 | Pending |
 | CLIENT-03 | Phase 4 | Pending |
