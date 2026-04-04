@@ -59,14 +59,14 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Engagements
 
-- [ ] **ENG-01**: User can create an engagement linked to a client and engagement type
-- [ ] **ENG-02**: Engagement name auto-generated as "[Type] - [Client] - [Period]" when not provided
-- [ ] **ENG-03**: Partner/Manager inherited from client when null on creation
-- [ ] **ENG-04**: Engagement creation optionally instantiates task chain from template (auto_create_tasks)
-- [ ] **ENG-05**: User can list engagements with client, type, status, period, and task summary
-- [ ] **ENG-06**: User can transition engagement status (ACTIVE, ON_HOLD, COMPLETED, CANCELLED)
-- [ ] **ENG-07**: COMPLETED blocked if open tasks exist (returns blocking task IDs)
-- [ ] **ENG-08**: CANCELLED auto-cancels TO_DO and IN_PROGRESS child tasks
+- [x] **ENG-01**: User can create an engagement linked to a client and engagement type
+- [x] **ENG-02**: Engagement name auto-generated as "[Type] - [Client] - [Period]" when not provided
+- [x] **ENG-03**: Partner/Manager inherited from client when null on creation
+- [x] **ENG-04**: Engagement creation optionally instantiates task chain from template (auto_create_tasks)
+- [x] **ENG-05**: User can list engagements with client, type, status, period, and task summary
+- [x] **ENG-06**: User can transition engagement status (ACTIVE, ON_HOLD, COMPLETED, CANCELLED)
+- [x] **ENG-07**: COMPLETED blocked if open tasks exist (returns blocking task IDs)
+- [x] **ENG-08**: CANCELLED auto-cancels TO_DO and IN_PROGRESS child tasks
 
 ### Tasks
 
@@ -277,14 +277,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLIENT-07 | Phase 4 | Complete |
 | CLIENT-08 | Phase 4 | Complete |
 | CLIENT-09 | Phase 4 | Complete |
-| ENG-01 | Phase 4 | Pending |
-| ENG-02 | Phase 4 | Pending |
-| ENG-03 | Phase 4 | Pending |
-| ENG-04 | Phase 4 | Pending |
-| ENG-05 | Phase 4 | Pending |
-| ENG-06 | Phase 4 | Pending |
-| ENG-07 | Phase 4 | Pending |
-| ENG-08 | Phase 4 | Pending |
+| ENG-01 | Phase 4 | Complete |
+| ENG-02 | Phase 4 | Complete |
+| ENG-03 | Phase 4 | Complete |
+| ENG-04 | Phase 4 | Complete |
+| ENG-05 | Phase 4 | Complete |
+| ENG-06 | Phase 4 | Complete |
+| ENG-07 | Phase 4 | Complete |
+| ENG-08 | Phase 4 | Complete |
 | PAGE-01 | Phase 4 | Pending |
 | PAGE-02 | Phase 4 | Pending |
 | PAGE-03 | Phase 4 | Pending |

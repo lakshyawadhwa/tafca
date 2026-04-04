@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-04-04T19:04:29.448Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-04-04T19:11:42.199Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 11
-  completed_plans: 9
+  completed_plans: 10
   percent: 82
 ---
 
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 ## Current Position
 
 Phase: 4
-Plan: 1 of 3
-Status: executing
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-04-04
 
 Progress: [████████░░] 82%
@@ -60,6 +60,7 @@ Progress: [████████░░] 82%
 | Phase 03 P01 | 14min | 2 tasks | 28 files |
 | Phase 03 P02 | 4min | 2 tasks | 15 files |
 | Phase 04 P01 | 17min | 2 tasks | 16 files |
+| Phase 04 P02 | 4min | 1 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,9 @@ Recent decisions affecting current work:
 - [Phase 04]: Manager assignment accepts PARTNER or MANAGER role (partners can manage)
 - [Phase 04]: Backward-compatible enum aliases (Constitution, Recurrence) prevent breaking Phase 1-3 code
 - [Phase 04]: GST isPrimary toggle uses unscopedPrisma.$transaction for atomic unset+set across rows
+- [Phase 04]: unscopedPrisma for EngagementType and template queries -- platform types have firmId: null
+- [Phase 04]: Template instantiation uses unscopedPrisma.$transaction for two-pass task creation with explicit firmId
+- [Phase 04]: Task progress uses groupBy batch query to avoid N+1 on engagement list views
 
 ### Pending Todos
 
@@ -109,6 +113,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T19:04:29.446Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-04-04T19:11:42.197Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None
