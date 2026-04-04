@@ -114,14 +114,14 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Frontend Shell
 
-- [ ] **SHELL-01**: Login page with email/password, error states for all auth failures
-- [ ] **SHELL-02**: Register page with firm name + user details
+- [x] **SHELL-01**: Login page with email/password, error states for all auth failures
+- [x] **SHELL-02**: Register page with firm name + user details
 - [ ] **SHELL-03**: Authenticated layout with collapsible sidebar (Dashboard, Clients, Engagements, Tasks, Team, Settings)
 - [ ] **SHELL-04**: Topbar with user menu (profile, settings, logout) and notification bell
 - [ ] **SHELL-05**: Breadcrumb trail derived from route
 - [ ] **SHELL-06**: Responsive: sidebar collapses to icons on mobile
-- [ ] **SHELL-07**: Auth guard redirects unauthenticated users to login
-- [ ] **SHELL-08**: JWT stored in memory, refresh token handled via SvelteKit hooks
+- [x] **SHELL-07**: Auth guard redirects unauthenticated users to login
+- [x] **SHELL-08**: JWT stored in memory, refresh token handled via SvelteKit hooks
 
 ### Frontend Components
 
@@ -251,14 +251,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUDIT-03 | Phase 2 | Pending |
 | AUDIT-04 | Phase 2 | Pending |
 | AUDIT-05 | Phase 2 | Pending |
-| SHELL-01 | Phase 3 | Pending |
-| SHELL-02 | Phase 3 | Pending |
+| SHELL-01 | Phase 3 | Complete |
+| SHELL-02 | Phase 3 | Complete |
 | SHELL-03 | Phase 3 | Pending |
 | SHELL-04 | Phase 3 | Pending |
 | SHELL-05 | Phase 3 | Pending |
 | SHELL-06 | Phase 3 | Pending |
-| SHELL-07 | Phase 3 | Pending |
-| SHELL-08 | Phase 3 | Pending |
+| SHELL-07 | Phase 3 | Complete |
+| SHELL-08 | Phase 3 | Complete |
 | COMP-01 | Phase 3 | Complete |
 | COMP-02 | Phase 3 | Complete |
 | COMP-03 | Phase 3 | Complete |
