@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-04-04T21:35:51.999Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-04-04T21:54:08.579Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 6
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
   percent: 86
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 ## Current Position
 
 Phase: 5
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-04
 
@@ -63,6 +63,7 @@ Progress: [█████████░] 86%
 | Phase 04 P02 | 4min | 1 tasks | 12 files |
 | Phase 05 P01 | 4min | 2 tasks | 11 files |
 | Phase 05 P02 | 5min | 2 tasks | 10 files |
+| Phase 05 P03 | 9min | 3 tasks | 22 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,10 @@ Recent decisions affecting current work:
 - [Phase 05]: Sub-resource services extend FirmScopedService independently, injecting ActivityService and NotificationHelper for side effects
 - [Phase 05]: BFS cycle detection uses firm-scoped queries for multi-tenant isolation in dependency graph traversal
 - [Phase 05]: Comment author resolution batches unique authorIds into single unscopedPrisma.user.findMany to avoid N+1
+- [Phase 05]: Kanban uses svelte-dnd-action with optimistic updates and client-side pre-validation against TASK_STATUS_TRANSITIONS before API call
+- [Phase 05]: Comments use plain textarea with mention chips below (not rich text) per CONTEXT.md V1 simplification
+- [Phase 05]: Activity timeline collapsed by default with load-more pagination to keep detail page focused
+- [Phase 05]: All task list filters URL-synced via goto() with replaceState for bookmarkable filter state
 
 ### Pending Todos
 
@@ -123,6 +128,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T21:35:51.997Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-04-04T21:54:08.577Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None

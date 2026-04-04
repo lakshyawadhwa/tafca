@@ -140,8 +140,8 @@ Requirements for initial release. Task tracking + client/engagement management i
 - [ ] **PAGE-01**: Client list page with filters, search, pagination, empty state, loading skeleton
 - [ ] **PAGE-02**: Client detail page with tabs (Overview, Engagements, Tasks) and editable fields
 - [ ] **PAGE-03**: Engagement list page with filters + create modal (type selector, template preview)
-- [ ] **PAGE-04**: Task list with table view (sortable/filterable) and Kanban view (drag-to-change-status)
-- [ ] **PAGE-05**: Task detail page (status controls, checklist, dependencies, comments, activity timeline)
+- [x] **PAGE-04**: Task list with table view (sortable/filterable) and Kanban view (drag-to-change-status)
+- [x] **PAGE-05**: Task detail page (status controls, checklist, dependencies, comments, activity timeline)
 - [ ] **PAGE-06**: Dashboard (my tasks: overdue/today/this week, approval queue, recent notifications)
 - [ ] **PAGE-07**: Team workload table with load status indicators
 - [ ] **PAGE-08**: Leave request form + approval interface
@@ -301,8 +301,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TASK-11 | Phase 5 | Complete |
 | TASK-12 | Phase 5 | Complete |
 | TASK-13 | Phase 5 | Complete |
-| PAGE-04 | Phase 5 | Pending |
-| PAGE-05 | Phase 5 | Pending |
+| PAGE-04 | Phase 5 | Complete |
+| PAGE-05 | Phase 5 | Complete |
 | NOTIF-01 | Phase 6 | Pending |
 | NOTIF-02 | Phase 6 | Pending |
 | NOTIF-03 | Phase 6 | Pending |

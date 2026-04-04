@@ -105,7 +105,7 @@ Plans:
 Plans:
 - [x] 05-01-PLAN.md -- Task backend: CRUD, status machine with transition gates, internal due date auto-computation, subtask depth enforcement, list with full filter set, activity logging, notification stubs
 - [x] 05-02-PLAN.md -- Task sub-resources: checklist CRUD with max-30 and toggle tracking, dependency management with BFS cycle detection, threaded comments with @mentions and depth-1 enforcement
-- [ ] 05-03-PLAN.md -- Task frontend: task list page with table/Kanban views, task create form, task detail page with checklist, dependencies, comments, activity timeline, and metadata sidebar
+- [x] 05-03-PLAN.md -- Task frontend: task list page with table/Kanban views, task create form, task detail page with checklist, dependencies, comments, activity timeline, and metadata sidebar
 
 ### Phase 6: Notifications, Team, Dashboard & Admin
 **Goal**: The platform is complete with in-app notifications, team workload visibility, leave management, a dashboard landing page, and admin tools (audit log, recently deleted, settings, user management pages)
