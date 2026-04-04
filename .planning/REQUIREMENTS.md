@@ -77,10 +77,10 @@ Requirements for initial release. Task tracking + client/engagement management i
 - [x] **TASK-05**: internal_due_date auto-computed from buffer chain (PRD section 13.3)
 - [x] **TASK-06**: Subtask depth limited to 1 level
 - [x] **TASK-07**: User can list tasks with filters (assignee, client, engagement, status, priority, due date range, overdue, search)
-- [ ] **TASK-08**: User can add/edit/toggle/delete checklist items (max 30 per task)
-- [ ] **TASK-09**: User can add task dependencies with cycle detection (circular dependency returns 400)
-- [ ] **TASK-10**: Predecessor completing to DONE emits DEPENDENCY_UNBLOCKED event
-- [ ] **TASK-11**: User can post comments with @mentions (max 10) and threaded replies (depth 1)
+- [x] **TASK-08**: User can add/edit/toggle/delete checklist items (max 30 per task)
+- [x] **TASK-09**: User can add task dependencies with cycle detection (circular dependency returns 400)
+- [x] **TASK-10**: Predecessor completing to DONE emits DEPENDENCY_UNBLOCKED event
+- [x] **TASK-11**: User can post comments with @mentions (max 10) and threaded replies (depth 1)
 - [x] **TASK-12**: Task activity log records all mutations with actor, old/new values, timestamp
 - [x] **TASK-13**: Notifications emitted on status change (TASK_ASSIGNED, REVIEW_REQUESTED, etc.)
 
@@ -295,10 +295,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TASK-05 | Phase 5 | Complete |
 | TASK-06 | Phase 5 | Complete |
 | TASK-07 | Phase 5 | Complete |
-| TASK-08 | Phase 5 | Pending |
-| TASK-09 | Phase 5 | Pending |
-| TASK-10 | Phase 5 | Pending |
-| TASK-11 | Phase 5 | Pending |
+| TASK-08 | Phase 5 | Complete |
+| TASK-09 | Phase 5 | Complete |
+| TASK-10 | Phase 5 | Complete |
+| TASK-11 | Phase 5 | Complete |
 | TASK-12 | Phase 5 | Complete |
 | TASK-13 | Phase 5 | Complete |
 | PAGE-04 | Phase 5 | Pending |

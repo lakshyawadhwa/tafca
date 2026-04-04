@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-04-04T21:26:45.294Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-04-04T21:35:51.999Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 14
-  completed_plans: 12
-  percent: 82
+  completed_plans: 13
+  percent: 86
 ---
 
 # Project State
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 ## Current Position
 
 Phase: 5
-Plan: 1 of 3
-Status: Executing Phase 5 — Plan 1 complete
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-04-04
 
 Progress: [█████████░] 86%
@@ -62,6 +62,7 @@ Progress: [█████████░] 86%
 | Phase 04 P01 | 17min | 2 tasks | 16 files |
 | Phase 04 P02 | 4min | 1 tasks | 12 files |
 | Phase 05 P01 | 4min | 2 tasks | 11 files |
+| Phase 05 P02 | 5min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,9 @@ Recent decisions affecting current work:
 - [Phase 05]: Internal due date auto-computed from firm.settings.default_internal_deadline_buffer_days (default 3), overridable per task
 - [Phase 05]: Computed fields (isBlocked, checklistProgress, subtaskCount) in responses to avoid frontend N+1
 - [Phase 05]: Activity and notification writes are fire-and-forget with .catch(() => {}) to never block the main operation
+- [Phase 05]: Sub-resource services extend FirmScopedService independently, injecting ActivityService and NotificationHelper for side effects
+- [Phase 05]: BFS cycle detection uses firm-scoped queries for multi-tenant isolation in dependency graph traversal
+- [Phase 05]: Comment author resolution batches unique authorIds into single unscopedPrisma.user.findMany to avoid N+1
 
 ### Pending Todos
 
@@ -119,6 +123,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T21:24:49Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-04-04T21:35:51.997Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
