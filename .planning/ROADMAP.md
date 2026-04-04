@@ -68,7 +68,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md -- Auth pages (login, register), SvelteKit auth hooks, design system foundation, stores, API wrapper
-- [ ] 03-02-PLAN.md -- App shell layout (sidebar, topbar, breadcrumbs, user menu, responsive behavior, placeholder pages)
+- [x] 03-02-PLAN.md -- App shell layout (sidebar, topbar, breadcrumbs, user menu, responsive behavior, placeholder pages)
 - [x] 03-03-PLAN.md -- Shared UI component library (DataTable, Modal, FormField, StatusBadge, Pickers, DatePicker, EmptyState, LoadingSkeleton, ConfirmDialog)
 
 ### Phase 4: Client & Engagement Management
