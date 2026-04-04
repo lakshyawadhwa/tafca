@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { Component } from 'svelte';
 	import { Inbox } from 'lucide-svelte';
 
 	let {
@@ -9,7 +8,7 @@
 		actionLabel = undefined,
 		onAction = undefined
 	}: {
-		icon?: Component;
+		icon?: any;
 		heading: string;
 		body?: string;
 		actionLabel?: string;

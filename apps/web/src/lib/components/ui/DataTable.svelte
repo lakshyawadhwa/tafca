@@ -8,7 +8,7 @@
 		key: string;
 		label: string;
 		sortable?: boolean;
-		render?: Snippet<[any]>;
+		render?: Snippet<[any]> | ((...args: any[]) => any);
 	};
 
 	let {
