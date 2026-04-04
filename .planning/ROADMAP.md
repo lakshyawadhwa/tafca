@@ -85,7 +85,7 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 04-01-PLAN.md -- Client backend: shared enum sync, ENGAGEMENT_STATUS_TRANSITIONS constant, Client CRUD + GST number CRUD + validation + soft delete
+- [x] 04-01-PLAN.md -- Client backend: shared enum sync, ENGAGEMENT_STATUS_TRANSITIONS constant, Client CRUD + GST number CRUD + validation + soft delete
 - [ ] 04-02-PLAN.md -- Engagement backend: EngagementType API, Engagement CRUD, status transitions, template task instantiation (two-pass)
 - [ ] 04-03-PLAN.md -- Client and engagement frontend: 7 new UI components, client list/create/detail/edit pages, engagement list page with create modal
 

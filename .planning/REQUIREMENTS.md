@@ -47,15 +47,15 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Clients
 
-- [ ] **CLIENT-01**: User can create a client with display name, entity type, PAN/TAN/CIN, contact info, and team assignment
-- [ ] **CLIENT-02**: PAN, TAN, CIN validated by regex format on create/update
-- [ ] **CLIENT-03**: Client display_name is unique per firm (case-insensitive)
-- [ ] **CLIENT-04**: User can list clients with pagination, search, and filters (status, entity_type, tag, assigned_partner)
-- [ ] **CLIENT-05**: User can view client detail with GST numbers, assigned team, engagement count, open task count
-- [ ] **CLIENT-06**: User can update client fields
-- [ ] **CLIENT-07**: User can soft-delete a client (blocked if active engagements exist)
-- [ ] **CLIENT-08**: User can add/edit/delete GST numbers for a client (GSTIN regex validated, one primary per client)
-- [ ] **CLIENT-09**: Assignment fields verify user role (partner_id must be PARTNER, etc.)
+- [x] **CLIENT-01**: User can create a client with display name, entity type, PAN/TAN/CIN, contact info, and team assignment
+- [x] **CLIENT-02**: PAN, TAN, CIN validated by regex format on create/update
+- [x] **CLIENT-03**: Client display_name is unique per firm (case-insensitive)
+- [x] **CLIENT-04**: User can list clients with pagination, search, and filters (status, entity_type, tag, assigned_partner)
+- [x] **CLIENT-05**: User can view client detail with GST numbers, assigned team, engagement count, open task count
+- [x] **CLIENT-06**: User can update client fields
+- [x] **CLIENT-07**: User can soft-delete a client (blocked if active engagements exist)
+- [x] **CLIENT-08**: User can add/edit/delete GST numbers for a client (GSTIN regex validated, one primary per client)
+- [x] **CLIENT-09**: Assignment fields verify user role (partner_id must be PARTNER, etc.)
 
 ### Engagements
 
@@ -268,15 +268,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-07 | Phase 3 | Complete |
 | COMP-08 | Phase 3 | Complete |
 | COMP-09 | Phase 3 | Complete |
-| CLIENT-01 | Phase 4 | Pending |
-| CLIENT-02 | Phase 4 | Pending |
-| CLIENT-03 | Phase 4 | Pending |
-| CLIENT-04 | Phase 4 | Pending |
-| CLIENT-05 | Phase 4 | Pending |
-| CLIENT-06 | Phase 4 | Pending |
-| CLIENT-07 | Phase 4 | Pending |
-| CLIENT-08 | Phase 4 | Pending |
-| CLIENT-09 | Phase 4 | Pending |
+| CLIENT-01 | Phase 4 | Complete |
+| CLIENT-02 | Phase 4 | Complete |
+| CLIENT-03 | Phase 4 | Complete |
+| CLIENT-04 | Phase 4 | Complete |
+| CLIENT-05 | Phase 4 | Complete |
+| CLIENT-06 | Phase 4 | Complete |
+| CLIENT-07 | Phase 4 | Complete |
+| CLIENT-08 | Phase 4 | Complete |
+| CLIENT-09 | Phase 4 | Complete |
 | ENG-01 | Phase 4 | Pending |
 | ENG-02 | Phase 4 | Pending |
 | ENG-03 | Phase 4 | Pending |
