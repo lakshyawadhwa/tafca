@@ -101,9 +101,9 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Recently Deleted
 
-- [ ] **DEL-01**: Partner/Admin can view recently deleted records across all entity types
-- [ ] **DEL-02**: Partner can restore any soft-deleted record within 30 days
-- [ ] **DEL-03**: Records show days until permanent deletion
+- [x] **DEL-01**: Partner/Admin can view recently deleted records across all entity types
+- [x] **DEL-02**: Partner can restore any soft-deleted record within 30 days
+- [x] **DEL-03**: Records show days until permanent deletion
 
 ### Team & Workload
 
@@ -142,10 +142,10 @@ Requirements for initial release. Task tracking + client/engagement management i
 - [ ] **PAGE-03**: Engagement list page with filters + create modal (type selector, template preview)
 - [x] **PAGE-04**: Task list with table view (sortable/filterable) and Kanban view (drag-to-change-status)
 - [x] **PAGE-05**: Task detail page (status controls, checklist, dependencies, comments, activity timeline)
-- [ ] **PAGE-06**: Dashboard (my tasks: overdue/today/this week, approval queue, recent notifications)
+- [x] **PAGE-06**: Dashboard (my tasks: overdue/today/this week, approval queue, recent notifications)
 - [ ] **PAGE-07**: Team workload table with load status indicators
 - [ ] **PAGE-08**: Leave request form + approval interface
-- [ ] **PAGE-09**: Firm settings page (buffer days, toggles)
+- [x] **PAGE-09**: Firm settings page (buffer days, toggles)
 - [ ] **PAGE-10**: User management page (list, invite, edit role, deactivate)
 - [ ] **PAGE-11**: Audit log page with filters
 - [ ] **PAGE-12**: Recently deleted page with restore buttons
@@ -311,13 +311,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TEAM-02 | Phase 6 | Pending |
 | TEAM-03 | Phase 6 | Pending |
 | TEAM-04 | Phase 6 | Pending |
-| DEL-01 | Phase 6 | Pending |
-| DEL-02 | Phase 6 | Pending |
-| DEL-03 | Phase 6 | Pending |
-| PAGE-06 | Phase 6 | Pending |
+| DEL-01 | Phase 6 | Complete |
+| DEL-02 | Phase 6 | Complete |
+| DEL-03 | Phase 6 | Complete |
+| PAGE-06 | Phase 6 | Complete |
 | PAGE-07 | Phase 6 | Pending |
 | PAGE-08 | Phase 6 | Pending |
-| PAGE-09 | Phase 6 | Pending |
+| PAGE-09 | Phase 6 | Complete |
 | PAGE-10 | Phase 6 | Pending |
 | PAGE-11 | Phase 6 | Pending |
 | PAGE-12 | Phase 6 | Pending |

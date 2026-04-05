@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-04-04T21:54:08.579Z"
-last_activity: 2026-04-04
+status: verifying
+stopped_at: Completed 06-02-PLAN.md
+last_updated: "2026-04-05T07:08:27.624Z"
+last_activity: 2026-04-05
 progress:
   total_phases: 6
   completed_phases: 5
-  total_plans: 14
-  completed_plans: 14
+  total_plans: 17
+  completed_plans: 15
   percent: 86
 ---
 
@@ -27,8 +27,8 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 
 Phase: 5
 Plan: 3 of 3
-Status: Ready to execute
-Last activity: 2026-04-04
+Status: Phase complete — ready for verification
+Last activity: 2026-04-05
 
 Progress: [█████████░] 86%
 
@@ -64,6 +64,7 @@ Progress: [█████████░] 86%
 | Phase 05 P01 | 4min | 2 tasks | 11 files |
 | Phase 05 P02 | 5min | 2 tasks | 10 files |
 | Phase 05 P03 | 9min | 3 tasks | 22 files |
+| Phase 06 P02 | 5min | 2 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,9 @@ Recent decisions affecting current work:
 - [Phase 05]: Comments use plain textarea with mention chips below (not rich text) per CONTEXT.md V1 simplification
 - [Phase 05]: Activity timeline collapsed by default with load-more pagination to keep detail page focused
 - [Phase 05]: All task list filters URL-synced via goto() with replaceState for bookmarkable filter state
+- [Phase 06]: Dashboard uses Promise.all for 7 parallel queries in a single endpoint
+- [Phase 06]: Recently deleted uses unscopedPrisma with explicit firmId (scoped client auto-filters deletedAt IS NULL)
+- [Phase 06]: Firm settings JSONB merge: spread existing + DTO fields so unset fields are preserved
 
 ### Pending Todos
 
@@ -128,6 +132,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T21:54:08.577Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-04-05T07:08:27.621Z
+Stopped at: Completed 06-02-PLAN.md
 Resume file: None
