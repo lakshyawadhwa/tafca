@@ -22,6 +22,8 @@ import { ActionLogModule } from './action-log/action-log.module';
 import { ActionLogInterceptor } from './action-log/action-log.interceptor';
 import { TaskModule } from './task/task.module';
 import { NotificationModule } from './notification/notification.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { FirmSettingsModule } from './firm-settings/firm-settings.module';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { NotificationModule } from './notification/notification.module';
     ActionLogModule,
     TaskModule,
     NotificationModule,
+    DashboardModule,
+    FirmSettingsModule,
   ],
   controllers: [AppController],
   providers: [
