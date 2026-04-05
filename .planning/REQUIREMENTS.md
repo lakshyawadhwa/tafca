@@ -86,10 +86,10 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Notifications
 
-- [ ] **NOTIF-01**: In-app notifications created for all event types (task assigned, status change, comment mention, dependency unblocked)
-- [ ] **NOTIF-02**: User can view notification list with unread count
-- [ ] **NOTIF-03**: User can mark individual notification as read
-- [ ] **NOTIF-04**: User can mark all notifications as read
+- [x] **NOTIF-01**: In-app notifications created for all event types (task assigned, status change, comment mention, dependency unblocked)
+- [x] **NOTIF-02**: User can view notification list with unread count
+- [x] **NOTIF-03**: User can mark individual notification as read
+- [x] **NOTIF-04**: User can mark all notifications as read
 
 ### Audit & Logging
 
@@ -107,10 +107,10 @@ Requirements for initial release. Task tracking + client/engagement management i
 
 ### Team & Workload
 
-- [ ] **TEAM-01**: User can view team workload (open tasks, overdue count, load status per user)
-- [ ] **TEAM-02**: User can create leave requests with type, date range, half-day option
-- [ ] **TEAM-03**: Manager/Partner can approve/reject leave requests
-- [ ] **TEAM-04**: Partner/Manager can view approval queue (tasks in PARTNER_APPROVAL status)
+- [x] **TEAM-01**: User can view team workload (open tasks, overdue count, load status per user)
+- [x] **TEAM-02**: User can create leave requests with type, date range, half-day option
+- [x] **TEAM-03**: Manager/Partner can approve/reject leave requests
+- [x] **TEAM-04**: Partner/Manager can view approval queue (tasks in PARTNER_APPROVAL status)
 
 ### Frontend Shell
 
@@ -303,14 +303,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TASK-13 | Phase 5 | Complete |
 | PAGE-04 | Phase 5 | Complete |
 | PAGE-05 | Phase 5 | Complete |
-| NOTIF-01 | Phase 6 | Pending |
-| NOTIF-02 | Phase 6 | Pending |
-| NOTIF-03 | Phase 6 | Pending |
-| NOTIF-04 | Phase 6 | Pending |
-| TEAM-01 | Phase 6 | Pending |
-| TEAM-02 | Phase 6 | Pending |
-| TEAM-03 | Phase 6 | Pending |
-| TEAM-04 | Phase 6 | Pending |
+| NOTIF-01 | Phase 6 | Complete |
+| NOTIF-02 | Phase 6 | Complete |
+| NOTIF-03 | Phase 6 | Complete |
+| NOTIF-04 | Phase 6 | Complete |
+| TEAM-01 | Phase 6 | Complete |
+| TEAM-02 | Phase 6 | Complete |
+| TEAM-03 | Phase 6 | Complete |
+| TEAM-04 | Phase 6 | Complete |
 | DEL-01 | Phase 6 | Complete |
 | DEL-02 | Phase 6 | Complete |
 | DEL-03 | Phase 6 | Complete |

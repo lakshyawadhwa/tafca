@@ -121,7 +121,7 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 06-01-PLAN.md -- Notification module (list, mark-read, mark-all-read, unread-count) + TaskNotificationHelper status fix + Team module (workload, leave CRUD, approval queue)
+- [x] 06-01-PLAN.md -- Notification module (list, mark-read, mark-all-read, unread-count) + TaskNotificationHelper status fix + Team module (workload, leave CRUD, approval queue)
 - [x] 06-02-PLAN.md -- Dashboard aggregation endpoint + Recently deleted cross-entity query and restore + Firm settings CRUD
 - [ ] 06-03-PLAN.md -- All 7 frontend pages (dashboard, team workload, leave, settings/users, audit log, recently deleted) + notification bell + sidebar admin section
 
@@ -137,4 +137,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Frontend Foundation | 2/3 | In Progress|  |
 | 4. Client & Engagement Management | 0/3 | Not started | - |
 | 5. Task Engine | 0/3 | Not started | - |
-| 6. Notifications, Team, Dashboard & Admin | 0/3 | Not started | - |
+| 6. Notifications, Team, Dashboard & Admin | 2/3 | In Progress|  |
