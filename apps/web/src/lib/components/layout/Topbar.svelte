@@ -1,8 +1,9 @@
 <script lang="ts">
   import Breadcrumbs from './Breadcrumbs.svelte';
+  import NotificationBell from './NotificationBell.svelte';
   import UserMenu from './UserMenu.svelte';
   import { toggleMobileOpen } from '$lib/stores/sidebar.svelte';
-  import { Bell, Menu } from 'lucide-svelte';
+  import { Menu } from 'lucide-svelte';
 
   interface Props {
     user: NonNullable<App.Locals['user']>;
@@ -31,17 +32,7 @@
   </div>
 
   <div class="flex items-center gap-4">
-    <!-- Notification bell -->
-    <button
-      class="relative rounded-md p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
-      aria-label="Notifications"
-      type="button"
-    >
-      <Bell class="h-5 w-5" />
-      <!-- Notification dot — hidden for now, structure for future -->
-      <!-- <span class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500"></span> -->
-    </button>
-
+    <NotificationBell />
     <UserMenu {user} />
   </div>
 </header>

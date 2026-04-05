@@ -4,7 +4,7 @@
 		type
 	}: {
 		status: string;
-		type: 'task' | 'engagement' | 'client' | 'priority';
+		type: 'task' | 'engagement' | 'client' | 'priority' | 'role' | 'userStatus' | 'leaveStatus' | 'workload';
 	} = $props();
 
 	// Complete class strings — never dynamically interpolated (TailwindCSS v4 requirement)
@@ -38,11 +38,41 @@
 		PROSPECT: 'text-purple-700 bg-purple-50 border-purple-200'
 	};
 
+	const ROLE_COLORS: Record<string, string> = {
+		PARTNER: 'text-indigo-700 bg-indigo-50 border-indigo-200',
+		MANAGER: 'text-blue-700 bg-blue-50 border-blue-200',
+		JUNIOR_CA: 'text-green-700 bg-green-50 border-green-200',
+		ARTICLE: 'text-amber-700 bg-amber-50 border-amber-200',
+		ADMIN: 'text-purple-700 bg-purple-50 border-purple-200'
+	};
+
+	const USER_STATUS_COLORS: Record<string, string> = {
+		Active: 'text-green-700 bg-green-50 border-green-200',
+		Inactive: 'text-gray-500 bg-gray-50 border-gray-200'
+	};
+
+	const LEAVE_STATUS_COLORS: Record<string, string> = {
+		PENDING: 'text-amber-700 bg-amber-50 border-amber-200',
+		APPROVED: 'text-green-700 bg-green-50 border-green-200',
+		REJECTED: 'text-red-700 bg-red-50 border-red-200',
+		CANCELLED: 'text-gray-500 bg-gray-50 border-gray-200'
+	};
+
+	const WORKLOAD_COLORS: Record<string, string> = {
+		UNDERUTILISED: 'text-amber-700 bg-amber-50 border-amber-200',
+		BALANCED: 'text-green-700 bg-green-50 border-green-200',
+		OVERLOADED: 'text-red-700 bg-red-50 border-red-200'
+	};
+
 	const COLOR_MAPS: Record<string, Record<string, string>> = {
 		task: TASK_STATUS_COLORS,
 		priority: TASK_PRIORITY_COLORS,
 		engagement: ENGAGEMENT_STATUS_COLORS,
-		client: CLIENT_STATUS_COLORS
+		client: CLIENT_STATUS_COLORS,
+		role: ROLE_COLORS,
+		userStatus: USER_STATUS_COLORS,
+		leaveStatus: LEAVE_STATUS_COLORS,
+		workload: WORKLOAD_COLORS
 	};
 
 	const FALLBACK_COLORS = 'text-gray-600 bg-gray-50 border-gray-200';

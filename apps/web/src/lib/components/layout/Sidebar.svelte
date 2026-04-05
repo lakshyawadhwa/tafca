@@ -15,6 +15,8 @@
     Settings,
     ChevronLeft,
     ChevronRight,
+    FileText,
+    Trash2,
   } from 'lucide-svelte';
 
   interface NavItem {
@@ -31,6 +33,14 @@
     { label: 'Team', href: '/team', icon: UserCircle },
     { label: 'Settings', href: '/settings', icon: Settings },
   ];
+
+  const adminItems: NavItem[] = [
+    { label: 'Audit Log', href: '/audit-log', icon: FileText },
+    { label: 'Recently Deleted', href: '/recently-deleted', icon: Trash2 },
+  ];
+
+  let userRole = $derived($page.data.user?.role);
+  let isAdmin = $derived(userRole === 'PARTNER' || userRole === 'ADMIN');
 
   function isActive(href: string, pathname: string): boolean {
     if (href === '/') return pathname === '/';
@@ -112,6 +122,40 @@
         </li>
       {/each}
     </ul>
+
+    <!-- Admin section (PARTNER/ADMIN only) -->
+    {#if isAdmin}
+      <div class="border-t border-gray-200 mt-4 mb-2"></div>
+      {#if !isSidebarCollapsed() || isMobileOpen()}
+        <p class="px-6 text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Admin</p>
+      {/if}
+      <ul class="flex flex-col gap-1">
+        {#each adminItems as item (item.href)}
+          {@const active = isActive(item.href, $page.url.pathname)}
+          <li>
+            <a
+              href={item.href}
+              onclick={handleNavClick}
+              title={isSidebarCollapsed() && !isMobileOpen() ? item.label : undefined}
+              class={[
+                'flex h-10 items-center gap-3 transition-colors',
+                isSidebarCollapsed() && !isMobileOpen()
+                  ? 'justify-center px-0'
+                  : 'px-6',
+                active
+                  ? 'border-l-3 border-blue-600 bg-blue-50 text-blue-600'
+                  : 'border-l-3 border-transparent text-gray-700 hover:bg-gray-100',
+              ].join(' ')}
+            >
+              <item.icon class="h-5 w-5 shrink-0" />
+              {#if !isSidebarCollapsed() || isMobileOpen()}
+                <span class="text-sm font-medium">{item.label}</span>
+              {/if}
+            </a>
+          </li>
+        {/each}
+      </ul>
+    {/if}
   </nav>
 
   <!-- Toggle button (desktop only) -->

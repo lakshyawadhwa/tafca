@@ -9,7 +9,10 @@ const ROUTE_LABELS: Record<string, string> = {
   '/engagements': 'Engagements',
   '/tasks': 'Tasks',
   '/team': 'Team',
+  '/team/leave': 'Leave',
   '/settings': 'Settings',
+  '/audit-log': 'Audit Log',
+  '/recently-deleted': 'Recently Deleted',
 };
 
 /**
