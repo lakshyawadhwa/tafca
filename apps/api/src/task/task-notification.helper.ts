@@ -3,6 +3,7 @@ import {
   TaskStatus,
   NotificationType,
   NotificationChannel,
+  NotificationStatus,
 } from '@ca-practice-os/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { FirmScopedService } from '../common/base/firm-scoped.service';
@@ -190,7 +191,8 @@ export class TaskNotificationHelper extends FirmScopedService {
         entityType,
         entityId,
         channel: NotificationChannel.IN_APP,
-        // status defaults to PENDING in schema
+        status: NotificationStatus.SENT,
+        sentAt: new Date(),
       },
     });
   }

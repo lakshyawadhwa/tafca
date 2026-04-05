@@ -21,6 +21,7 @@ import { EngagementModule } from './engagement/engagement.module';
 import { ActionLogModule } from './action-log/action-log.module';
 import { ActionLogInterceptor } from './action-log/action-log.interceptor';
 import { TaskModule } from './task/task.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { TaskModule } from './task/task.module';
     EngagementModule,
     ActionLogModule,
     TaskModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [
