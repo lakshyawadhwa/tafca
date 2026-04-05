@@ -117,13 +117,13 @@ Plans:
   3. User can view team workload (open tasks, overdue count, load status per person) and submit/approve/reject leave requests
   4. Partner/Admin can view recently deleted records across all entity types and restore any record within 30 days
   5. Firm settings, user management, and audit log pages are accessible and functional
-**Plans**: TBD
+**Plans**: 3 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 06-01: Notification backend and team/workload/leave backend
-- [ ] 06-02: Recently deleted backend and remaining API endpoints
-- [ ] 06-03: Dashboard, team, admin, and settings frontend pages
+- [ ] 06-01-PLAN.md -- Notification module (list, mark-read, mark-all-read, unread-count) + TaskNotificationHelper status fix + Team module (workload, leave CRUD, approval queue)
+- [ ] 06-02-PLAN.md -- Dashboard aggregation endpoint + Recently deleted cross-entity query and restore + Firm settings CRUD
+- [ ] 06-03-PLAN.md -- All 7 frontend pages (dashboard, team workload, leave, settings/users, audit log, recently deleted) + notification bell + sidebar admin section
 
 ## Progress
 
