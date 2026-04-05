@@ -25,6 +25,7 @@ import { NotificationModule } from './notification/notification.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { FirmSettingsModule } from './firm-settings/firm-settings.module';
 import { RecentlyDeletedModule } from './recently-deleted/recently-deleted.module';
+import { TeamModule } from './team/team.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { RecentlyDeletedModule } from './recently-deleted/recently-deleted.modul
     DashboardModule,
     FirmSettingsModule,
     RecentlyDeletedModule,
+    TeamModule,
   ],
   controllers: [AppController],
   providers: [

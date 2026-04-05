@@ -8,3 +8,4 @@ export * from './types/address.type';
 export * from './types/firm-settings.type';
 export * from './types/notification-preferences.type';
 export * from './types/recurrence-config.type';
+export * from './types/workload-status.type';
