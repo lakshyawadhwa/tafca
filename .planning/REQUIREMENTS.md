@@ -143,12 +143,12 @@ Requirements for initial release. Task tracking + client/engagement management i
 - [x] **PAGE-04**: Task list with table view (sortable/filterable) and Kanban view (drag-to-change-status)
 - [x] **PAGE-05**: Task detail page (status controls, checklist, dependencies, comments, activity timeline)
 - [x] **PAGE-06**: Dashboard (my tasks: overdue/today/this week, approval queue, recent notifications)
-- [ ] **PAGE-07**: Team workload table with load status indicators
-- [ ] **PAGE-08**: Leave request form + approval interface
+- [x] **PAGE-07**: Team workload table with load status indicators
+- [x] **PAGE-08**: Leave request form + approval interface
 - [x] **PAGE-09**: Firm settings page (buffer days, toggles)
-- [ ] **PAGE-10**: User management page (list, invite, edit role, deactivate)
-- [ ] **PAGE-11**: Audit log page with filters
-- [ ] **PAGE-12**: Recently deleted page with restore buttons
+- [x] **PAGE-10**: User management page (list, invite, edit role, deactivate)
+- [x] **PAGE-11**: Audit log page with filters
+- [x] **PAGE-12**: Recently deleted page with restore buttons
 
 ### Error Handling
 
@@ -315,12 +315,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DEL-02 | Phase 6 | Complete |
 | DEL-03 | Phase 6 | Complete |
 | PAGE-06 | Phase 6 | Complete |
-| PAGE-07 | Phase 6 | Pending |
-| PAGE-08 | Phase 6 | Pending |
+| PAGE-07 | Phase 6 | Complete |
+| PAGE-08 | Phase 6 | Complete |
 | PAGE-09 | Phase 6 | Complete |
-| PAGE-10 | Phase 6 | Pending |
-| PAGE-11 | Phase 6 | Pending |
-| PAGE-12 | Phase 6 | Pending |
+| PAGE-10 | Phase 6 | Complete |
+| PAGE-11 | Phase 6 | Complete |
+| PAGE-12 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 104 total
