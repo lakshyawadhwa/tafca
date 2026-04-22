@@ -34,6 +34,8 @@ model Task {
   firm                 Firm         @relation(fields: [firmId], references: [id])
   engagement           Engagement?  @relation(fields: [engagementId], references: [id])
   client               Client?      @relation(fields: [clientId], references: [id])
+  assignee             User?        @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  reviewer             User?        @relation("TaskReviewer", fields: [reviewerId], references: [id])
   parentTask           Task?        @relation("SubTasks", fields: [parentTaskId], references: [id])
   subTasks             Task[]       @relation("SubTasks")
   recurrenceParent     Task?        @relation("RecurringChain", fields: [recurrenceParentId], references: [id])

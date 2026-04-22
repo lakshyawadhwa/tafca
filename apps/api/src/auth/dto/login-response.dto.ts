@@ -6,6 +6,7 @@ export class LoginUserDto {
   fullName!: string;
   role!: UserRole;
   firmId!: string;
+  firmName!: string;
   avatarUrl!: string | null;
 }
 

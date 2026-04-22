@@ -1,4 +1,4 @@
-import { TaskStatus } from '../enums/task-status.enum';
+import { TaskStatus } from '../enums/task-status.enum.js';
 
 export const TASK_STATUS_TRANSITIONS: Record<TaskStatus, TaskStatus[]> = {
   [TaskStatus.TO_DO]: [TaskStatus.IN_PROGRESS, TaskStatus.CANCELLED],

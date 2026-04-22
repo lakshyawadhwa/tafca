@@ -255,6 +255,7 @@ export class AuthService {
         fullName: userRecord.fullName,
         role: userRecord.role as UserRole,
         firmId: userRecord.firmId,
+        firmName: userRecord.firm.name,
         avatarUrl: userRecord.avatarUrl,
       },
     };
@@ -420,7 +421,7 @@ export class AuthService {
     return this.jwtService.sign(
       { ...payload },
       {
-        expiresIn: '15m',
+        expiresIn: '1d',
         issuer: this.configService.get<string>('JWT_ISSUER', 'ca-practice-os'),
       },
     );

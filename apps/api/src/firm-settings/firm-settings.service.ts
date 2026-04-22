@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { FirmScopedService } from '../common/base/firm-scoped.service';
 import { UpdateFirmSettingsDto } from './dto/update-firm-settings.dto';
+import { UpdateFirmProfileDto } from './dto/update-firm-profile.dto';
 import { FirmSettingsResponseDto } from './dto/firm-settings-response.dto';
 import { FirmSettings } from '@ca-practice-os/shared';
 
@@ -80,5 +81,64 @@ export class FirmSettingsService extends FirmScopedService {
       require_partner_approval_for:
         merged.require_partner_approval_for ?? DEFAULT_SETTINGS.require_partner_approval_for,
     };
+  }
+
+  async updateProfile(dto: UpdateFirmProfileDto) {
+    const firmId = this.getFirmId();
+    const userId = this.getUserId();
+
+    const firm = await this.unscopedPrisma.firm.findFirst({
+      where: { id: firmId },
+    });
+
+    if (!firm) {
+      throw new NotFoundException('Firm not found');
+    }
+
+    const data: Record<string, unknown> = { updatedBy: userId };
+    if (dto.displayName !== undefined) data.displayName = dto.displayName;
+    if (dto.icaiRegistration !== undefined) data.icaiRegistration = dto.icaiRegistration;
+    if (dto.pan !== undefined) data.pan = dto.pan;
+    if (dto.phone !== undefined) data.phone = dto.phone;
+    if (dto.email !== undefined) data.email = dto.email;
+
+    const updated = await this.unscopedPrisma.firm.update({
+      where: { id: firmId },
+      data,
+      select: {
+        id: true,
+        name: true,
+        displayName: true,
+        icaiRegistration: true,
+        pan: true,
+        phone: true,
+        email: true,
+      },
+    });
+
+    return updated;
+  }
+
+  async getProfile() {
+    const firmId = this.getFirmId();
+
+    const firm = await this.unscopedPrisma.firm.findFirst({
+      where: { id: firmId },
+      select: {
+        id: true,
+        name: true,
+        displayName: true,
+        icaiRegistration: true,
+        pan: true,
+        phone: true,
+        email: true,
+      },
+    });
+
+    if (!firm) {
+      throw new NotFoundException('Firm not found');
+    }
+
+    return firm;
   }
 }

@@ -26,9 +26,17 @@ export interface DashboardNotificationDto {
   readAt: Date | null;
 }
 
+export interface OnboardingStatusDto {
+  firmProfileDone: boolean;
+  teamInvited: boolean;
+  clientAdded: boolean;
+  allDone: boolean;
+}
+
 export interface DashboardResponseDto {
   taskSummary: TaskSummaryDto;
   myTasks: DashboardTaskDto[];
   approvalQueue: DashboardTaskDto[];
   recentNotifications: DashboardNotificationDto[];
+  onboarding: OnboardingStatusDto;
 }

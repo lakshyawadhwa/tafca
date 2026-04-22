@@ -23,6 +23,8 @@ model User {
   firm                     Firm      @relation(fields: [firmId], references: [id])
   sessions                 Session[]
   roleHistory              UserRoleHistory[]
+  assignedTasks            Task[]    @relation("TaskAssignee")
+  reviewingTasks           Task[]    @relation("TaskReviewer")
 
   @@unique([firmId, email], map: "idx_users_email_firm")
   @@index([firmId])

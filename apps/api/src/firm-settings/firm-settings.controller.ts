@@ -1,6 +1,7 @@
 import { Controller, Get, Patch, Body } from '@nestjs/common';
 import { FirmSettingsService } from './firm-settings.service';
 import { UpdateFirmSettingsDto } from './dto/update-firm-settings.dto';
+import { UpdateFirmProfileDto } from './dto/update-firm-profile.dto';
 import { FirmSettingsResponseDto } from './dto/firm-settings-response.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '@ca-practice-os/shared';
@@ -20,5 +21,17 @@ export class FirmSettingsController {
     @Body() dto: UpdateFirmSettingsDto,
   ): Promise<FirmSettingsResponseDto> {
     return this.firmSettingsService.updateSettings(dto);
+  }
+
+  @Get('profile')
+  @Roles(UserRole.PARTNER, UserRole.ADMIN)
+  async getProfile() {
+    return this.firmSettingsService.getProfile();
+  }
+
+  @Patch('profile')
+  @Roles(UserRole.PARTNER, UserRole.ADMIN)
+  async updateProfile(@Body() dto: UpdateFirmProfileDto) {
+    return this.firmSettingsService.updateProfile(dto);
   }
 }

@@ -1,0 +1,86 @@
+<script lang="ts">
+  import './app.css';
+  import { QueryClientProvider } from '@tanstack/svelte-query';
+  import { queryClient } from './lib/query';
+  import { addRoute, getMatch, getPath, replace } from './lib/router.svelte';
+  import { isAuthenticated } from './lib/auth.svelte';
+  import ToastContainer from './components/ToastContainer.svelte';
+  import AppShell from './components/AppShell.svelte';
+
+  // Pages
+  import Login from './pages/Login.svelte';
+  import Register from './pages/Register.svelte';
+  import Dashboard from './pages/Dashboard.svelte';
+  import TaskList from './pages/TaskList.svelte';
+  import TaskDetail from './pages/TaskDetail.svelte';
+  import TaskCreate from './pages/TaskCreate.svelte';
+  import ClientList from './pages/ClientList.svelte';
+  import ClientDetail from './pages/ClientDetail.svelte';
+  import ClientForm from './pages/ClientForm.svelte';
+  import EngagementList from './pages/EngagementList.svelte';
+  import Team from './pages/Team.svelte';
+  import Leave from './pages/Leave.svelte';
+  import Settings from './pages/Settings.svelte';
+  import AuditLog from './pages/AuditLog.svelte';
+  import RecentlyDeleted from './pages/RecentlyDeleted.svelte';
+  import Welcome from './pages/Welcome.svelte';
+  import Onboarding from './pages/Onboarding.svelte';
+  import NotFound from './pages/NotFound.svelte';
+
+  // --- Route definitions ---
+  // Auth
+  addRoute('/login', Login);
+  addRoute('/register', Register);
+  // App
+  addRoute('/welcome', Welcome);
+  addRoute('/onboarding', Onboarding);
+  addRoute('/', Dashboard);
+  addRoute('/tasks', TaskList);
+  addRoute('/tasks/new', TaskCreate);
+  addRoute('/tasks/:id', TaskDetail);
+  addRoute('/clients', ClientList);
+  addRoute('/clients/new', ClientForm);
+  addRoute('/clients/:id', ClientDetail);
+  addRoute('/clients/:id/edit', ClientForm);
+  addRoute('/engagements', EngagementList);
+  addRoute('/team', Team);
+  addRoute('/team/leave', Leave);
+  addRoute('/settings', Settings);
+  addRoute('/audit-log', AuditLog);
+  addRoute('/recently-deleted', RecentlyDeleted);
+
+  const publicPaths = new Set(['/login', '/register']);
+  const fullScreenPaths = new Set(['/onboarding']);
+
+  const match = $derived(getMatch());
+  const path = $derived(getPath());
+  const authed = $derived(isAuthenticated());
+  const isPublicPage = $derived(publicPaths.has(path));
+  const isFullScreen = $derived(fullScreenPaths.has(path));
+
+  // Auth guard
+  $effect(() => {
+    if (!authed && !isPublicPage) {
+      replace('/login');
+    }
+    if (authed && isPublicPage) {
+      replace('/');
+    }
+  });
+
+  const Component = $derived(match?.component ?? NotFound);
+  const params = $derived(match?.params ?? {});
+</script>
+
+<QueryClientProvider client={queryClient}>
+  {#if isPublicPage || !authed}
+    <Component {...params} />
+  {:else if isFullScreen}
+    <Component {...params} />
+  {:else}
+    <AppShell>
+      <Component {...params} />
+    </AppShell>
+  {/if}
+  <ToastContainer />
+</QueryClientProvider>

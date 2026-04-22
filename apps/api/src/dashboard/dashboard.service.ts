@@ -6,6 +6,7 @@ import {
   DashboardTaskDto,
   DashboardNotificationDto,
   TaskSummaryDto,
+  OnboardingStatusDto,
 } from './dto/dashboard-response.dto';
 
 @Injectable()
@@ -23,6 +24,8 @@ export class DashboardService extends FirmScopedService {
     const activeStatuses = { notIn: [TaskStatus.DONE, TaskStatus.CANCELLED] };
     const isReviewer = userRole === UserRole.PARTNER || userRole === UserRole.MANAGER;
 
+    const firmId = this.getFirmId();
+
     const [
       overdueCount,
       dueTodayCount,
@@ -31,6 +34,9 @@ export class DashboardService extends FirmScopedService {
       myTasks,
       approvalQueue,
       recentNotifications,
+      firmProfile,
+      teamCount,
+      clientCount,
     ] = await Promise.all([
       // a. Overdue count
       this.prisma.task.count({
@@ -114,6 +120,20 @@ export class DashboardService extends FirmScopedService {
         orderBy: { createdAt: 'desc' },
         take: 5,
       }),
+
+      // h. Firm profile (for onboarding check)
+      this.unscopedPrisma.firm.findFirst({
+        where: { id: firmId },
+        select: { icaiRegistration: true, pan: true },
+      }),
+
+      // i. Team member count (for onboarding check)
+      this.unscopedPrisma.user.count({
+        where: { firmId, deletedAt: null, isActive: true },
+      }),
+
+      // j. Client count (for onboarding check)
+      this.prisma.client.count(),
     ]);
 
     // Batch-fetch assignee names for approval queue
@@ -170,11 +190,23 @@ export class DashboardService extends FirmScopedService {
       }),
     );
 
+    const firmProfileDone = !!(firmProfile?.icaiRegistration || firmProfile?.pan);
+    const teamInvited = teamCount > 1;
+    const clientAdded = clientCount > 0;
+
+    const onboarding: OnboardingStatusDto = {
+      firmProfileDone,
+      teamInvited,
+      clientAdded,
+      allDone: firmProfileDone && teamInvited && clientAdded,
+    };
+
     return {
       taskSummary,
       myTasks: mappedMyTasks,
       approvalQueue: mappedApprovalQueue,
       recentNotifications: mappedNotifications,
+      onboarding,
     };
   }
 }

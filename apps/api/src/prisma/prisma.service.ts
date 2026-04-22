@@ -10,6 +10,16 @@ export class PrismaService
   private _scopedClient: ReturnType<typeof createFirmScopedClient> | null =
     null;
 
+  // PrismaClient wraps instances in a Proxy. Inside getters, `this` points to
+  // the raw target (without the Proxy), so model delegates like `.user` are
+  // missing. We capture the proxied reference in the constructor instead.
+  private readonly _self: PrismaClient;
+
+  constructor() {
+    super();
+    this._self = this;
+  }
+
   async onModuleInit() {
     await this.$connect();
   }
@@ -25,7 +35,7 @@ export class PrismaService
    */
   get scoped() {
     if (!this._scopedClient) {
-      this._scopedClient = createFirmScopedClient(this);
+      this._scopedClient = createFirmScopedClient(this._self);
     }
     return this._scopedClient;
   }
@@ -35,6 +45,6 @@ export class PrismaService
    * Use this for system-level operations: seeding, migrations, auth lookups.
    */
   get unscoped(): PrismaClient {
-    return this;
+    return this._self;
   }
 }

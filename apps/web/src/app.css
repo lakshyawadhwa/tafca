@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 
-@theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+/* Restore cursor:pointer on interactive elements (Tailwind preflight removes it) */
+button, [role="button"], a, select, summary, [onclick] {
+  cursor: pointer;
 }
