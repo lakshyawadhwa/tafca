@@ -5,7 +5,7 @@ import {
   NotFoundException,
   Logger,
 } from '@nestjs/common';
-import { UserRole, EngagementStatus } from '@ca-practice-os/shared';
+import { UserRole, EngagementStatus, EntityType } from '@ca-practice-os/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { FirmScopedService } from '../common/base/firm-scoped.service';
 import { CreateClientDto } from './dto/create-client.dto';
@@ -93,6 +93,14 @@ export class ClientService extends FirmScopedService {
    * Validates displayName uniqueness (case-insensitive) and role assignments.
    */
   async createClient(dto: CreateClientDto): Promise<ClientResponseDto> {
+    // AC-2: PAN required for non-INDIVIDUAL entity types
+    if (dto.entityType !== EntityType.INDIVIDUAL && !dto.pan) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        errors: [{ field: 'pan', message: 'PAN is required for non-individual entities' }],
+      });
+    }
+
     // Check displayName uniqueness within firm (case-insensitive)
     await this.assertDisplayNameUnique(dto.displayName);
 

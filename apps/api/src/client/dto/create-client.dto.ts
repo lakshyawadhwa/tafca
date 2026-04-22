@@ -44,6 +44,11 @@ export class CreateClientDto {
   @IsEnum(ClientStatus)
   status?: ClientStatus;
 
+  /**
+   * AC-1: invalid PAN format → 400.
+   * AC-2: PAN required for non-INDIVIDUAL → enforced in ClientService (cross-field check).
+   * @Matches runs when pan is provided. @IsOptional skips validation when absent.
+   */
   @IsOptional()
   @IsString()
   @Matches(REGEX.PAN, {
@@ -71,9 +76,14 @@ export class CreateClientDto {
   @MaxLength(100)
   primaryContactName?: string;
 
+  /**
+   * AC-6: Phone must be E.164 format if provided (e.g., +919876543210).
+   */
   @IsOptional()
   @IsString()
-  @MaxLength(15)
+  @Matches(REGEX.E164_PHONE, {
+    message: 'Phone must be in E.164 format (e.g., +919876543210)',
+  })
   primaryContactPhone?: string;
 
   @IsOptional()
