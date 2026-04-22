@@ -7,3 +7,8 @@ export const REGEX = {
   EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   SNAKE_CASE_KEY: /^[a-z][a-z0-9_]{0,49}$/,
 };
+
+/** Named regex exports for use in class-validator @Matches() decorators */
+export const PAN = REGEX.PAN;
+export const GSTIN = REGEX.GSTIN;
+export const PHONE_E164 = REGEX.E164_PHONE;
