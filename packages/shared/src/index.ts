@@ -4,6 +4,7 @@ export * from './constants/engagement-status-transitions.js';
 export * from './constants/regex-patterns.js';
 export * from './constants/limits.js';
 export * from './constants/mime-types.js';
+export * from './constants/role-permissions.js';
 export * from './types/address.type.js';
 export * from './types/firm-settings.type.js';
 export * from './types/notification-preferences.type.js';

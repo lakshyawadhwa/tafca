@@ -26,6 +26,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { FirmSettingsModule } from './firm-settings/firm-settings.module';
 import { RecentlyDeletedModule } from './recently-deleted/recently-deleted.module';
 import { TeamModule } from './team/team.module';
+import { PermissionModule } from './permission/permission.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { TeamModule } from './team/team.module';
     FirmSettingsModule,
     RecentlyDeletedModule,
     TeamModule,
+    PermissionModule,
   ],
   controllers: [AppController],
   providers: [

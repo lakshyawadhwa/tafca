@@ -11,12 +11,12 @@ model LeaveRecord {
   approvedBy String?     @map("approved_by") @db.Uuid
   approvedAt DateTime?   @map("approved_at") @db.Timestamptz()
 
-  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt  DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-  createdBy  String      @map("created_by") @db.Uuid
-  updatedBy  String      @map("updated_by") @db.Uuid
-  deletedAt  DateTime?   @map("deleted_at") @db.Timestamptz()
-  deletedBy  String?     @map("deleted_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy String    @map("created_by") @db.Uuid
+  updatedBy String    @map("updated_by") @db.Uuid
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedBy String?   @map("deleted_by") @db.Uuid
 
   @@index([firmId])
   @@index([userId])

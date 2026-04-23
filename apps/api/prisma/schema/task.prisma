@@ -1,51 +1,51 @@
 model Task {
-  id                   String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  firmId               String       @map("firm_id") @db.Uuid
-  engagementId         String?      @map("engagement_id") @db.Uuid
-  clientId             String?      @map("client_id") @db.Uuid
-  parentTaskId         String?      @map("parent_task_id") @db.Uuid
-  title                String       @db.VarChar(300)
-  description          String?      @db.Text
-  status               TaskStatus   @default(TO_DO)
-  priority             TaskPriority @default(MEDIUM)
-  assigneeId           String?      @map("assignee_id") @db.Uuid
-  reviewerId           String?      @map("reviewer_id") @db.Uuid
-  dueDate              DateTime?    @map("due_date") @db.Date
-  internalDueDate      DateTime?    @map("internal_due_date") @db.Date
-  statutoryDeadlineId  String?      @map("statutory_deadline_id") @db.Uuid
-  estimatedHours       Decimal?     @map("estimated_hours") @db.Decimal(5, 2)
-  isRecurring          Boolean      @default(false) @map("is_recurring")
-  recurrenceConfig     Json?        @map("recurrence_config") @db.JsonB
-  recurrenceParentId   String?      @map("recurrence_parent_id") @db.Uuid
-  tags                 String[]     @default([]) @db.VarChar(50)
-  customFields         Json         @default("{}") @map("custom_fields") @db.JsonB
-  completedAt          DateTime?    @map("completed_at") @db.Timestamptz()
-  cancelledAt          DateTime?    @map("cancelled_at") @db.Timestamptz()
-  overdueNotifiedAt    DateTime?    @map("overdue_notified_at") @db.Timestamptz()
+  id                  String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId              String       @map("firm_id") @db.Uuid
+  engagementId        String?      @map("engagement_id") @db.Uuid
+  clientId            String?      @map("client_id") @db.Uuid
+  parentTaskId        String?      @map("parent_task_id") @db.Uuid
+  title               String       @db.VarChar(300)
+  description         String?      @db.Text
+  status              TaskStatus   @default(TO_DO)
+  priority            TaskPriority @default(MEDIUM)
+  assigneeId          String?      @map("assignee_id") @db.Uuid
+  reviewerId          String?      @map("reviewer_id") @db.Uuid
+  dueDate             DateTime?    @map("due_date") @db.Date
+  internalDueDate     DateTime?    @map("internal_due_date") @db.Date
+  statutoryDeadlineId String?      @map("statutory_deadline_id") @db.Uuid
+  estimatedHours      Decimal?     @map("estimated_hours") @db.Decimal(5, 2)
+  isRecurring         Boolean      @default(false) @map("is_recurring")
+  recurrenceConfig    Json?        @map("recurrence_config") @db.JsonB
+  recurrenceParentId  String?      @map("recurrence_parent_id") @db.Uuid
+  tags                String[]     @default([]) @db.VarChar(50)
+  customFields        Json         @default("{}") @map("custom_fields") @db.JsonB
+  completedAt         DateTime?    @map("completed_at") @db.Timestamptz()
+  cancelledAt         DateTime?    @map("cancelled_at") @db.Timestamptz()
+  overdueNotifiedAt   DateTime?    @map("overdue_notified_at") @db.Timestamptz()
 
-  createdAt            DateTime     @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt            DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-  createdBy            String       @map("created_by") @db.Uuid
-  updatedBy            String       @map("updated_by") @db.Uuid
-  deletedAt            DateTime?    @map("deleted_at") @db.Timestamptz()
-  deletedBy            String?      @map("deleted_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy String    @map("created_by") @db.Uuid
+  updatedBy String    @map("updated_by") @db.Uuid
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedBy String?   @map("deleted_by") @db.Uuid
 
   // Relations
-  firm                 Firm         @relation(fields: [firmId], references: [id])
-  engagement           Engagement?  @relation(fields: [engagementId], references: [id])
-  client               Client?      @relation(fields: [clientId], references: [id])
-  assignee             User?        @relation("TaskAssignee", fields: [assigneeId], references: [id])
-  reviewer             User?        @relation("TaskReviewer", fields: [reviewerId], references: [id])
-  parentTask           Task?        @relation("SubTasks", fields: [parentTaskId], references: [id])
-  subTasks             Task[]       @relation("SubTasks")
-  recurrenceParent     Task?        @relation("RecurringChain", fields: [recurrenceParentId], references: [id])
-  recurrenceChildren   Task[]       @relation("RecurringChain")
-  checklists           TaskChecklist[]
-  comments             TaskComment[]
-  activityLog          TaskActivityLog[]
-  dependsOn            TaskDependency[] @relation("DependentTask")
-  dependedOnBy         TaskDependency[] @relation("PredecessorTask")
-  documents            Document[]
+  firm               Firm              @relation(fields: [firmId], references: [id])
+  engagement         Engagement?       @relation(fields: [engagementId], references: [id])
+  client             Client?           @relation(fields: [clientId], references: [id])
+  assignee           User?             @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  reviewer           User?             @relation("TaskReviewer", fields: [reviewerId], references: [id])
+  parentTask         Task?             @relation("SubTasks", fields: [parentTaskId], references: [id])
+  subTasks           Task[]            @relation("SubTasks")
+  recurrenceParent   Task?             @relation("RecurringChain", fields: [recurrenceParentId], references: [id])
+  recurrenceChildren Task[]            @relation("RecurringChain")
+  checklists         TaskChecklist[]
+  comments           TaskComment[]
+  activityLog        TaskActivityLog[]
+  dependsOn          TaskDependency[]  @relation("DependentTask")
+  dependedOnBy       TaskDependency[]  @relation("PredecessorTask")
+  documents          Document[]
 
   @@index([firmId])
   @@index([engagementId])
@@ -66,15 +66,15 @@ model TaskChecklist {
   completedBy  String?   @map("completed_by") @db.Uuid
   displayOrder Int       @default(0) @map("display_order") @db.SmallInt
 
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-  createdBy    String    @map("created_by") @db.Uuid
-  updatedBy    String    @map("updated_by") @db.Uuid
-  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz()
-  deletedBy    String?   @map("deleted_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy String    @map("created_by") @db.Uuid
+  updatedBy String    @map("updated_by") @db.Uuid
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedBy String?   @map("deleted_by") @db.Uuid
 
   // Relations
-  task         Task      @relation(fields: [taskId], references: [id])
+  task Task @relation(fields: [taskId], references: [id])
 
   @@index([taskId])
   @@index([firmId])
@@ -87,11 +87,11 @@ model TaskDependency {
   taskId          String @map("task_id") @db.Uuid
   dependsOnTaskId String @map("depends_on_task_id") @db.Uuid
 
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
   // Relations
-  task            Task   @relation("DependentTask", fields: [taskId], references: [id])
-  dependsOnTask   Task   @relation("PredecessorTask", fields: [dependsOnTaskId], references: [id])
+  task          Task @relation("DependentTask", fields: [taskId], references: [id])
+  dependsOnTask Task @relation("PredecessorTask", fields: [dependsOnTaskId], references: [id])
 
   @@unique([taskId, dependsOnTaskId])
   @@index([taskId])
@@ -100,25 +100,25 @@ model TaskDependency {
 }
 
 model TaskComment {
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  taskId          String    @map("task_id") @db.Uuid
-  firmId          String    @map("firm_id") @db.Uuid
-  authorId        String    @map("author_id") @db.Uuid
-  body            String    @db.Text
-  mentions        String[]  @default([]) @db.Uuid
-  parentCommentId String?   @map("parent_comment_id") @db.Uuid
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  taskId          String   @map("task_id") @db.Uuid
+  firmId          String   @map("firm_id") @db.Uuid
+  authorId        String   @map("author_id") @db.Uuid
+  body            String   @db.Text
+  mentions        String[] @default([]) @db.Uuid
+  parentCommentId String?  @map("parent_comment_id") @db.Uuid
 
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-  createdBy       String    @map("created_by") @db.Uuid
-  updatedBy       String    @map("updated_by") @db.Uuid
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz()
-  deletedBy       String?   @map("deleted_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy String    @map("created_by") @db.Uuid
+  updatedBy String    @map("updated_by") @db.Uuid
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedBy String?   @map("deleted_by") @db.Uuid
 
   // Relations
-  task            Task      @relation(fields: [taskId], references: [id])
-  parentComment   TaskComment?  @relation("CommentReplies", fields: [parentCommentId], references: [id])
-  replies         TaskComment[] @relation("CommentReplies")
+  task          Task          @relation(fields: [taskId], references: [id])
+  parentComment TaskComment?  @relation("CommentReplies", fields: [parentCommentId], references: [id])
+  replies       TaskComment[] @relation("CommentReplies")
 
   @@index([taskId])
   @@map("task_comments")
@@ -135,28 +135,28 @@ model TaskActivityLog {
   occurredAt DateTime   @default(now()) @map("occurred_at") @db.Timestamptz()
 
   // Relations
-  task       Task       @relation(fields: [taskId], references: [id])
+  task Task @relation(fields: [taskId], references: [id])
 
   @@index([taskId])
   @@map("task_activity_log")
 }
 
 model TaskTemplate {
-  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  firmId           String?            @map("firm_id") @db.Uuid
-  engagementTypeId String             @map("engagement_type_id") @db.Uuid
-  name             String             @db.VarChar(200)
-  isActive         Boolean            @default(true) @map("is_active")
+  id               String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId           String? @map("firm_id") @db.Uuid
+  engagementTypeId String  @map("engagement_type_id") @db.Uuid
+  name             String  @db.VarChar(200)
+  isActive         Boolean @default(true) @map("is_active")
 
-  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt        DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-  createdBy        String             @map("created_by") @db.Uuid
-  updatedBy        String             @map("updated_by") @db.Uuid
-  deletedAt        DateTime?          @map("deleted_at") @db.Timestamptz()
-  deletedBy        String?            @map("deleted_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy String    @map("created_by") @db.Uuid
+  updatedBy String    @map("updated_by") @db.Uuid
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedBy String?   @map("deleted_by") @db.Uuid
 
   // Relations
-  items            TaskTemplateItem[]
+  items TaskTemplateItem[]
 
   @@index([firmId])
   @@map("task_templates")
@@ -175,11 +175,11 @@ model TaskTemplateItem {
   checklistItems Json      @default("[]") @map("checklist_items") @db.JsonB
   isRequired     Boolean   @default(true) @map("is_required")
 
-  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
 
   // Relations
-  template       TaskTemplate @relation(fields: [templateId], references: [id])
+  template TaskTemplate @relation(fields: [templateId], references: [id])
 
   @@index([templateId])
   @@map("task_template_items")

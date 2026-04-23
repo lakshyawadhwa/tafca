@@ -1,36 +1,37 @@
 model Firm {
-  id                     String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name                   String           @db.VarChar(200)
-  displayName            String?          @map("display_name") @db.VarChar(100)
-  icaiRegistration       String?          @map("icai_registration") @db.VarChar(20)
-  pan                    String?          @db.VarChar(10)
-  gstNumber              String?          @map("gst_number") @db.VarChar(15)
-  address                Json?            @db.JsonB
-  phone                  String?          @db.VarChar(15)
-  email                  String?          @db.VarChar(255)
-  logoUrl                String?          @map("logo_url") @db.VarChar(500)
-  timezone               String           @default("Asia/Kolkata") @db.VarChar(50)
-  financialYearStart     Int              @default(4) @map("financial_year_start") @db.SmallInt
-  subscriptionTier       SubscriptionTier @default(FREE) @map("subscription_tier")
-  subscriptionExpiresAt  DateTime?        @map("subscription_expires_at") @db.Timestamptz()
-  maxUsers               Int              @default(3) @map("max_users") @db.SmallInt
-  settings               Json             @default("{}") @db.JsonB
+  id                    String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String           @db.VarChar(200)
+  displayName           String?          @map("display_name") @db.VarChar(100)
+  icaiRegistration      String?          @map("icai_registration") @db.VarChar(20)
+  pan                   String?          @db.VarChar(10)
+  gstNumber             String?          @map("gst_number") @db.VarChar(15)
+  address               Json?            @db.JsonB
+  phone                 String?          @db.VarChar(15)
+  email                 String?          @db.VarChar(255)
+  logoUrl               String?          @map("logo_url") @db.VarChar(500)
+  timezone              String           @default("Asia/Kolkata") @db.VarChar(50)
+  financialYearStart    Int              @default(4) @map("financial_year_start") @db.SmallInt
+  subscriptionTier      SubscriptionTier @default(FREE) @map("subscription_tier")
+  subscriptionExpiresAt DateTime?        @map("subscription_expires_at") @db.Timestamptz()
+  maxUsers              Int              @default(3) @map("max_users") @db.SmallInt
+  settings              Json             @default("{}") @db.JsonB
 
-  createdAt              DateTime         @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt              DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-  createdBy              String           @map("created_by") @db.Uuid
-  updatedBy              String           @map("updated_by") @db.Uuid
-  deletedAt              DateTime?        @map("deleted_at") @db.Timestamptz()
-  deletedBy              String?          @map("deleted_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy String    @map("created_by") @db.Uuid
+  updatedBy String    @map("updated_by") @db.Uuid
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedBy String?   @map("deleted_by") @db.Uuid
 
   // Relations
-  users                  User[]
-  clients                Client[]
-  engagements            Engagement[]
-  engagementTypes        EngagementType[]
-  tasks                  Task[]
-  documents              Document[]
-  notifications          Notification[]
+  users           User[]
+  clients         Client[]
+  engagements     Engagement[]
+  engagementTypes EngagementType[]
+  tasks           Task[]
+  documents       Document[]
+  notifications   Notification[]
+  rolePermissions FirmRolePermission[]
 
   @@map("firms")
 }

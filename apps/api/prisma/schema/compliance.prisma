@@ -15,55 +15,55 @@ model StatutoryDeadline {
   isActive                 Boolean            @default(true) @map("is_active")
   linkedEngagementTypeCode String?            @map("linked_engagement_type_code") @db.VarChar(50)
 
-  createdAt                DateTime           @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt                DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
 
   // Relations
-  overrides                StatutoryDeadlineOverride[]
-  complianceAssignments    ClientComplianceAssignment[]
-  calendarEntries          ComplianceCalendarEntry[]
+  overrides             StatutoryDeadlineOverride[]
+  complianceAssignments ClientComplianceAssignment[]
+  calendarEntries       ComplianceCalendarEntry[]
 
   @@map("statutory_deadlines")
 }
 
 model StatutoryDeadlineOverride {
-  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  statutoryDeadlineId  String   @map("statutory_deadline_id") @db.Uuid
-  periodLabel          String   @map("period_label") @db.VarChar(50)
-  originalDate         DateTime @map("original_date") @db.Date
-  extendedDate         DateTime @map("extended_date") @db.Date
-  notificationSource   String?  @map("notification_source") @db.VarChar(500)
-  appliedBy            String   @map("applied_by") @db.Uuid
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  statutoryDeadlineId String   @map("statutory_deadline_id") @db.Uuid
+  periodLabel         String   @map("period_label") @db.VarChar(50)
+  originalDate        DateTime @map("original_date") @db.Date
+  extendedDate        DateTime @map("extended_date") @db.Date
+  notificationSource  String?  @map("notification_source") @db.VarChar(500)
+  appliedBy           String   @map("applied_by") @db.Uuid
 
-  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
   // Relations
-  statutoryDeadline    StatutoryDeadline @relation(fields: [statutoryDeadlineId], references: [id])
+  statutoryDeadline StatutoryDeadline @relation(fields: [statutoryDeadlineId], references: [id])
 
   @@index([statutoryDeadlineId])
   @@map("statutory_deadline_overrides")
 }
 
 model ClientComplianceAssignment {
-  id                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  firmId               String    @map("firm_id") @db.Uuid
-  clientId             String    @map("client_id") @db.Uuid
-  statutoryDeadlineId  String    @map("statutory_deadline_id") @db.Uuid
-  isEnabled            Boolean   @default(true) @map("is_enabled")
-  autoGenerateTasks    Boolean   @default(true) @map("auto_generate_tasks")
-  taskTemplateId       String?   @map("task_template_id") @db.Uuid
-  internalBufferDays   Int?      @map("internal_buffer_days") @db.SmallInt
-  customDueDateDay     Int?      @map("custom_due_date_day") @db.SmallInt
+  id                  String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId              String  @map("firm_id") @db.Uuid
+  clientId            String  @map("client_id") @db.Uuid
+  statutoryDeadlineId String  @map("statutory_deadline_id") @db.Uuid
+  isEnabled           Boolean @default(true) @map("is_enabled")
+  autoGenerateTasks   Boolean @default(true) @map("auto_generate_tasks")
+  taskTemplateId      String? @map("task_template_id") @db.Uuid
+  internalBufferDays  Int?    @map("internal_buffer_days") @db.SmallInt
+  customDueDateDay    Int?    @map("custom_due_date_day") @db.SmallInt
 
-  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt            DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-  createdBy            String    @map("created_by") @db.Uuid
-  updatedBy            String    @map("updated_by") @db.Uuid
-  deletedAt            DateTime? @map("deleted_at") @db.Timestamptz()
-  deletedBy            String?   @map("deleted_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdBy String    @map("created_by") @db.Uuid
+  updatedBy String    @map("updated_by") @db.Uuid
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedBy String?   @map("deleted_by") @db.Uuid
 
   // Relations
-  statutoryDeadline    StatutoryDeadline @relation(fields: [statutoryDeadlineId], references: [id])
+  statutoryDeadline StatutoryDeadline @relation(fields: [statutoryDeadlineId], references: [id])
 
   @@index([firmId])
   @@index([clientId])
@@ -71,21 +71,21 @@ model ClientComplianceAssignment {
 }
 
 model ComplianceCalendarEntry {
-  id                   String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  firmId               String                @map("firm_id") @db.Uuid
-  clientId             String                @map("client_id") @db.Uuid
-  statutoryDeadlineId  String                @map("statutory_deadline_id") @db.Uuid
-  periodLabel          String                @map("period_label") @db.VarChar(50)
-  dueDate              DateTime              @map("due_date") @db.Date
-  internalDueDate      DateTime              @map("internal_due_date") @db.Date
-  status               ComplianceEntryStatus @default(PENDING)
-  linkedTaskId         String?               @map("linked_task_id") @db.Uuid
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId              String                @map("firm_id") @db.Uuid
+  clientId            String                @map("client_id") @db.Uuid
+  statutoryDeadlineId String                @map("statutory_deadline_id") @db.Uuid
+  periodLabel         String                @map("period_label") @db.VarChar(50)
+  dueDate             DateTime              @map("due_date") @db.Date
+  internalDueDate     DateTime              @map("internal_due_date") @db.Date
+  status              ComplianceEntryStatus @default(PENDING)
+  linkedTaskId        String?               @map("linked_task_id") @db.Uuid
 
-  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt            DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
 
   // Relations
-  statutoryDeadline    StatutoryDeadline     @relation(fields: [statutoryDeadlineId], references: [id])
+  statutoryDeadline StatutoryDeadline @relation(fields: [statutoryDeadlineId], references: [id])
 
   @@index([firmId])
   @@index([clientId])
