@@ -90,7 +90,7 @@
 <div class="space-y-4">
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-bold text-gray-900">Engagements</h1>
-    <button onclick={() => (showCreate = true)} class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700">
+    <button onclick={() => navigate('/engagements/new')} class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700">
       New Engagement
     </button>
   </div>
@@ -127,7 +127,11 @@
         <tbody>
           {#each $engagements.data.data as eng (eng.id)}
             <tr class="border-b border-gray-50 hover:bg-gray-50">
-              <td class="px-4 py-3 font-medium text-gray-900">{eng.name}</td>
+              <td class="px-4 py-3 font-medium text-gray-900">
+                <button onclick={() => navigate(`/engagements/${eng.id}`)} class="hover:text-blue-600 text-left">
+                  {eng.name}
+                </button>
+              </td>
               <td class="px-4 py-3">
                 <button onclick={() => navigate(`/clients/${eng.client.id}`)} class="text-blue-600 hover:underline text-sm">
                   {eng.client.displayName}

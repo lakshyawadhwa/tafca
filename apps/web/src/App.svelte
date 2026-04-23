@@ -19,6 +19,8 @@
   import ClientDetail from './pages/ClientDetail.svelte';
   import ClientForm from './pages/ClientForm.svelte';
   import EngagementList from './pages/EngagementList.svelte';
+  import EngagementCreate from './pages/EngagementCreate.svelte';
+  import EngagementDetail from './pages/EngagementDetail.svelte';
   import Team from './pages/Team.svelte';
   import Leave from './pages/Leave.svelte';
   import Settings from './pages/Settings.svelte';
@@ -45,6 +47,8 @@
   addRoute('/clients/:id', ClientDetail);
   addRoute('/clients/:id/edit', ClientForm);
   addRoute('/engagements', EngagementList);
+  addRoute('/engagements/new', EngagementCreate);
+  addRoute('/engagements/:id', EngagementDetail);
   addRoute('/team', Team);
   addRoute('/team/leave', Leave);
   addRoute('/settings', Settings);
