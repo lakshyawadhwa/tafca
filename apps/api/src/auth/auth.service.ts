@@ -412,6 +412,69 @@ export class AuthService {
     );
   }
 
+  /**
+   * Issue a fresh session + tokens for a user. Used after flows that bypass
+   * password (e.g. invite-accept) but still need to produce a logged-in state.
+   * Returns the same shape as login.
+   */
+  async issueSession(
+    userId: string,
+    ipAddress?: string,
+    userAgent?: string,
+  ): Promise<LoginResponseDto & { refreshToken: string }> {
+    const userRecord = await this.prisma.unscoped.user.findFirstOrThrow({
+      where: { id: userId, deletedAt: null, isActive: true },
+      include: { firm: { select: { id: true, name: true, deletedAt: true } } },
+    });
+
+    if (userRecord.firm.deletedAt) {
+      throw new ForbiddenException('Firm is deactivated');
+    }
+
+    const sessionId = crypto.randomUUID();
+
+    const accessToken = this.signAccessToken({
+      sub: userRecord.id,
+      firmId: userRecord.firmId,
+      role: userRecord.role as UserRole,
+      email: userRecord.email,
+      sessionId,
+    });
+    const refreshToken = this.signRefreshToken({
+      sub: userRecord.id,
+      sessionId,
+    });
+
+    await this.sessionService.createSession({
+      id: sessionId,
+      userId: userRecord.id,
+      firmId: userRecord.firmId,
+      role: userRecord.role as UserRole,
+      jwt: accessToken,
+      ipAddress,
+      userAgent,
+    });
+
+    await this.prisma.unscoped.user.update({
+      where: { id: userRecord.id },
+      data: { lastLoginAt: new Date() },
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      user: {
+        id: userRecord.id,
+        email: userRecord.email,
+        fullName: userRecord.fullName,
+        role: userRecord.role as UserRole,
+        firmId: userRecord.firmId,
+        firmName: userRecord.firm.name,
+        avatarUrl: userRecord.avatarUrl,
+      },
+    };
+  }
+
   // --- Private helpers ---
 
   /**

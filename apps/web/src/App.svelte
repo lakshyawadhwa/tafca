@@ -10,6 +10,7 @@
   // Pages
   import Login from './pages/Login.svelte';
   import Register from './pages/Register.svelte';
+  import AcceptInvite from './pages/AcceptInvite.svelte';
   import Dashboard from './pages/Dashboard.svelte';
   import TaskList from './pages/TaskList.svelte';
   import TaskDetail from './pages/TaskDetail.svelte';
@@ -31,6 +32,7 @@
   // Auth
   addRoute('/login', Login);
   addRoute('/register', Register);
+  addRoute('/accept-invite', AcceptInvite);
   // App
   addRoute('/welcome', Welcome);
   addRoute('/onboarding', Onboarding);
@@ -49,7 +51,7 @@
   addRoute('/audit-log', AuditLog);
   addRoute('/recently-deleted', RecentlyDeleted);
 
-  const publicPaths = new Set(['/login', '/register']);
+  const publicPaths = new Set(['/login', '/register', '/accept-invite']);
   const fullScreenPaths = new Set(['/onboarding']);
 
   const match = $derived(getMatch());

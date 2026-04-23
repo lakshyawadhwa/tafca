@@ -27,6 +27,7 @@ import { FirmSettingsModule } from './firm-settings/firm-settings.module';
 import { RecentlyDeletedModule } from './recently-deleted/recently-deleted.module';
 import { TeamModule } from './team/team.module';
 import { PermissionModule } from './permission/permission.module';
+import { InviteModule } from './invite/invite.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { PermissionModule } from './permission/permission.module';
     RecentlyDeletedModule,
     TeamModule,
     PermissionModule,
+    InviteModule,
   ],
   controllers: [AppController],
   providers: [

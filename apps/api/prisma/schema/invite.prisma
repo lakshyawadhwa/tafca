@@ -1,0 +1,22 @@
+model Invite {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firmId     String    @map("firm_id") @db.Uuid
+  email      String    @db.VarChar(255)
+  fullName   String    @map("full_name") @db.VarChar(100)
+  role       UserRole
+  tokenHash  String    @unique @map("token_hash") @db.VarChar(255)
+  expiresAt  DateTime  @map("expires_at") @db.Timestamptz()
+  acceptedAt DateTime? @map("accepted_at") @db.Timestamptz()
+  revokedAt  DateTime? @map("revoked_at") @db.Timestamptz()
+  invitedBy  String    @map("invited_by") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  firm Firm @relation(fields: [firmId], references: [id])
+
+  @@index([firmId])
+  @@index([email])
+  @@index([tokenHash])
+  @@map("invites")
+}

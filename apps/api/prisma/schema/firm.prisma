@@ -32,6 +32,7 @@ model Firm {
   documents       Document[]
   notifications   Notification[]
   rolePermissions FirmRolePermission[]
+  invites         Invite[]
 
   @@map("firms")
 }
