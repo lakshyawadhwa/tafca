@@ -353,6 +353,10 @@ export class ClientService extends FirmScopedService {
     // Verify client exists
     await this.assertClientExists(clientId);
 
+    // AC-4: state_code must match first 2 chars of GSTIN
+    // AC-5: GSTIN regex is enforced in the DTO via @Matches(REGEX.GSTIN)
+    this.validateGstinStateCode(dto.gstin, dto.stateCode);
+
     const userId = this.getUserId();
     const firmId = this.getFirmId();
 
@@ -484,6 +488,19 @@ export class ClientService extends FirmScopedService {
   // ───────────────────────── Private Helpers ─────────────────────────
 
   /**
+   * AC-4: Validate that GSTIN's first 2 digits match the provided stateCode.
+   * GSTIN format: <2-digit state code><rest>
+   */
+  private validateGstinStateCode(gstin: string, stateCode: string): void {
+    const gstinStateCode = gstin.substring(0, 2);
+    if (gstinStateCode !== stateCode) {
+      throw new BadRequestException(
+        `state_code mismatch: GSTIN prefix '${gstinStateCode}' does not match state_code '${stateCode}'`,
+      );
+    }
+  }
+
+  /**
    * Check that displayName is unique within the firm (case-insensitive).
    * Optionally exclude a specific client ID (for updates).
    */
@@ -503,7 +520,7 @@ export class ClientService extends FirmScopedService {
 
     if (existing) {
       throw new ConflictException(
-        'Client with this display name already exists in your firm',
+        'A client with this name already exists in your firm',
       );
     }
   }

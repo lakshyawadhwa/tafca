@@ -483,19 +483,26 @@ export class EngagementService extends FirmScopedService {
       updatedBy: userId,
     };
 
-    // ENG-07: COMPLETED blocked if open tasks exist
+    // ENG-07: COMPLETED blocked if open tasks exist (AC-8)
     if (targetStatus === EngagementStatus.COMPLETED) {
-      const openTaskCount = await this.prisma.task.count({
+      const openTasks = await this.prisma.task.findMany({
         where: {
           engagementId: id,
           status: { notIn: [TaskStatus.DONE, TaskStatus.CANCELLED] },
         },
+        select: { id: true, title: true, status: true },
       });
 
-      if (openTaskCount > 0) {
-        throw new ConflictException(
-          `Cannot complete this engagement. ${openTaskCount} open task${openTaskCount > 1 ? 's' : ''} must be completed or cancelled first.`,
-        );
+      if (openTasks.length > 0) {
+        throw new ConflictException({
+          message: `Cannot complete this engagement. ${openTasks.length} open task${openTasks.length > 1 ? 's' : ''} must be completed or cancelled first.`,
+          open_task_count: openTasks.length,
+          blocking_tasks: openTasks.map((t) => ({
+            id: t.id,
+            title: t.title,
+            status: t.status,
+          })),
+        });
       }
 
       updateData.completedAt = new Date();
