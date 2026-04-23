@@ -5,6 +5,7 @@
   import { addToast } from '../lib/toast.svelte';
   import { getUser } from '../lib/auth.svelte';
   import InviteModal from '../components/InviteModal.svelte';
+  import PendingInvitesList from '../components/PendingInvitesList.svelte';
 
   const qc = useQueryClient();
   const currentUser = $derived(getUser());
@@ -125,6 +126,13 @@
       </div>
     {/if}
   </div>
+
+  {#if isAdmin}
+    <div class="bg-white rounded-lg border border-gray-200 p-4">
+      <h2 class="text-lg font-semibold text-gray-800 mb-3">Pending Invites</h2>
+      <PendingInvitesList canRevoke={true} />
+    </div>
+  {/if}
 
   <!-- Firm settings -->
   {#if isAdmin && $firmSettings.data}
