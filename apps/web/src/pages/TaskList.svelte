@@ -1,17 +1,78 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { createQuery } from '@tanstack/svelte-query';
   import { toStore } from 'svelte/store';
-  import { TaskStatus, TaskPriority } from '@ca-practice-os/shared';
+  import { TaskStatus, TaskPriority, UserRole } from '@ca-practice-os/shared';
   import { api } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
+  import { getUser } from '../lib/auth.svelte';
+  import { can } from '../lib/permissions';
+
+  const currentUser = $derived(getUser());
+
+  // "assignedToMe" default for roles that usually only see their own work.
+  // PARTNER/MANAGER/ADMIN default to seeing everything.
+  const defaultAssignedToMe = $derived(
+    currentUser?.role === UserRole.ARTICLE ||
+      currentUser?.role === UserRole.JUNIOR_CA,
+  );
 
   let page = $state(1);
   let search = $state('');
   let statusFilter = $state('');
   let priorityFilter = $state('');
-  let searchTimeout: ReturnType<typeof setTimeout>;
-
+  let assignedToMe = $state(false);
   let debouncedSearch = $state('');
+  let searchTimeout: ReturnType<typeof setTimeout>;
+  let hydrated = $state(false);
+
+  function readFromUrl() {
+    const p = new URLSearchParams(window.location.search);
+    const q = p.get('q') ?? '';
+    search = q;
+    debouncedSearch = q;
+    statusFilter = p.get('status') ?? '';
+    priorityFilter = p.get('priority') ?? '';
+    // If URL has explicit 'mine', honor it; else use role default.
+    if (p.has('mine')) {
+      assignedToMe = p.get('mine') === '1';
+    } else {
+      assignedToMe = defaultAssignedToMe;
+    }
+    const pg = Number(p.get('page'));
+    page = Number.isFinite(pg) && pg > 0 ? pg : 1;
+    hydrated = true;
+  }
+
+  function writeToUrl() {
+    if (!hydrated) return;
+    const p = new URLSearchParams();
+    if (debouncedSearch) p.set('q', debouncedSearch);
+    if (statusFilter) p.set('status', statusFilter);
+    if (priorityFilter) p.set('priority', priorityFilter);
+    // Only emit `mine` if it differs from the role default, to keep URL tidy.
+    if (assignedToMe !== defaultAssignedToMe) p.set('mine', assignedToMe ? '1' : '0');
+    if (page > 1) p.set('page', String(page));
+    const qs = p.toString();
+    const target = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+    window.history.replaceState(null, '', target);
+  }
+
+  $effect(() => {
+    debouncedSearch;
+    statusFilter;
+    priorityFilter;
+    assignedToMe;
+    page;
+    writeToUrl();
+  });
+
+  onMount(() => {
+    readFromUrl();
+    const onPop = () => readFromUrl();
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  });
 
   function onSearchInput(value: string) {
     search = value;
@@ -29,12 +90,21 @@
     if (debouncedSearch) p.set('search', debouncedSearch);
     if (statusFilter) p.set('status', statusFilter);
     if (priorityFilter) p.set('priority', priorityFilter);
+    if (assignedToMe && currentUser) p.set('assignee_id', currentUser.id);
     return p.toString();
   });
 
   const tasks = createQuery(toStore(() => ({
-    queryKey: ['tasks', page, debouncedSearch, statusFilter, priorityFilter],
+    queryKey: [
+      'tasks',
+      page,
+      debouncedSearch,
+      statusFilter,
+      priorityFilter,
+      assignedToMe ? currentUser?.id : null,
+    ],
     queryFn: () => api(`/tasks?${queryParams()}`),
+    enabled: hydrated,
   })));
 
   const priorityColors: Record<string, string> = {
@@ -63,21 +133,25 @@
     if (!dueDate || status === 'DONE' || status === 'CANCELLED') return false;
     return new Date(dueDate) < new Date();
   }
+
+  const canCreate = $derived(can('task', 'create'));
 </script>
 
 <div class="space-y-4">
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-bold text-gray-900">Tasks</h1>
-    <button
-      onclick={() => navigate('/tasks/new')}
-      class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700"
-    >
-      New Task
-    </button>
+    {#if canCreate}
+      <button
+        onclick={() => navigate('/tasks/new')}
+        class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700"
+      >
+        New Task
+      </button>
+    {/if}
   </div>
 
   <!-- Filters -->
-  <div class="flex flex-wrap gap-3">
+  <div class="flex flex-wrap items-center gap-3">
     <input
       type="text"
       placeholder="Search tasks..."
@@ -105,15 +179,38 @@
         <option value={p}>{p}</option>
       {/each}
     </select>
+    <label class="flex items-center gap-2 text-sm text-gray-700">
+      <input
+        type="checkbox"
+        checked={assignedToMe}
+        onchange={(e) => { assignedToMe = e.currentTarget.checked; page = 1; }}
+        class="rounded border-gray-300"
+      />
+      Assigned to me
+    </label>
   </div>
 
   <!-- Table -->
-  {#if $tasks.isLoading}
+  {#if $tasks.isLoading || !hydrated}
     <p class="text-sm text-gray-500 py-8 text-center">Loading tasks...</p>
   {:else if $tasks.isError}
     <p class="text-sm text-red-600 py-8 text-center">Failed to load tasks.</p>
   {:else if $tasks.data?.data?.length === 0}
-    <p class="text-sm text-gray-500 py-8 text-center">No tasks found.</p>
+    <div class="py-16 text-center">
+      <p class="text-sm text-gray-500 mb-4">
+        {debouncedSearch || statusFilter || priorityFilter || assignedToMe
+          ? 'No tasks match your filters.'
+          : 'No tasks yet.'}
+      </p>
+      {#if canCreate && !debouncedSearch && !statusFilter && !priorityFilter && !assignedToMe}
+        <button
+          onclick={() => navigate('/tasks/new')}
+          class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Create your first task
+        </button>
+      {/if}
+    </div>
   {:else}
     <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
       <table class="w-full text-sm">
