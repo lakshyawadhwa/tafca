@@ -4,6 +4,8 @@
   import { api } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
+  import ChecklistSection from '../components/ChecklistSection.svelte';
+  import DependencySection from '../components/DependencySection.svelte';
 
   let { id }: { id: string } = $props();
 
@@ -27,6 +29,11 @@
   const activity = createQuery(() => ({
     queryKey: ['task', id, 'activity'],
     queryFn: () => api(`/tasks/${id}/activity?limit=20`),
+  }));
+
+  const dependencies = createQuery(() => ({
+    queryKey: ['task', id, 'dependencies'],
+    queryFn: () => api(`/tasks/${id}/dependencies`),
   }));
 
   // Status change mutation
@@ -58,19 +65,6 @@
       addToast('Comment added', 'success');
     },
     onError: (err: any) => addToast(err.message, 'error'),
-  });
-
-  // Checklist toggle mutation
-  const toggleChecklist = createMutation({
-    mutationFn: (item: { id: string; isCompleted: boolean }) =>
-      api(`/tasks/${id}/checklist/${item.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ isCompleted: !item.isCompleted }),
-      }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['task', id, 'checklist'] });
-      qc.invalidateQueries({ queryKey: ['task', id] });
-    },
   });
 
   // Delete mutation
@@ -151,30 +145,22 @@
         {/if}
 
         <!-- Checklist -->
-        {#if !$checklist.isLoading && $checklist.data?.length > 0}
-          <div class="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 class="text-sm font-medium text-gray-500 mb-3">
-              Checklist ({t.checklistProgress.completed}/{t.checklistProgress.total})
-            </h3>
-            <div class="space-y-2">
-              {#each $checklist.data as item (item.id)}
-                <label class="flex items-center gap-2 text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={item.isCompleted}
-                    onchange={() => $toggleChecklist.mutate(item)}
-                    class="rounded border-gray-300"
-                  />
-                  <span class={item.isCompleted ? 'line-through text-gray-400' : 'text-gray-700'}>
-                    {item.label}
-                  </span>
-                  {#if item.isRequired}
-                    <span class="text-xs text-red-400">*</span>
-                  {/if}
-                </label>
-              {/each}
-            </div>
-          </div>
+        {#if !$checklist.isLoading}
+          <ChecklistSection
+            taskId={id}
+            items={$checklist.data ?? []}
+            progress={t.checklistProgress}
+          />
+        {/if}
+
+        <!-- Dependencies -->
+        {#if !$dependencies.isLoading}
+          <DependencySection
+            taskId={id}
+            blockedBy={$dependencies.data?.blockedBy ?? []}
+            blocks={$dependencies.data?.blocking ?? []}
+            isBlocked={t.isBlocked ?? false}
+          />
         {/if}
 
         <!-- Comments -->
@@ -312,13 +298,6 @@
                   <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{tag}</span>
                 {/each}
               </div>
-            </div>
-          {/if}
-
-          <!-- Blocked -->
-          {#if t.isBlocked}
-            <div class="text-xs text-red-600 bg-red-50 rounded px-2 py-1 font-medium">
-              Blocked by dependencies
             </div>
           {/if}
 
