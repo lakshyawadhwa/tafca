@@ -1,20 +1,62 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { createQuery } from '@tanstack/svelte-query';
   import { toStore } from 'svelte/store';
-  import { ClientStatus, EntityType } from '@ca-practice-os/shared';
+  import { ClientStatus } from '@ca-practice-os/shared';
   import { api } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
+  import { can } from '../lib/permissions';
 
+  // URL-synced filter state
   let page = $state(1);
   let search = $state('');
   let statusFilter = $state('');
   let debouncedSearch = $state('');
   let searchTimeout: ReturnType<typeof setTimeout>;
 
+  function readFromUrl() {
+    const p = new URLSearchParams(window.location.search);
+    const q = p.get('q') ?? '';
+    search = q;
+    debouncedSearch = q;
+    statusFilter = p.get('status') ?? '';
+    const pg = Number(p.get('page'));
+    page = Number.isFinite(pg) && pg > 0 ? pg : 1;
+  }
+
+  function writeToUrl() {
+    const p = new URLSearchParams();
+    if (debouncedSearch) p.set('q', debouncedSearch);
+    if (statusFilter) p.set('status', statusFilter);
+    if (page > 1) p.set('page', String(page));
+    const qs = p.toString();
+    const target = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+    window.history.replaceState(null, '', target);
+  }
+
+  // Sync URL whenever any filter changes
+  $effect(() => {
+    // touch all reactive inputs
+    debouncedSearch;
+    statusFilter;
+    page;
+    writeToUrl();
+  });
+
+  onMount(() => {
+    readFromUrl();
+    const onPop = () => readFromUrl();
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  });
+
   function onSearchInput(value: string) {
     search = value;
     clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => { debouncedSearch = value; page = 1; }, 300);
+    searchTimeout = setTimeout(() => {
+      debouncedSearch = value;
+      page = 1;
+    }, 300);
   }
 
   const queryParams = $derived(() => {
@@ -36,17 +78,21 @@
     INACTIVE: 'text-gray-500 bg-gray-100',
     PROSPECT: 'text-blue-700 bg-blue-50',
   };
+
+  const canCreate = $derived(can('client', 'create'));
 </script>
 
 <div class="space-y-4">
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-bold text-gray-900">Clients</h1>
-    <button
-      onclick={() => navigate('/clients/new')}
-      class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700"
-    >
-      New Client
-    </button>
+    {#if canCreate}
+      <button
+        onclick={() => navigate('/clients/new')}
+        class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700"
+      >
+        New Client
+      </button>
+    {/if}
   </div>
 
   <div class="flex flex-wrap gap-3">
@@ -74,7 +120,19 @@
   {:else if $clients.isError}
     <p class="text-sm text-red-600 py-8 text-center">Failed to load clients.</p>
   {:else if $clients.data?.data?.length === 0}
-    <p class="text-sm text-gray-500 py-8 text-center">No clients found.</p>
+    <div class="py-16 text-center">
+      <p class="text-sm text-gray-500 mb-4">
+        {debouncedSearch || statusFilter ? 'No clients match your filters.' : 'No clients yet.'}
+      </p>
+      {#if canCreate && !debouncedSearch && !statusFilter}
+        <button
+          onclick={() => navigate('/clients/new')}
+          class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Add your first client
+        </button>
+      {/if}
+    </div>
   {:else}
     <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
       <table class="w-full text-sm">

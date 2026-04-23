@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
-  import { EntityType, ConstitutionType, ClientStatus, UserRole } from '@ca-practice-os/shared';
+  import { EntityType, ConstitutionType, ClientStatus, UserRole, REGEX } from '@ca-practice-os/shared';
   import { api, ApiError } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
@@ -50,12 +50,9 @@
   );
   const panRequired = $derived(!isIndividual);
 
-  // PAN regex
-  const PAN_REGEX = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-
   function validatePan(value: string): string {
     if (!value) return panRequired ? 'PAN is required for this entity type' : '';
-    if (!PAN_REGEX.test(value.toUpperCase())) return 'Invalid PAN format (e.g. ABCDE1234F)';
+    if (!REGEX.PAN.test(value.toUpperCase())) return 'Invalid PAN format (e.g. ABCDE1234F)';
     return '';
   }
 
