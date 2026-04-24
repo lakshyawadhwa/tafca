@@ -27,4 +27,7 @@ module.exports = {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   testTimeout: 30000,
+  // e2e suites share one Postgres/Redis and run TRUNCATE between tests —
+  // parallel workers deadlock on that. Keep it serial.
+  maxWorkers: 1,
 };

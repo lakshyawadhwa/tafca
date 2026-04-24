@@ -17,6 +17,10 @@ export function createThrottleGuard(
     constructor(readonly redis: RedisService) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
+      // Tests spin up many accounts behind the same loopback IP; skip the
+      // IP-throttle in NODE_ENV=test so e2e suites aren't fighting the guard.
+      if (process.env.NODE_ENV === 'test') return true;
+
       const request = context.switchToHttp().getRequest();
       const ip =
         (request.headers['x-forwarded-for'] as string)
