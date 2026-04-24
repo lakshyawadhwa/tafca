@@ -385,7 +385,8 @@ export class EngagementService extends FirmScopedService {
   }
 
   /**
-   * Get a single engagement by ID with client, type, and task counts.
+   * Get a single engagement by ID with client, type, task counts, and
+   * hydrated partner / manager / team users.
    */
   async getEngagement(id: string): Promise<EngagementResponseDto> {
     const engagement = await this.prisma.engagement.findUnique({
@@ -397,8 +398,25 @@ export class EngagementService extends FirmScopedService {
       throw new NotFoundException('Engagement not found');
     }
 
+    const userIds = Array.from(
+      new Set(
+        [
+          engagement.assignedPartnerId,
+          engagement.assignedManagerId,
+          ...(engagement.assignedTeam ?? []),
+        ].filter((u): u is string => !!u),
+      ),
+    );
+    const users = userIds.length
+      ? await this.prisma.user.findMany({
+          where: { id: { in: userIds } },
+          select: { id: true, fullName: true, avatarUrl: true },
+        })
+      : [];
+    const userMap = new Map(users.map((u) => [u.id, u]));
+
     const taskProgress = await this.getTaskProgress(id);
-    return this.toEngagementResponse(engagement, taskProgress);
+    return this.toEngagementResponse(engagement, taskProgress, userMap);
   }
 
   /**
@@ -595,8 +613,12 @@ export class EngagementService extends FirmScopedService {
   private toEngagementResponse(
     engagement: any,
     taskProgress: { total: number; done: number },
+    userMap?: Map<string, { id: string; fullName: string; avatarUrl: string | null }>,
   ): EngagementResponseDto {
-    return {
+    const hydrate = (id: string | null) =>
+      id && userMap?.has(id) ? userMap.get(id)! : null;
+
+    const response: EngagementResponseDto = {
       id: engagement.id,
       name: engagement.name,
       status: engagement.status,
@@ -627,5 +649,15 @@ export class EngagementService extends FirmScopedService {
       },
       taskProgress,
     };
+
+    if (userMap) {
+      response.assignedPartner = hydrate(engagement.assignedPartnerId);
+      response.assignedManager = hydrate(engagement.assignedManagerId);
+      response.assignedTeamUsers = (engagement.assignedTeam ?? [])
+        .map((id: string) => userMap.get(id))
+        .filter((u: any): u is { id: string; fullName: string; avatarUrl: string | null } => !!u);
+    }
+
+    return response;
   }
 }

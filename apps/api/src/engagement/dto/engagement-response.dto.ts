@@ -14,6 +14,11 @@ export class EngagementResponseDto {
   assignedPartnerId!: string | null;
   assignedManagerId!: string | null;
   assignedTeam!: string[];
+
+  // Hydrated on detail fetch only; undefined on list responses.
+  assignedPartner?: { id: string; fullName: string; avatarUrl: string | null } | null;
+  assignedManager?: { id: string; fullName: string; avatarUrl: string | null } | null;
+  assignedTeamUsers?: Array<{ id: string; fullName: string; avatarUrl: string | null }>;
   feeAmount!: number | null;
   feeCurrency!: string;
   notes!: string | null;
