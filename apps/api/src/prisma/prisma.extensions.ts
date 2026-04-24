@@ -29,6 +29,8 @@ const MODELS_WITHOUT_SOFT_DELETE = new Set([
   'TaskTemplateItem',
   'Notification',
   'EngagementCustomFieldDefinition',
+  'Invite',
+  'FirmRolePermission',
 ]);
 
 /**
