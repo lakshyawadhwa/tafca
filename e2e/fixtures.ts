@@ -1,4 +1,4 @@
-import { test as base, expect, type Page } from '@playwright/test';
+import { test as base, expect, type Page, type APIRequestContext } from '@playwright/test';
 
 /**
  * Each test gets a fresh firm + partner account registered through the UI.
@@ -48,6 +48,56 @@ export async function login(page: Page, email: string, password: string) {
   await page.waitForURL((url) => !url.pathname.startsWith('/login'), {
     timeout: 10_000,
   });
+}
+
+/**
+ * Current admin JWT from the logged-in browser session — needed for
+ * tests that want to create sibling users via API (faster than doing
+ * it through the invite UI).
+ */
+export async function getAccessToken(page: Page): Promise<string> {
+  const token = await page.evaluate(() => localStorage.getItem('ca_access_token'));
+  if (!token) throw new Error('No access token in localStorage');
+  return token;
+}
+
+export interface AuthedUser {
+  email: string;
+  password: string;
+  fullName: string;
+  role: 'PARTNER' | 'MANAGER' | 'JUNIOR_CA' | 'ARTICLE' | 'ADMIN';
+}
+
+/**
+ * Direct API create of a sibling user in the current firm.
+ * Caller must be logged in as PARTNER or ADMIN.
+ */
+export async function createSiblingUser(
+  request: APIRequestContext,
+  adminToken: string,
+  role: AuthedUser['role'],
+): Promise<AuthedUser> {
+  const suffix = `${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+  const user: AuthedUser = {
+    email: `pw_${role.toLowerCase()}_${suffix}@example.com`,
+    password: 'SiblingPass123!',
+    fullName: `Test ${role} ${suffix}`,
+    role,
+  };
+
+  const res = await request.post('http://localhost:3000/api/users', {
+    headers: { Authorization: `Bearer ${adminToken}` },
+    data: {
+      email: user.email,
+      password: user.password,
+      fullName: user.fullName,
+      role: user.role,
+    },
+  });
+  if (!res.ok()) {
+    throw new Error(`createSiblingUser ${role} failed: ${res.status()} ${await res.text()}`);
+  }
+  return user;
 }
 
 export const test = base.extend<{ registeredUser: RegisteredUser }>({

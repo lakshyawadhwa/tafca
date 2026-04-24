@@ -13,6 +13,7 @@
   let statusFilter = $state('');
   let debouncedSearch = $state('');
   let searchTimeout: ReturnType<typeof setTimeout>;
+  let hydrated = $state(false);
 
   function readFromUrl() {
     const p = new URLSearchParams(window.location.search);
@@ -22,9 +23,11 @@
     statusFilter = p.get('status') ?? '';
     const pg = Number(p.get('page'));
     page = Number.isFinite(pg) && pg > 0 ? pg : 1;
+    hydrated = true;
   }
 
   function writeToUrl() {
+    if (!hydrated) return;
     const p = new URLSearchParams();
     if (debouncedSearch) p.set('q', debouncedSearch);
     if (statusFilter) p.set('status', statusFilter);
@@ -34,9 +37,9 @@
     window.history.replaceState(null, '', target);
   }
 
-  // Sync URL whenever any filter changes
+  // Sync URL whenever any filter changes (skips until onMount hydrates
+  // from the initial URL — otherwise the first pass clobbers ?status= etc).
   $effect(() => {
-    // touch all reactive inputs
     debouncedSearch;
     statusFilter;
     page;

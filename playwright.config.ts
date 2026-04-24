@@ -34,6 +34,10 @@ export default defineConfig({
       timeout: 60_000,
       stdout: 'pipe',
       stderr: 'pipe',
+      // Lets the throttle guard bypass per-IP rate limits. Playwright
+      // hammers /auth/register from loopback and the 3-per-minute cap
+      // otherwise kills every test after the third.
+      env: { E2E_BYPASS_THROTTLE: '1' },
     },
     {
       command: 'pnpm --filter web dev',

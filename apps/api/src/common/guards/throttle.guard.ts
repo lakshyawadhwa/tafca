@@ -18,8 +18,14 @@ export function createThrottleGuard(
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
       // Tests spin up many accounts behind the same loopback IP; skip the
-      // IP-throttle in NODE_ENV=test so e2e suites aren't fighting the guard.
-      if (process.env.NODE_ENV === 'test') return true;
+      // IP-throttle when NODE_ENV=test (jest) or E2E_BYPASS_THROTTLE=1
+      // (Playwright webServer spawns api in dev mode).
+      if (
+        process.env.NODE_ENV === 'test' ||
+        process.env.E2E_BYPASS_THROTTLE === '1'
+      ) {
+        return true;
+      }
 
       const request = context.switchToHttp().getRequest();
       const ip =

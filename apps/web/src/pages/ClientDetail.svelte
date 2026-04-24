@@ -9,15 +9,15 @@
 
   const qc = useQueryClient();
 
-  const client = createQuery(() => ({
+  const client = createQuery(toStore(() => ({
     queryKey: ['client', id],
     queryFn: () => api(`/clients/${id}`),
-  }));
+  })));
 
-  const engagements = createQuery(() => ({
+  const engagements = createQuery(toStore(() => ({
     queryKey: ['engagements', 'client', id],
     queryFn: () => api(`/engagements?clientId=${id}&limit=50&sortBy=createdAt&sortDir=desc`),
-  }));
+  })));
 
   const deleteClient = createMutation({
     mutationFn: () => api(`/clients/${id}`, { method: 'DELETE' }),
