@@ -8,10 +8,13 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "turbo run test",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
     "db:migrate": "turbo run db:migrate --filter=api",
     "db:seed": "turbo run db:seed --filter=api"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "turbo": "^2.x",
     "typescript": "^5.x"
   },

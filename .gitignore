@@ -8,3 +8,8 @@ dist/
 .DS_Store
 *.tsbuildinfo
 .claude/
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
