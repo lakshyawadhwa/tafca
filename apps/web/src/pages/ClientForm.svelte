@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
+  import { toStore } from 'svelte/store';
   import { EntityType, ConstitutionType, ClientStatus, UserRole, REGEX } from '@ca-practice-os/shared';
   import { api, ApiError } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
@@ -109,11 +110,11 @@
   });
 
   // Load existing client for edit
-  const existing = createQuery(() => ({
+  const existing = createQuery(toStore(() => ({
     queryKey: ['client', id],
     queryFn: () => api(`/clients/${id}`),
     enabled: isEdit,
-  }));
+  })));
 
   $effect(() => {
     if ($existing.data) {

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
+  import { toStore } from 'svelte/store';
   import { TASK_STATUS_TRANSITIONS, type TaskStatus } from '@ca-practice-os/shared';
   import { api } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
@@ -11,30 +12,30 @@
 
   const qc = useQueryClient();
 
-  const task = createQuery(() => ({
+  const task = createQuery(toStore(() => ({
     queryKey: ['task', id],
     queryFn: () => api(`/tasks/${id}`),
-  }));
+  })));
 
-  const checklist = createQuery(() => ({
+  const checklist = createQuery(toStore(() => ({
     queryKey: ['task', id, 'checklist'],
     queryFn: () => api(`/tasks/${id}/checklist`),
-  }));
+  })));
 
-  const comments = createQuery(() => ({
+  const comments = createQuery(toStore(() => ({
     queryKey: ['task', id, 'comments'],
     queryFn: () => api(`/tasks/${id}/comments?limit=50`),
-  }));
+  })));
 
-  const activity = createQuery(() => ({
+  const activity = createQuery(toStore(() => ({
     queryKey: ['task', id, 'activity'],
     queryFn: () => api(`/tasks/${id}/activity?limit=20`),
-  }));
+  })));
 
-  const dependencies = createQuery(() => ({
+  const dependencies = createQuery(toStore(() => ({
     queryKey: ['task', id, 'dependencies'],
     queryFn: () => api(`/tasks/${id}/dependencies`),
-  }));
+  })));
 
   // Status change mutation
   const changeStatus = createMutation({
