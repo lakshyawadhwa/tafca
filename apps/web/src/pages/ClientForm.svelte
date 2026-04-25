@@ -6,6 +6,7 @@
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
   import { track } from '../lib/analytics';
+  import { useUnsavedGuard } from '../lib/unsaved-guard.svelte';
 
   let { id }: { id?: string } = $props();
 
@@ -44,6 +45,10 @@
   let notes = $state('');
   let fieldErrors = $state<Record<string, string>>({});
   let globalError = $state('');
+
+  // Dirty tracking + unsaved-changes guard
+  let dirty = $state(false);
+  const { guardedNavigate } = useUnsavedGuard(() => dirty);
 
   // Entity type derived flags
   const isIndividual = $derived(entityType === EntityType.INDIVIDUAL);
@@ -146,6 +151,7 @@
       return api('/clients', { method: 'POST', body: JSON.stringify(data) });
     },
     onSuccess: (result: any) => {
+      dirty = false;
       qc.invalidateQueries({ queryKey: ['clients'] });
       if (isEdit) qc.invalidateQueries({ queryKey: ['client', id] });
       addToast(isEdit ? 'Client updated' : 'Client created', 'success');
@@ -196,13 +202,13 @@
 </script>
 
 <div class="max-w-2xl">
-  <button onclick={() => navigate(isEdit ? `/clients/${id}` : '/clients')} class="text-sm text-gray-500 hover:text-gray-700 mb-2">&larr; Back</button>
+  <button onclick={() => guardedNavigate(isEdit ? `/clients/${id}` : '/clients')} class="text-sm text-gray-500 hover:text-gray-700 mb-2">&larr; Back</button>
   <h1 class="text-2xl font-bold text-gray-900 mb-6">{isEdit ? 'Edit Client' : 'New Client'}</h1>
 
   {#if isEdit && $existing.isLoading}
     <p class="text-gray-500 py-8 text-center">Loading...</p>
   {:else}
-    <form onsubmit={handleSubmit} class="space-y-6">
+    <form onsubmit={handleSubmit} oninput={() => { dirty = true; }} onchange={() => { dirty = true; }} class="space-y-6">
       {#if globalError}
         <p class="text-sm text-red-600 bg-red-50 rounded p-2">{globalError}</p>
       {/if}
@@ -409,7 +415,7 @@
       </div>
 
       <div class="flex justify-end gap-2">
-        <button type="button" onclick={() => navigate(isEdit ? `/clients/${id}` : '/clients')}
+        <button type="button" onclick={() => guardedNavigate(isEdit ? `/clients/${id}` : '/clients')}
           class="px-4 py-2 text-sm rounded border border-gray-300 hover:bg-gray-50">
           Cancel
         </button>

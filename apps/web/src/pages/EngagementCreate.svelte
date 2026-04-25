@@ -9,6 +9,7 @@
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
   import { track } from '../lib/analytics';
+  import { useUnsavedGuard } from '../lib/unsaved-guard.svelte';
 
   // client_id may come from query param
   const searchParams = new URLSearchParams(window.location.search);
@@ -160,26 +161,14 @@
     $create.mutate(data);
   }
 
-  // Unsaved-changes guard: browser beforeunload
-  $effect(() => {
-    function beforeUnload(e: BeforeUnloadEvent) {
-      if (isDirty) {
-        e.preventDefault();
-        e.returnValue = '';
-      }
-    }
-    window.addEventListener('beforeunload', beforeUnload);
-    return () => window.removeEventListener('beforeunload', beforeUnload);
-  });
+  const { guardedNavigate } = useUnsavedGuard(() => isDirty);
 
   function handleBack() {
-    if (isDirty && !confirm('You have unsaved changes. Leave?')) return;
-    navigate(prefillClientId ? `/clients/${prefillClientId}` : '/engagements');
+    guardedNavigate(prefillClientId ? `/clients/${prefillClientId}` : '/engagements');
   }
 
   function handleCancel() {
-    if (isDirty && !confirm('You have unsaved changes. Discard?')) return;
-    navigate(prefillClientId ? `/clients/${prefillClientId}` : '/engagements');
+    guardedNavigate(prefillClientId ? `/clients/${prefillClientId}` : '/engagements');
   }
 
   function formatLabel(s: string) { return s.replace(/_/g, ' '); }
