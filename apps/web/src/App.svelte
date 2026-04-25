@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import './app.css';
   import { QueryClientProvider } from '@tanstack/svelte-query';
   import { queryClient } from './lib/query';
@@ -6,6 +7,20 @@
   import { isAuthenticated } from './lib/auth.svelte';
   import ToastContainer from './components/ToastContainer.svelte';
   import AppShell from './components/AppShell.svelte';
+  import ErrorFallback from './components/ErrorFallback.svelte';
+
+  let boundaryError = $state<Error | null>(null);
+
+  onMount(() => {
+    function handleError(e: ErrorEvent) {
+      boundaryError = e.error instanceof Error ? e.error : new Error(String(e.error));
+    }
+    // Note: unhandledrejection is intentionally NOT caught here.
+    // svelte-query handles its own promise rejections and they do not bubble
+    // to window as unhandledrejection in normal operation.
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  });
 
   // Pages
   import Login from './pages/Login.svelte';
@@ -79,7 +94,9 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-  {#if isPublicPage || !authed}
+  {#if boundaryError}
+    <ErrorFallback onReset={() => { boundaryError = null; }} />
+  {:else if isPublicPage || !authed}
     <Component {...params} />
   {:else if isFullScreen}
     <Component {...params} />
