@@ -8,6 +8,7 @@
   import { track } from '../lib/analytics';
   import ChecklistSection from '../components/ChecklistSection.svelte';
   import DependencySection from '../components/DependencySection.svelte';
+  import CommentSection from '../components/CommentSection.svelte';
 
   let { id }: { id: string } = $props();
 
@@ -21,11 +22,6 @@
   const checklist = createQuery(toStore(() => ({
     queryKey: ['task', id, 'checklist'],
     queryFn: () => api(`/tasks/${id}/checklist`),
-  })));
-
-  const comments = createQuery(toStore(() => ({
-    queryKey: ['task', id, 'comments'],
-    queryFn: () => api(`/tasks/${id}/comments?limit=50`),
   })));
 
   const activity = createQuery(toStore(() => ({
@@ -50,22 +46,6 @@
       qc.invalidateQueries({ queryKey: ['task', id] });
       qc.invalidateQueries({ queryKey: ['tasks'] });
       addToast('Status updated', 'success');
-    },
-    onError: (err: any) => addToast(err.message, 'error'),
-  });
-
-  // Comment mutation
-  let commentBody = $state('');
-  const addComment = createMutation({
-    mutationFn: (body: string) =>
-      api(`/tasks/${id}/comments`, {
-        method: 'POST',
-        body: JSON.stringify({ body }),
-      }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['task', id, 'comments'] });
-      commentBody = '';
-      addToast('Comment added', 'success');
     },
     onError: (err: any) => addToast(err.message, 'error'),
   });
@@ -168,42 +148,7 @@
         {/if}
 
         <!-- Comments -->
-        <div class="bg-white rounded-lg border border-gray-200 p-4">
-          <h3 class="text-sm font-medium text-gray-500 mb-3">Comments</h3>
-
-          <form
-            onsubmit={(e) => { e.preventDefault(); if (commentBody.trim()) $addComment.mutate(commentBody.trim()); }}
-            class="flex gap-2 mb-4"
-          >
-            <input
-              type="text"
-              bind:value={commentBody}
-              placeholder="Add a comment..."
-              class="flex-1 rounded border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="submit"
-              disabled={!commentBody.trim() || $addComment.isPending}
-              class="bg-blue-600 text-white text-sm px-4 py-1.5 rounded hover:bg-blue-700 disabled:opacity-40"
-            >
-              Send
-            </button>
-          </form>
-
-          {#if $comments.data?.data?.length > 0}
-            <div class="space-y-3">
-              {#each $comments.data.data as c (c.id)}
-                <div class="text-sm">
-                  <span class="font-medium text-gray-800">{c.author?.fullName ?? 'Unknown'}</span>
-                  <span class="text-gray-400 ml-2">{timeAgo(c.createdAt)}</span>
-                  <p class="text-gray-600 mt-0.5">{c.body}</p>
-                </div>
-              {/each}
-            </div>
-          {:else if !$comments.isLoading}
-            <p class="text-sm text-gray-400">No comments yet.</p>
-          {/if}
-        </div>
+        <CommentSection taskId={id} />
 
         <!-- Activity -->
         {#if $activity.data?.data?.length > 0}
