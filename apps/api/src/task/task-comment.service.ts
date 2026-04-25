@@ -5,7 +5,7 @@ import {
   NotFoundException,
   Logger,
 } from '@nestjs/common';
-import { TaskAction } from '@ca-practice-os/shared';
+import { TaskAction, UserRole } from '@ca-practice-os/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { FirmScopedService } from '../common/base/firm-scoped.service';
 import { TaskActivityService } from './task-activity.service';
@@ -53,7 +53,7 @@ export class TaskCommentService extends FirmScopedService {
     }
 
     const userId = this.getUserId();
-    const mentions = dto.mentions || [];
+    const mentionIds = dto.mentions || [];
 
     const comment = await this.prisma.taskComment.create({
       data: {
@@ -61,7 +61,7 @@ export class TaskCommentService extends FirmScopedService {
         firmId: this.getFirmId(),
         authorId: userId,
         body: dto.body,
-        mentions,
+        mentions: mentionIds,
         parentCommentId: dto.parentCommentId || null,
         createdBy: userId,
         updatedBy: userId,
@@ -79,25 +79,29 @@ export class TaskCommentService extends FirmScopedService {
       .catch(() => {});
 
     // Fire-and-forget: mention notifications
-    if (mentions.length > 0) {
+    if (mentionIds.length > 0) {
       this.notificationHelper
-        .onCommentMention(taskId, task.title, mentions)
+        .onCommentMention(taskId, task.title, mentionIds)
         .catch(() => {});
     }
 
     this.logger.log(`Comment added to task ${taskId}: ${comment.id}`);
 
-    // Return comment with author info
-    const author = await this.unscopedPrisma.user.findUnique({
-      where: { id: userId },
+    // Batch-fetch author + mentioned users for hydrated response
+    const allUserIds = [userId, ...mentionIds.filter((id) => id !== userId)];
+    const users = await this.unscopedPrisma.user.findMany({
+      where: { id: { in: allUserIds } },
       select: { id: true, fullName: true },
     });
+    const userMap = new Map(users.map((u) => [u.id, u]));
 
     return {
       ...comment,
       createdAt: comment.createdAt.toISOString(),
       updatedAt: comment.updatedAt.toISOString(),
-      author: author || { id: userId, fullName: 'Unknown User' },
+      deletedAt: comment.deletedAt ? comment.deletedAt.toISOString() : null,
+      author: userMap.get(userId) || { id: userId, fullName: 'Unknown User' },
+      mentions: mentionIds.map((id) => userMap.get(id) || { id, fullName: 'Unknown User' }),
     };
   }
 
@@ -138,6 +142,8 @@ export class TaskCommentService extends FirmScopedService {
   // ───────────────────────── Delete Comment ─────────────────────────
 
   async deleteComment(taskId: string, commentId: string): Promise<void> {
+    const userId = this.getUserId();
+
     const comment = await this.prisma.taskComment.findFirst({
       where: { id: commentId, taskId },
     });
@@ -145,16 +151,22 @@ export class TaskCommentService extends FirmScopedService {
       throw new NotFoundException('Comment not found');
     }
 
-    // Ownership check
-    if (comment.authorId !== this.getUserId()) {
-      throw new ForbiddenException('You can only delete your own comments');
+    // ADMIN can delete any comment; others only their own
+    if (comment.authorId !== userId) {
+      const currentUser = await this.unscopedPrisma.user.findUnique({
+        where: { id: userId },
+        select: { role: true },
+      });
+      if (currentUser?.role !== UserRole.ADMIN) {
+        throw new ForbiddenException('You can only delete your own comments');
+      }
     }
 
     await this.prisma.taskComment.update({
       where: { id: commentId },
       data: {
         deletedAt: new Date(),
-        deletedBy: this.getUserId(),
+        deletedBy: userId,
       },
     });
 
@@ -166,16 +178,18 @@ export class TaskCommentService extends FirmScopedService {
   async listComments(taskId: string, page: number = 1, limit: number = 20) {
     const skip = (page - 1) * limit;
 
-    // Fetch top-level comments (no parent), newest first
+    // Fetch top-level comments including soft-deleted ones (we need them if they have replies).
+    // We pass deletedAt: undefined to bypass the extension's auto-filter and handle manually.
     const [topLevelComments, total] = await Promise.all([
       this.prisma.taskComment.findMany({
         where: {
           taskId,
           parentCommentId: null,
+          deletedAt: undefined, // bypass soft-delete extension filter
         },
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: 'asc' },
         select: {
           id: true,
           body: true,
@@ -184,6 +198,7 @@ export class TaskCommentService extends FirmScopedService {
           parentCommentId: true,
           createdAt: true,
           updatedAt: true,
+          deletedAt: true,
           replies: {
             where: { deletedAt: null },
             orderBy: { createdAt: 'asc' },
@@ -195,6 +210,7 @@ export class TaskCommentService extends FirmScopedService {
               parentCommentId: true,
               createdAt: true,
               updatedAt: true,
+              deletedAt: true,
             },
           },
         },
@@ -203,43 +219,53 @@ export class TaskCommentService extends FirmScopedService {
         where: {
           taskId,
           parentCommentId: null,
+          deletedAt: null,
         },
       }),
     ]);
 
-    // Batch-fetch author info for all unique authorIds
-    const allComments = topLevelComments.flatMap((c: any) => [
-      c,
-      ...c.replies,
-    ]);
-    const authorIds = [
-      ...new Set(allComments.map((c: any) => c.authorId)),
-    ] as string[];
+    // Filter out soft-deleted top-level comments with no replies (omit entirely per spec)
+    const visibleTopLevel = topLevelComments.filter(
+      (c: any) => c.deletedAt === null || c.replies.length > 0,
+    );
 
-    const authors =
-      authorIds.length > 0
+    // Collect all unique user IDs (authors + mentioned)
+    const allComments = visibleTopLevel.flatMap((c: any) => [c, ...c.replies]);
+    const allUserIds = new Set<string>();
+    for (const c of allComments) {
+      allUserIds.add(c.authorId);
+      for (const id of c.mentions ?? []) {
+        allUserIds.add(id);
+      }
+    }
+
+    const users =
+      allUserIds.size > 0
         ? await this.unscopedPrisma.user.findMany({
-            where: { id: { in: authorIds } },
+            where: { id: { in: [...allUserIds] } },
             select: { id: true, fullName: true },
           })
         : [];
-    const authorMap = new Map(authors.map((a) => [a.id, a]));
+    const userMap = new Map(users.map((u) => [u.id, u]));
 
     const mapComment = (c: any) => ({
       id: c.id,
       body: c.body,
-      mentions: c.mentions,
+      mentions: (c.mentions ?? []).map(
+        (id: string) => userMap.get(id) || { id, fullName: 'Unknown User' },
+      ),
       authorId: c.authorId,
       parentCommentId: c.parentCommentId,
       createdAt: c.createdAt.toISOString(),
       updatedAt: c.updatedAt.toISOString(),
-      author: authorMap.get(c.authorId) || {
+      deletedAt: c.deletedAt ? c.deletedAt.toISOString() : null,
+      author: userMap.get(c.authorId) || {
         id: c.authorId,
         fullName: 'Unknown User',
       },
     });
 
-    const data = topLevelComments.map((c: any) => ({
+    const data = visibleTopLevel.map((c: any) => ({
       ...mapComment(c),
       replies: c.replies.map(mapComment),
     }));
