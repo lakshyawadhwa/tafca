@@ -2,6 +2,7 @@
   import { createMutation, useQueryClient } from '@tanstack/svelte-query';
   import { api } from '../lib/api';
   import { addToast } from '../lib/toast.svelte';
+  import { track } from '../lib/analytics';
 
   interface ChecklistItem {
     id: string;
@@ -68,6 +69,7 @@
         method: 'PATCH',
         body: JSON.stringify({ isCompleted: !item.isCompleted }),
       });
+      track('checklist_item_toggled', { isCompleted: !item.isCompleted });
       qc.invalidateQueries({ queryKey: ['task', taskId] });
     } catch (err: any) {
       items = prev;

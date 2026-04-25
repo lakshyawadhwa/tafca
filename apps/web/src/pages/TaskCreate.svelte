@@ -4,6 +4,7 @@
   import { api } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
+  import { track } from '../lib/analytics';
 
   const qc = useQueryClient();
 
@@ -36,6 +37,7 @@
     onSuccess: (result: any) => {
       qc.invalidateQueries({ queryKey: ['tasks'] });
       addToast('Task created', 'success');
+      track('task_create_completed', { priority, hasEngagement: !!engagementId });
       navigate(`/tasks/${result.id}`);
     },
     onError: (err: any) => addToast(err.message, 'error'),

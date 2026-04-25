@@ -8,6 +8,7 @@
   import { api, ApiError } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
+  import { track } from '../lib/analytics';
 
   // client_id may come from query param
   const searchParams = new URLSearchParams(window.location.search);
@@ -123,6 +124,10 @@
       isDirty = false;
       qc.invalidateQueries({ queryKey: ['engagements'] });
       addToast('Engagement created', 'success');
+      track('engagement_create_completed', {
+        engagementTypeCode: selectedType?.code ?? selectedType?.name ?? engagementTypeId,
+        autoCreateTasks: generateTaskChecklist,
+      });
       navigate(`/engagements/${result.id}`);
     },
     onError: (err: any) => {

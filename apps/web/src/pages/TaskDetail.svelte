@@ -5,6 +5,7 @@
   import { api } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
+  import { track } from '../lib/analytics';
   import ChecklistSection from '../components/ChecklistSection.svelte';
   import DependencySection from '../components/DependencySection.svelte';
 
@@ -44,7 +45,8 @@
         method: 'PATCH',
         body: JSON.stringify({ status }),
       }),
-    onSuccess: () => {
+    onSuccess: (_data: any, newStatus: string) => {
+      track('task_status_changed', { from: prevStatus, to: newStatus });
       qc.invalidateQueries({ queryKey: ['task', id] });
       qc.invalidateQueries({ queryKey: ['tasks'] });
       addToast('Status updated', 'success');
@@ -104,6 +106,7 @@
   }
 
   let showDeleteConfirm = $state(false);
+  let prevStatus = $state<string>('');
 
   const priorityColors: Record<string, string> = {
     URGENT: 'text-red-700 bg-red-50',
@@ -232,7 +235,7 @@
             <span class="text-xs text-gray-500 block mb-1">Status</span>
             <select
               value={t.status}
-              onchange={(e) => $changeStatus.mutate(e.currentTarget.value)}
+              onchange={(e) => { prevStatus = t.status; $changeStatus.mutate(e.currentTarget.value); }}
               class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
               disabled={$changeStatus.isPending}
             >

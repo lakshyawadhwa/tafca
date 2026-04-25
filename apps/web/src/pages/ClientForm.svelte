@@ -5,6 +5,7 @@
   import { api, ApiError } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
+  import { track } from '../lib/analytics';
 
   let { id }: { id?: string } = $props();
 
@@ -148,6 +149,7 @@
       qc.invalidateQueries({ queryKey: ['clients'] });
       if (isEdit) qc.invalidateQueries({ queryKey: ['client', id] });
       addToast(isEdit ? 'Client updated' : 'Client created', 'success');
+      if (!isEdit) track('client_create_completed', { entityType });
       navigate(`/clients/${result.id}`);
     },
     onError: (err: any) => {
