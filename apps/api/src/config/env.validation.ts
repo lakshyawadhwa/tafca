@@ -14,9 +14,13 @@ class EnvironmentVariables {
   @IsNotEmpty()
   DATABASE_URL!: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  REDIS_HOST!: string;
+  REDIS_URL?: string;
+
+  @IsOptional()
+  @IsString()
+  REDIS_HOST?: string;
 
   @IsOptional()
   @IsNumberString()
@@ -25,6 +29,10 @@ class EnvironmentVariables {
   @IsOptional()
   @IsNumberString()
   APP_PORT?: string;
+
+  @IsOptional()
+  @IsNumberString()
+  PORT?: string;
 
   @IsString()
   @MinLength(32)
