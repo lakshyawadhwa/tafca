@@ -36,12 +36,13 @@ Goal: get a public URL so a CA can test. **API on Railway, web on Vercel.**
 
 ## 2. Vercel (web SPA)
 
-1. https://vercel.com → **Add New → Project** → import same repo.
-2. **Root directory:** `apps/web`
-3. **Framework preset:** Other (vercel.json overrides everything).
-4. Before first deploy, edit `apps/web/vercel.json`: replace `REPLACE_WITH_RAILWAY_API_URL` with the Railway domain from step 1.7 (no protocol, just the host).
-5. Push. Vercel builds and gives you a `*.vercel.app` URL.
-6. Copy the Vercel URL → set it as `APP_URL` on Railway api service (step 1.6) → Railway auto-redeploys.
+1. Before first deploy: edit `vercel.json` (repo root) — replace `REPLACE_WITH_RAILWAY_API_DOMAIN` with the Railway domain from step 1.7 (host only, no `https://`). Commit + push.
+2. https://vercel.com → **Add New → Project** → import same repo.
+3. **Root directory:** leave at repo root (`.`). `vercel.json` handles paths.
+4. **Framework preset:** Other.
+5. Build/install/output commands: leave blank — `vercel.json` overrides.
+6. Deploy. Vercel gives a `*.vercel.app` URL.
+7. Copy the Vercel URL → set as `APP_URL` on Railway api service (step 1.6) → Railway auto-redeploys.
 
 ## 3. Smoke test (5 min)
 

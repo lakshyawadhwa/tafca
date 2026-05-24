@@ -1,0 +1,7 @@
+apps/api
+.planning
+docs
+playwright-report
+test-results
+*.log
+.DS_Store
