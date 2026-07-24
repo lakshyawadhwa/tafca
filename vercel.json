@@ -5,7 +5,7 @@
   "outputDirectory": "apps/web/dist",
   "framework": null,
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://REPLACE_WITH_RAILWAY_API_DOMAIN/api/$1" },
+    { "source": "/api/(.*)", "destination": "https://tafca-api.onrender.com/api/$1" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
