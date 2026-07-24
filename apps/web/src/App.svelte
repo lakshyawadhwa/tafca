@@ -36,6 +36,7 @@
   import EngagementList from './pages/EngagementList.svelte';
   import EngagementCreate from './pages/EngagementCreate.svelte';
   import EngagementDetail from './pages/EngagementDetail.svelte';
+  import ComplianceCalendar from './pages/ComplianceCalendar.svelte';
   import Team from './pages/Team.svelte';
   import Leave from './pages/Leave.svelte';
   import Settings from './pages/Settings.svelte';
@@ -64,6 +65,7 @@
   addRoute('/engagements', EngagementList);
   addRoute('/engagements/new', EngagementCreate);
   addRoute('/engagements/:id', EngagementDetail);
+  addRoute('/compliance', ComplianceCalendar);
   addRoute('/team', Team);
   addRoute('/team/leave', Leave);
   addRoute('/settings', Settings);

@@ -1,6 +1,7 @@
 export * from './enums/index.js';
 export * from './constants/task-status-transitions.js';
 export * from './constants/engagement-status-transitions.js';
+export * from './constants/compliance-entry-transitions.js';
 export * from './constants/regex-patterns.js';
 export * from './constants/limits.js';
 export * from './constants/mime-types.js';

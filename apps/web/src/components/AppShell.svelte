@@ -23,6 +23,7 @@
     { label: 'Tasks', path: '/tasks' },
     { label: 'Clients', path: '/clients' },
     { label: 'Engagements', path: '/engagements' },
+    { label: 'Compliance', path: '/compliance' },
     { label: 'Team', path: '/team' },
     { label: 'Settings', path: '/settings', roles: ['PARTNER', 'ADMIN'] as UserRole[] },
     { label: 'Audit Log', path: '/audit-log', roles: ['PARTNER', 'ADMIN'] as UserRole[] },

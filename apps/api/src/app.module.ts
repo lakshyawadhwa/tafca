@@ -28,6 +28,7 @@ import { RecentlyDeletedModule } from './recently-deleted/recently-deleted.modul
 import { TeamModule } from './team/team.module';
 import { PermissionModule } from './permission/permission.module';
 import { InviteModule } from './invite/invite.module';
+import { ComplianceModule } from './compliance/compliance.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { InviteModule } from './invite/invite.module';
     TeamModule,
     PermissionModule,
     InviteModule,
+    ComplianceModule,
   ],
   controllers: [AppController],
   providers: [
