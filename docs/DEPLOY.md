@@ -21,7 +21,7 @@ Files:
 - `api/index.js` — Vercel function entry, re-exports `apps/api/dist/serverless.handler`
 - `apps/api/src/serverless.ts` — boots Nest once per instance, hands Express to Vercel
 - `apps/api/src/app.factory.ts` — shared bootstrap for `main.ts` (local) and `serverless.ts`
-- `scripts/vercel-build.sh` — buildCommand: shared → prisma generate → api → migrate → web
+- `scripts/vercel-install.sh` — installCommand: install → shared → prisma generate → api → migrate. Runs at install because Vercel bundles `api/` functions BEFORE buildCommand; buildCommand only builds web
 - `vercel.json` — rewrites, function config (`includeFiles` pulls Prisma engine into the bundle)
 
 ## 1. Neon (Postgres)
@@ -59,7 +59,7 @@ Free tier: 500K commands/month. We only use Redis for sessions + throttle counte
 
    Skip S3 vars — documents deferred to V1.1.
 
-4. Deploy. Build log should show `[vercel-build] …` steps incl. `prisma migrate deploy`.
+4. Deploy. Build log should show `[vercel-install] …` steps incl. `prisma migrate deploy`.
 5. Check: `https://<project>.vercel.app/api/health` → `{"status":"ok","checks":{"database":{"status":"up"},"redis":{"status":"up"}}}`.
 
 If `DIRECT_URL` is missing the build skips migrations (logged) instead of failing — so preview builds without DB access still succeed.

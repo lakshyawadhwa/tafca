@@ -1,9 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "pnpm install --frozen-lockfile --prod=false",
-  "buildCommand": "bash scripts/vercel-build.sh",
+  "installCommand": "bash scripts/vercel-install.sh",
+  "buildCommand": "pnpm --filter web build",
   "outputDirectory": "apps/web/dist",
   "framework": null,
+  "regions": ["sin1"],
   "functions": {
     "api/index.js": {
       "maxDuration": 30,
