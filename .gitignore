@@ -14,3 +14,5 @@ dist/
 /playwright-report/
 /playwright/.cache/
 .vercel/
+.vercel
+.env*

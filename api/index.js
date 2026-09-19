@@ -18,19 +18,7 @@ module.exports = async (req, res) => {
   if (startupError) {
     res.statusCode = 500;
     res.setHeader('content-type', 'application/json');
-    // List what actually made it into the bundle, to debug tracing/includeFiles.
-    const fs = require('fs');
-    const ls = (d) => { try { return fs.readdirSync(d); } catch (e) { return `ERR ${e.code}`; } };
-    const tree = {
-      cwd: process.cwd(),
-      root: ls(process.cwd()),
-      apps: ls(process.cwd() + '/apps'),
-      'apps/api': ls(process.cwd() + '/apps/api'),
-      'apps/api/dist': ls(process.cwd() + '/apps/api/dist'),
-      'packages/shared': ls(process.cwd() + '/packages/shared'),
-      marker: (() => { try { return fs.readFileSync(process.cwd() + '/packages/shared/dist/.vercel-install-marker', 'utf8'); } catch (e) { return `ERR ${e.code}`; } })(),
-    };
-    res.end(JSON.stringify({ error: 'startup_failed', message: startupError.message, tree }, null, 1));
+    res.end(JSON.stringify({ error: 'startup_failed', message: startupError.message }));
     return;
   }
   try {

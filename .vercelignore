@@ -1,4 +1,4 @@
-apps/api
+# NOTE: apps/api must NOT be listed — it is built into the Vercel function (api/index.js).
 .planning
 docs
 playwright-report

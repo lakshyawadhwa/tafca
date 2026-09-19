@@ -9,16 +9,6 @@
 # through pgbouncer). Runtime env is documented in docs/DEPLOY.md.
 set -euo pipefail
 
-# Debug: mirror all output into a marker file that ends up inside the function
-# bundle (packages/shared/dist is in includeFiles), readable via the startup
-# diagnostic in api/index.js when Vercel's own logs aren't at hand.
-MARKER_DIR="packages/shared/dist"
-MARKER="$MARKER_DIR/.vercel-install-marker"
-mkdir -p "$MARKER_DIR"
-exec > >(tee -a "$MARKER") 2>&1
-echo "== install start $(date -u +%FT%TZ) cwd=$(pwd) node=$(node -v) pnpm=$(pnpm -v)"
-echo "== workspace packages:"; pnpm -r ls --depth -1 2>&1 | head -20
-
 echo "[vercel-install] pnpm install"
 # --prod=false: NODE_ENV=production would otherwise skip devDeps (tsc, nest, prisma CLI)
 pnpm install --frozen-lockfile --prod=false
@@ -31,7 +21,8 @@ pnpm --filter ./apps/api exec prisma generate
 
 echo "[vercel-install] api"
 pnpm --filter ./apps/api build
-ls apps/api/dist | head -5
+# pnpm exits 0 when a filter matches nothing (see .vercelignore history) — fail loudly instead
+test -f apps/api/dist/serverless.js || { echo "apps/api/dist/serverless.js missing — is apps/api excluded by .vercelignore?"; exit 1; }
 
 if [ -n "${DIRECT_URL:-}" ]; then
   echo "[vercel-install] prisma migrate deploy"
@@ -39,4 +30,3 @@ if [ -n "${DIRECT_URL:-}" ]; then
 else
   echo "[vercel-install] DIRECT_URL not set — skipping migrations"
 fi
-echo "== install done $(date -u +%FT%TZ)"
