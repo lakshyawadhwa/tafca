@@ -28,3 +28,11 @@ if [ -n "${DIRECT_URL:-}" ]; then
 else
   echo "[vercel-install] DIRECT_URL not set — skipping migrations"
 fi
+
+# Debug marker: bundled into the function via includeFiles (packages/shared/dist),
+# lets us see from a curl what existed at the end of the install step.
+{
+  echo "install finished: $(date -u +%FT%TZ) pid=$$ cwd=$(pwd)"
+  echo "apps/api/dist: $(ls apps/api/dist 2>&1 | head -c 200)"
+  echo "prisma: $(ls -d node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client 2>&1)"
+} > packages/shared/dist/.vercel-install-marker

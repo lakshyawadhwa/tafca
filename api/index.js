@@ -28,6 +28,7 @@ module.exports = async (req, res) => {
       'apps/api': ls(process.cwd() + '/apps/api'),
       'apps/api/dist': ls(process.cwd() + '/apps/api/dist'),
       'packages/shared': ls(process.cwd() + '/packages/shared'),
+      marker: (() => { try { return fs.readFileSync(process.cwd() + '/packages/shared/dist/.vercel-install-marker', 'utf8'); } catch (e) { return `ERR ${e.code}`; } })(),
     };
     res.end(JSON.stringify({ error: 'startup_failed', message: startupError.message, tree }, null, 1));
     return;
