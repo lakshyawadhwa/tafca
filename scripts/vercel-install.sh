@@ -9,6 +9,16 @@
 # through pgbouncer). Runtime env is documented in docs/DEPLOY.md.
 set -euo pipefail
 
+# Debug: mirror all output into a marker file that ends up inside the function
+# bundle (packages/shared/dist is in includeFiles), readable via the startup
+# diagnostic in api/index.js when Vercel's own logs aren't at hand.
+MARKER_DIR="packages/shared/dist"
+MARKER="$MARKER_DIR/.vercel-install-marker"
+mkdir -p "$MARKER_DIR"
+exec > >(tee -a "$MARKER") 2>&1
+echo "== install start $(date -u +%FT%TZ) cwd=$(pwd) node=$(node -v) pnpm=$(pnpm -v)"
+echo "== workspace packages:"; pnpm -r ls --depth -1 2>&1 | head -20
+
 echo "[vercel-install] pnpm install"
 # --prod=false: NODE_ENV=production would otherwise skip devDeps (tsc, nest, prisma CLI)
 pnpm install --frozen-lockfile --prod=false
@@ -17,22 +27,16 @@ echo "[vercel-install] shared"
 pnpm --filter @ca-practice-os/shared build
 
 echo "[vercel-install] prisma generate"
-pnpm --filter api exec prisma generate
+pnpm --filter ./apps/api exec prisma generate
 
 echo "[vercel-install] api"
-pnpm --filter api build
+pnpm --filter ./apps/api build
+ls apps/api/dist | head -5
 
 if [ -n "${DIRECT_URL:-}" ]; then
   echo "[vercel-install] prisma migrate deploy"
-  DATABASE_URL="$DIRECT_URL" pnpm --filter api exec prisma migrate deploy
+  DATABASE_URL="$DIRECT_URL" pnpm --filter ./apps/api exec prisma migrate deploy
 else
   echo "[vercel-install] DIRECT_URL not set — skipping migrations"
 fi
-
-# Debug marker: bundled into the function via includeFiles (packages/shared/dist),
-# lets us see from a curl what existed at the end of the install step.
-{
-  echo "install finished: $(date -u +%FT%TZ) pid=$$ cwd=$(pwd)"
-  echo "apps/api/dist: $(ls apps/api/dist 2>&1 | head -c 200)"
-  echo "prisma: $(ls -d node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client 2>&1)"
-} > packages/shared/dist/.vercel-install-marker
+echo "== install done $(date -u +%FT%TZ)"
