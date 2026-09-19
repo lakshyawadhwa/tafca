@@ -4,15 +4,23 @@
   "buildCommand": "pnpm --filter web build",
   "outputDirectory": "apps/web/dist",
   "framework": null,
-  "regions": ["sin1"],
+  "regions": [
+    "sin1"
+  ],
   "functions": {
     "api/index.js": {
       "maxDuration": 30,
-      "includeFiles": "node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client/**"
+      "includeFiles": "{apps/api/dist/**,packages/shared/dist/**,node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client/**}"
     }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
   ]
 }
