@@ -1,11 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm --filter @ca-practice-os/shared build && pnpm --filter web build",
   "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "bash scripts/vercel-build.sh",
   "outputDirectory": "apps/web/dist",
   "framework": null,
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30,
+      "includeFiles": "node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client/**"
+    }
+  },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://tafca-api.onrender.com/api/$1" },
+    { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

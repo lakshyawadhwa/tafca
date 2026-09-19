@@ -1,75 +1,93 @@
-# Deploy — fastest path to live URL
+# Deploy — free tier, single Vercel project
 
-Goal: get a public URL so a CA can test. **API on Railway, web on Vercel.**
+Goal: public URL a CA can test, ₹0/month. Web (static) + API (serverless function) on **Vercel**, Postgres on **Neon**, Redis on **Upstash**. All free tiers.
 
-## 1. Railway (API + Postgres + Redis)
+Why not Railway/Render: Railway is paid. Render free sleeps after 15 min → ~50s cold start. Vercel cold start is ~2–4s (Nest bootstrap) and there is no sleep.
 
-1. Push branch to GitHub.
-2. https://railway.app → **New Project → Deploy from GitHub repo** → pick this repo.
-3. Railway detects `railway.toml` → uses `apps/api/Dockerfile`. Build will start.
-4. Add Postgres: **+ New → Database → Postgres**. Railway sets `DATABASE_URL` on the postgres service; you must reference it from the api service.
-5. Add Redis: **+ New → Database → Redis**. Same — reference `REDIS_URL` from api service.
-6. On the **api service → Variables**, set:
+## How it fits together
 
-   ```
-   DATABASE_URL   = ${{Postgres.DATABASE_URL}}
-   REDIS_URL      = ${{Redis.REDIS_URL}}
-   JWT_SECRET     = <openssl rand -hex 32>
-   JWT_ISSUER     = ca-practice-os
-   ENCRYPTION_KEY = <openssl rand -hex 32>   # 64 hex chars
-   APP_URL        = https://<your-vercel-domain>.vercel.app
-   NODE_ENV       = production
-   ```
+```
+browser ──> vercel.app
+             ├─ /api/*   -> api/index.js  (Vercel Node function)
+             │             └─ apps/api/dist/serverless.js (Nest app, cached per instance)
+             │                  ├─ Neon Postgres  (DATABASE_URL, pooled)
+             │                  └─ Upstash Redis  (REDIS_URL, sessions + throttle)
+             └─ /*       -> apps/web/dist/index.html (SPA)
+```
 
-   (Skip S3 vars — documents deferred to V1.1.)
+Same origin for web and API → no CORS in prod (APP_URL still set for safety).
 
-7. **api service → Settings → Networking → Generate Domain.** Note the URL, e.g. `ca-api-production.up.railway.app`.
-8. First deploy runs `prisma migrate deploy` automatically (see Dockerfile CMD). Check logs.
-9. Seed platform data (engagement types, deadlines, role perms, task templates) — one-time:
+Files:
+- `api/index.js` — Vercel function entry, re-exports `apps/api/dist/serverless.handler`
+- `apps/api/src/serverless.ts` — boots Nest once per instance, hands Express to Vercel
+- `apps/api/src/app.factory.ts` — shared bootstrap for `main.ts` (local) and `serverless.ts`
+- `scripts/vercel-build.sh` — buildCommand: shared → prisma generate → api → migrate → web
+- `vercel.json` — rewrites, function config (`includeFiles` pulls Prisma engine into the bundle)
 
-   ```bash
-   # local machine, against prod DB:
-   railway run --service api pnpm db:seed
-   ```
+## 1. Neon (Postgres)
 
-   Or temporarily change Dockerfile CMD to include `pnpm db:seed &&` for first deploy, then revert.
+1. https://neon.tech → New project, region **Singapore (ap-southeast-1)** (closest to India).
+2. Dashboard → Connection string. Grab **both**:
+   - **Pooled** (host has `-pooler`) → runtime. Append `?pgbouncer=true`:
+     `postgresql://user:pw@ep-xxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&pgbouncer=true`
+   - **Direct** (no `-pooler`) → migrations + seed.
 
-## 2. Vercel (web SPA)
+Free tier: 0.5 GB, scales to zero after 5 min idle (~1s wake). No 30-day expiry (unlike Render's free PG).
 
-1. Before first deploy: edit `vercel.json` (repo root) — replace `REPLACE_WITH_RAILWAY_API_DOMAIN` with the Railway domain from step 1.7 (host only, no `https://`). Commit + push.
-2. https://vercel.com → **Add New → Project** → import same repo.
-3. **Root directory:** leave at repo root (`.`). `vercel.json` handles paths.
-4. **Framework preset:** Other.
-5. Build/install/output commands: leave blank — `vercel.json` overrides.
-6. Deploy. Vercel gives a `*.vercel.app` URL.
-7. Copy the Vercel URL → set as `APP_URL` on Railway api service (step 1.6) → Railway auto-redeploys.
+## 2. Upstash (Redis)
 
-## 3. Smoke test (5 min)
+1. https://upstash.com → Create database, region **ap-southeast-1**, TLS on.
+2. Copy the `rediss://default:xxx@xxx.upstash.io:6379` URL. ioredis handles TLS from the `rediss://` scheme.
 
-Open the Vercel URL:
+Free tier: 500K commands/month. We only use Redis for sessions + throttle counters — a few commands per request. Fine.
 
-- [ ] `/register` — create firm + first user
-- [ ] Land on `/onboarding` — complete or skip all 3 steps
-- [ ] Dashboard loads (onboarding checklist visible if not done)
-- [ ] Create a client (`/clients/new`)
-- [ ] Create an engagement (`/engagements/new`)
-- [ ] Open the engagement → create a task
-- [ ] Open the task → post a comment, mention yourself
+## 3. Vercel
 
-If any step 500s: Railway → api service → Logs.
+1. https://vercel.com → Add New Project → import `lakshyawadhwa/tafca`.
+2. **Root Directory: leave as repo root.** Framework: Other. Build/output settings come from `vercel.json` — don't override in the dashboard.
+3. Environment Variables (Production + Preview):
 
-## 4. Hand to CA friend
+   | Name | Value | Used |
+   |---|---|---|
+   | `DATABASE_URL` | Neon **pooled** URL with `?pgbouncer=true` | runtime |
+   | `DIRECT_URL` | Neon **direct** URL | build only (`prisma migrate deploy`) |
+   | `REDIS_URL` | Upstash `rediss://…` | runtime |
+   | `JWT_SECRET` | `openssl rand -hex 32` | runtime |
+   | `JWT_ISSUER` | `ca-practice-os` | runtime |
+   | `NODE_ENV` | `production` | runtime |
+   | `APP_URL` | `https://<project>.vercel.app` | runtime (CORS). Set after first deploy, then redeploy |
 
-Share:
+   Skip S3 vars — documents deferred to V1.1.
 
-- URL: `https://<your-vercel-domain>.vercel.app/register`
-- Tell them: WhatsApp, document uploads, and email notifications are deferred — comments + tasks + clients are the V1 surface.
+4. Deploy. Build log should show `[vercel-build] …` steps incl. `prisma migrate deploy`.
+5. Check: `https://<project>.vercel.app/api/health` → `{"status":"ok","checks":{"database":{"status":"up"},"redis":{"status":"up"}}}`.
 
-## Cost
+If `DIRECT_URL` is missing the build skips migrations (logged) instead of failing — so preview builds without DB access still succeed.
 
-- Railway: ~$5/mo trial credit, then ~$5–10/mo for small workloads
-- Vercel: free hobby tier is enough
+## 4. Seed platform data (once)
 
-## Rotating secrets
+Engagement types, statutory deadlines, task templates, role permissions. Run locally against Neon **direct** URL:
 
-`JWT_SECRET` rotation invalidates all sessions — fine pre-launch. `ENCRYPTION_KEY` rotation **breaks the credential locker** (encrypted credentials become unreadable). Generate once, keep safe.
+```bash
+DATABASE_URL='<neon direct url>' pnpm --filter api db:seed
+```
+
+## 5. Smoke test
+
+1. Register firm → login.
+2. Create client → engagement → task.
+3. Open Compliance Calendar.
+4. Reload page — session should survive (Redis).
+
+## Gotchas
+
+- **Cold start**: first request after idle ≈ 2–4s (Nest boot + Neon wake). Warm requests are normal. Hit `/api/health` before a demo.
+- **Function timeout**: 30s (`vercel.json`). Nothing should get near that.
+- **Migrations run in build**, not at request time. Failed migration = failed deploy = old version stays live. Good.
+- **Prisma engine**: `binaryTargets` includes `rhel-openssl-3.0.x` (Vercel's Lambda base). `includeFiles` in `vercel.json` copies the engine + `schema.prisma` into the function bundle. If you see `Query engine library not found` → check that glob still matches the pnpm path after a Prisma upgrade.
+- **Vercel Hobby = non-commercial.** Fine for demos. Charging firms → Pro ($20/mo) or move API elsewhere.
+- **Local verify** without deploying: `pnpm dlx vercel build` (needs `.vercel/project.json`; `vercel link` creates it).
+
+## Local dev unchanged
+
+`docker compose up -d postgres redis` + `pnpm dev`. `main.ts` still runs a normal long-lived server.
