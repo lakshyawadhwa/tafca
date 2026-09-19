@@ -18,7 +18,18 @@ module.exports = async (req, res) => {
   if (startupError) {
     res.statusCode = 500;
     res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({ error: 'startup_failed', message: startupError.message }));
+    // List what actually made it into the bundle, to debug tracing/includeFiles.
+    const fs = require('fs');
+    const ls = (d) => { try { return fs.readdirSync(d); } catch (e) { return `ERR ${e.code}`; } };
+    const tree = {
+      cwd: process.cwd(),
+      root: ls(process.cwd()),
+      apps: ls(process.cwd() + '/apps'),
+      'apps/api': ls(process.cwd() + '/apps/api'),
+      'apps/api/dist': ls(process.cwd() + '/apps/api/dist'),
+      'packages/shared': ls(process.cwd() + '/packages/shared'),
+    };
+    res.end(JSON.stringify({ error: 'startup_failed', message: startupError.message, tree }, null, 1));
     return;
   }
   try {
