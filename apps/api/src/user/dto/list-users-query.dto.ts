@@ -8,7 +8,9 @@ export class ListUsersQueryDto {
   role?: UserRole;
 
   @IsOptional()
-  @Transform(({ value }) => value === 'true')
+  // enableImplicitConversion runs Boolean(value) first, which makes "false" true.
+  // Read the raw query value off `obj` so "false" stays false.
+  @Transform(({ obj, key }) => obj[key] === 'true')
   isActive?: boolean;
 
   @IsOptional()

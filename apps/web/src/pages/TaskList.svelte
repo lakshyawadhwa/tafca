@@ -90,7 +90,7 @@
     if (debouncedSearch) p.set('search', debouncedSearch);
     if (statusFilter) p.set('status', statusFilter);
     if (priorityFilter) p.set('priority', priorityFilter);
-    if (assignedToMe && currentUser) p.set('assignee_id', currentUser.id);
+    if (assignedToMe && currentUser) p.set('assigneeId', currentUser.id);
     return p.toString();
   });
 
@@ -191,7 +191,7 @@
   </div>
 
   <!-- Table -->
-  {#if $tasks.isLoading || !hydrated}
+  {#if $tasks.isPending || !hydrated}
     <p class="text-sm text-gray-500 py-8 text-center">Loading tasks...</p>
   {:else if $tasks.isError}
     <p class="text-sm text-red-600 py-8 text-center">Failed to load tasks.</p>

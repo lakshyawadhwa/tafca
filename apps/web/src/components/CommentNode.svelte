@@ -61,7 +61,8 @@
   );
 
   // Regex to render mention chips
-  const MENTION_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
+  // Tokens are stored as @[Name](id) — match the @ too, or it survives the replace.
+  const MENTION_RE = /@\[([^\]]+)\]\(([^)]+)\)/g;
 
   function renderBody(raw: string): string {
     return raw.replace(MENTION_RE, '<span class="text-blue-600 font-medium">@$1</span>');
@@ -106,7 +107,7 @@
     editBody = comment.body;
     // Extract existing mention IDs from @[Name](id) tokens in the body
     editMentions = [];
-    const re = /\[([^\]]+)\]\(([^)]+)\)/g;
+    const re = /@\[([^\]]+)\]\(([^)]+)\)/g;
     let m;
     while ((m = re.exec(comment.body)) !== null) {
       editMentions.push(m[2]);

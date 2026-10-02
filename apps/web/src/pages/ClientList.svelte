@@ -118,7 +118,7 @@
     </select>
   </div>
 
-  {#if $clients.isLoading}
+  {#if $clients.isPending}
     <p class="text-sm text-gray-500 py-8 text-center">Loading clients...</p>
   {:else if $clients.isError}
     <p class="text-sm text-red-600 py-8 text-center">Failed to load clients.</p>

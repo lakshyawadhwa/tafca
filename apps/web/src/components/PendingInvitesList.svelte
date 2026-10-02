@@ -38,7 +38,7 @@
   }
 </script>
 
-{#if $invites.isLoading}
+{#if $invites.isPending}
   <p class="text-sm text-gray-500">Loading invites…</p>
 {:else if $invites.isError}
   <p class="text-sm text-red-600">Failed to load invites.</p>

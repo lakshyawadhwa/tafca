@@ -23,7 +23,7 @@
   // Tasks scoped to this engagement, sorted by due_date ASC
   const tasks = createQuery(toStore(() => ({
     queryKey: ['tasks', 'engagement', id],
-    queryFn: () => api(`/tasks?engagement_id=${id}&limit=200&sortBy=dueDate&sortOrder=asc`),
+    queryFn: () => api(`/tasks?engagementId=${id}&limit=100&sortBy=dueDate&sortOrder=asc`),
   })));
 
   // Status change

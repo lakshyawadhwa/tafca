@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
+  import { toStore } from 'svelte/store';
   import { TaskPriority } from '@ca-practice-os/shared';
   import { api } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
@@ -13,8 +14,10 @@
   let priority = $state<string>(TaskPriority.MEDIUM);
   let assigneeId = $state('');
   let reviewerId = $state('');
-  let clientId = $state('');
-  let engagementId = $state('');
+  // "Add Task" from an engagement/client page passes these in the query string.
+  const prefill = new URLSearchParams(window.location.search);
+  let clientId = $state(prefill.get('client_id') ?? '');
+  let engagementId = $state(prefill.get('engagement_id') ?? '');
   let dueDate = $state('');
 
   // Load users and clients for pickers
@@ -26,6 +29,18 @@
   const clients = createQuery({
     queryKey: ['clients-picker'],
     queryFn: () => api('/clients?limit=100'),
+  });
+
+  // Engagements are scoped to the picked client, so this refetches when it changes.
+  const engagements = createQuery(toStore(() => ({
+    queryKey: ['engagements-picker', clientId],
+    queryFn: () => api(`/engagements?clientId=${clientId}&limit=100`),
+    enabled: !!clientId,
+  })));
+
+  // Clearing the client orphans the engagement, so drop it too.
+  $effect(() => {
+    if (!clientId && engagementId) engagementId = '';
   });
 
   const create = createMutation({
@@ -147,6 +162,11 @@
         <label for="engagement" class="block text-sm font-medium text-gray-700 mb-1">Engagement</label>
         <select id="engagement" bind:value={engagementId} class="w-full rounded border border-gray-300 px-3 py-2 text-sm" disabled={!clientId}>
           <option value="">None</option>
+          {#if $engagements.data?.data}
+            {#each $engagements.data.data as e}
+              <option value={e.id}>{e.name}</option>
+            {/each}
+          {/if}
         </select>
         {#if !clientId}
           <p class="text-xs text-gray-400 mt-1">Select a client first</p>

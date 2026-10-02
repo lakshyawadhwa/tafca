@@ -16,7 +16,7 @@
 
   const engagements = createQuery(toStore(() => ({
     queryKey: ['engagements', 'client', id],
-    queryFn: () => api(`/engagements?clientId=${id}&limit=50&sortBy=createdAt&sortDir=desc`),
+    queryFn: () => api(`/engagements?clientId=${id}&limit=50&sortBy=createdAt&sortOrder=desc`),
   })));
 
   const deleteClient = createMutation({

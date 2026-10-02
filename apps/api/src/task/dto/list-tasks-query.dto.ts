@@ -69,7 +69,9 @@ export class ListTasksQueryDto {
 
   /** If true, filter overdue tasks (dueDate < today AND status not DONE/CANCELLED) */
   @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === true)
+  // enableImplicitConversion runs Boolean(value) first, which makes "false" true.
+  // Read the raw query value off `obj` so "false" stays false.
+  @Transform(({ obj, key }) => obj[key] === 'true')
   overdue?: boolean;
 
   /** Filter subtasks of a specific parent. When absent, only top-level tasks returned. */

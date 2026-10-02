@@ -65,10 +65,11 @@
   const clientsQuery = createQuery(
     toStore(() => ({
       queryKey: ['clients-all'],
-      queryFn: () => api(`/clients?page=1&limit=200`),
+      queryFn: () => api(`/clients?page=1&limit=100`),
     })),
   );
-  const clients = $derived(($clientsQuery.data?.items ?? []) as any[]);
+  // /clients is paginated as { data, meta } — only the compliance endpoints return { items }.
+  const clients = $derived(($clientsQuery.data?.data ?? []) as any[]);
 
   // Group calendar items by due date for a scannable list.
   const grouped = $derived.by(() => {
