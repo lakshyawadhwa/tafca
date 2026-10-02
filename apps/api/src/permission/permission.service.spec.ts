@@ -144,3 +144,61 @@ describe('PermissionService', () => {
     });
   });
 });
+
+/**
+ * Every role can hand a task to a colleague — work moves sideways in a small
+ * practice. Assignment is still a distinct permission from editing, because
+ * the check has to cover both doors: gating only the update path left the same
+ * capability reachable by creating a task pre-assigned.
+ */
+describe('task:assign by role', () => {
+  const svc = () =>
+    new PermissionService({
+      unscoped: { firmRolePermission: { findUnique: jest.fn().mockResolvedValue(null) } },
+    } as any);
+
+  const everyRole = [
+    UserRole.PARTNER,
+    UserRole.MANAGER,
+    UserRole.ADMIN,
+    UserRole.JUNIOR_CA,
+    UserRole.ARTICLE,
+  ];
+
+  it.each(everyRole)('%s can hand work to someone else', async (role) => {
+    await expect(svc().can(actor(role), 'task', 'assign')).resolves.toBe(true);
+  });
+});
+
+/**
+ * Clients and engagements are senior work — juniors and articles do the tasks
+ * on them but do not open or close the relationship itself.
+ */
+describe('client and engagement creation is senior-only', () => {
+  const svc = () =>
+    new PermissionService({
+      unscoped: { firmRolePermission: { findUnique: jest.fn().mockResolvedValue(null) } },
+    } as any);
+
+  const seniors = [UserRole.PARTNER, UserRole.MANAGER, UserRole.ADMIN];
+  const juniors = [UserRole.JUNIOR_CA, UserRole.ARTICLE];
+
+  it.each(seniors)('%s can create clients and engagements', async (role) => {
+    await expect(svc().can(actor(role), 'client', 'create')).resolves.toBe(true);
+    await expect(svc().can(actor(role), 'engagement', 'create')).resolves.toBe(true);
+  });
+
+  it.each(juniors)('%s cannot create clients or engagements', async (role) => {
+    await expect(svc().can(actor(role), 'client', 'create')).resolves.toBe(false);
+    await expect(svc().can(actor(role), 'engagement', 'create')).resolves.toBe(false);
+  });
+
+  it.each(juniors)('%s cannot delete a client', async (role) => {
+    await expect(svc().can(actor(role), 'client', 'delete')).resolves.toBe(false);
+  });
+
+  it('MANAGER can create a client but not delete one', async () => {
+    await expect(svc().can(actor(UserRole.MANAGER), 'client', 'create')).resolves.toBe(true);
+    await expect(svc().can(actor(UserRole.MANAGER), 'client', 'delete')).resolves.toBe(false);
+  });
+});

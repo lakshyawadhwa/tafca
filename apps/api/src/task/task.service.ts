@@ -164,6 +164,21 @@ export class TaskService extends FirmScopedService {
     const firmId = this.getFirmId();
     const userId = this.getUserId();
 
+    // Handing work to someone else needs task:assign, whether that happens on
+    // create or on update. Gating only the update path would leave the same
+    // capability reachable by creating the task pre-assigned.
+    // Assigning to yourself is not "assigning" and stays open to every role.
+    const assigningToSomeoneElse =
+      (!!dto.assigneeId && dto.assigneeId !== userId) ||
+      (!!dto.reviewerId && dto.reviewerId !== userId);
+    if (assigningToSomeoneElse) {
+      const actor = currentActor();
+      await assertCanAccess(this.permissionService, actor, 'task', 'assign', {
+        ownerId: userId,
+        assigneeIds: [userId],
+      });
+    }
+
     // Subtask depth enforcement (TASK-06)
     if (dto.parentTaskId) {
       const parent = await this.prisma.task.findUnique({
