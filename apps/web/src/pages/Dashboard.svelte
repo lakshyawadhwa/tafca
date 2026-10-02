@@ -2,9 +2,17 @@
   import { createQuery } from '@tanstack/svelte-query';
   import { api } from '../lib/api';
   import { getUser } from '../lib/auth.svelte';
+  import { UserRole } from '@ca-practice-os/shared';
   import { navigate } from '../lib/router.svelte';
 
   const user = $derived(getUser());
+
+  // Every step in the setup checklist (firm profile, inviting, first client) is
+  // restricted to PARTNER/ADMIN, so showing it to anyone else offers work they
+  // will only be refused.
+  const canCompleteSetup = $derived(
+    user?.role === UserRole.PARTNER || user?.role === UserRole.ADMIN,
+  );
 
   const dashboard = createQuery({
     queryKey: ['dashboard'],
@@ -46,7 +54,7 @@
     {@const d = $dashboard.data}
 
     <!-- Onboarding checklist -->
-    {#if d.onboarding && !d.onboarding.allDone && !onboardingDismissed}
+    {#if canCompleteSetup && d.onboarding && !d.onboarding.allDone && !onboardingDismissed}
       {@const ob = d.onboarding}
       {@const done = [ob.firmProfileDone, ob.teamInvited, ob.clientAdded].filter(Boolean).length}
       <div class="bg-blue-50 border border-blue-200 rounded-lg p-5">

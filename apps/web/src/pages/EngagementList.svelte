@@ -5,6 +5,7 @@
   import { api } from '../lib/api';
   import { addToast } from '../lib/toast.svelte';
   import { navigate } from '../lib/router.svelte';
+  import { can } from '../lib/permissions';
 
   const qc = useQueryClient();
 
@@ -85,14 +86,20 @@
     if (!d) return '-';
     return new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
   }
+
+  // The API refuses engagement:create for roles the matrix excludes, so do not
+  // offer a button that can only end in a 403.
+  const canCreate = $derived(can('engagement', 'create'));
 </script>
 
 <div class="space-y-4">
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-bold text-gray-900">Engagements</h1>
-    <button onclick={() => navigate('/engagements/new')} class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700">
-      New Engagement
-    </button>
+    {#if canCreate}
+      <button onclick={() => navigate('/engagements/new')} class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700">
+        New Engagement
+      </button>
+    {/if}
   </div>
 
   <div class="flex flex-wrap gap-3">

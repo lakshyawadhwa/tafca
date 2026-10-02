@@ -14,6 +14,13 @@ import {
 } from '@ca-practice-os/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { FirmScopedService } from '../common/base/firm-scoped.service';
+import { PermissionService } from '../permission/permission.service';
+import {
+  assertCanAccess,
+  currentActor,
+  engagementScopeWhere,
+  withScope,
+} from '../permission/permission-scope.helper';
 import { EngagementTypeService } from '../engagement-type/engagement-type.service';
 import { CreateEngagementDto } from './dto/create-engagement.dto';
 import { UpdateEngagementDto } from './dto/update-engagement.dto';
@@ -64,8 +71,43 @@ export class EngagementService extends FirmScopedService {
   constructor(
     prismaService: PrismaService,
     private readonly engagementTypeService: EngagementTypeService,
+    private readonly permissionService: PermissionService,
   ) {
     super(prismaService);
+  }
+
+  /**
+   * Record-level check for scoped roles. An engagement counts as the user's
+   * when they hold one of its slots or are on the assigned client.
+   */
+  private async assertEngagementAccess(
+    engagement: {
+      createdBy?: string | null;
+      assignedPartnerId?: string | null;
+      assignedManagerId?: string | null;
+      assignedTeam?: string[] | null;
+      client?: {
+        assignedPartnerId?: string | null;
+        assignedManagerId?: string | null;
+        assignedJuniorId?: string | null;
+        assignedArticleId?: string | null;
+      } | null;
+    },
+    action: 'view' | 'edit' | 'status_change',
+  ): Promise<void> {
+    const actor = currentActor();
+    await assertCanAccess(this.permissionService, actor, 'engagement', action, {
+      ownerId: engagement.createdBy ?? null,
+      assigneeIds: [
+        engagement.assignedPartnerId,
+        engagement.assignedManagerId,
+        ...(engagement.assignedTeam ?? []),
+        engagement.client?.assignedPartnerId,
+        engagement.client?.assignedManagerId,
+        engagement.client?.assignedJuniorId,
+        engagement.client?.assignedArticleId,
+      ],
+    });
   }
 
   /**
@@ -344,12 +386,23 @@ export class EngagementService extends FirmScopedService {
       ];
     }
 
+    const actor = currentActor();
+    const viewScope = await this.permissionService.getScope(
+      actor.firmId,
+      actor.role,
+      'engagement',
+      'view',
+    );
+    const scopedWhere = viewScope
+      ? withScope(where, engagementScopeWhere(viewScope, actor.id))
+      : where;
+
     const skip = (page - 1) * limit;
     const orderBy = { [sortBy]: sortOrder };
 
     const [data, total] = await Promise.all([
       this.prisma.engagement.findMany({
-        where,
+        where: scopedWhere,
         skip,
         take: limit,
         orderBy,
@@ -360,7 +413,7 @@ export class EngagementService extends FirmScopedService {
           },
         },
       }),
-      this.prisma.engagement.count({ where }),
+      this.prisma.engagement.count({ where: scopedWhere }),
     ]);
 
     // Get task progress for each engagement
@@ -391,12 +444,25 @@ export class EngagementService extends FirmScopedService {
   async getEngagement(id: string): Promise<EngagementResponseDto> {
     const engagement = await this.prisma.engagement.findUnique({
       where: { id },
-      select: ENGAGEMENT_SELECT,
+      select: {
+        ...ENGAGEMENT_SELECT,
+        createdBy: true,
+        client: {
+          select: {
+            assignedPartnerId: true,
+            assignedManagerId: true,
+            assignedJuniorId: true,
+            assignedArticleId: true,
+          },
+        },
+      },
     });
 
     if (!engagement) {
       throw new NotFoundException('Engagement not found');
     }
+
+    await this.assertEngagementAccess(engagement as any, 'view');
 
     const userIds = Array.from(
       new Set(
