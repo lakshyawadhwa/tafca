@@ -114,6 +114,19 @@ shared per origin, so two roles cannot be driven in parallel in one browser.
 
 ---
 
+## New — found while changing the assign policy
+
+### N-1 Permission cache has no invalidation hook — TODO
+`PermissionService` caches resolved scopes in memory and `invalidate()` exists
+but nothing calls it. Changing `firm_role_permissions` therefore has no effect
+until the API restarts — which cost real debugging time when the task:assign
+grant appeared to do nothing. This matters more than it looks: the table exists
+precisely so a firm can override permissions from a future admin UI, and that
+UI will silently appear broken. Call `invalidate(firmId)` wherever those rows
+are written, or drop the cache to a short TTL.
+
+---
+
 ## Deferred (needs a product decision, not a fix)
 
 - **Partner-approval workflow for privileged roles.** Adding a PARTNER or ADMIN would
@@ -154,3 +167,5 @@ running API before moving on.
 **Prod state:** both migrations applied to Neon
 (`20261003030000_unique_identity_constraints` included). The API changes are
 pushed to main and will deploy on the next Vercel build.
+| 2026-10-03 | policy | Task assignment opened to every role (user decision); clients/engagements confirmed senior-only. Closed an assign-on-create hole in passing. Migration applied to prod. |
+| 2026-10-03 | N-1 | FOUND, not fixed. Permission cache never invalidated — permission changes need an API restart. |
