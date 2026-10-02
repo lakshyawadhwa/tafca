@@ -1,5 +1,7 @@
 import {
   Injectable,
+  ForbiddenException,
+  NotFoundException,
   ConflictException,
   BadRequestException,
   Logger,
@@ -8,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { UserRole, TaskStatus } from '@ca-practice-os/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { FirmScopedService } from '../common/base/firm-scoped.service';
+import { getUserRole } from '../common/context/request-context';
 import { SessionService } from '../session/session.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -111,6 +114,8 @@ export class UserService extends FirmScopedService {
     }
 
     // Hash password
+    this.assertMayGrantRole(dto.role);
+
     const passwordHash = await bcrypt.hash(dto.password, 12);
 
     const user = await this.prisma.user.create({
@@ -133,6 +138,26 @@ export class UserService extends FirmScopedService {
   }
 
   /**
+   * PARTNER and ADMIN can see and change everything in the firm, so handing out
+   * those roles is itself a privileged act. Only a PARTNER may do it — an ADMIN
+   * minting another ADMIN would otherwise be an unchecked escalation path.
+   *
+   * A fuller "an existing partner must approve" workflow is tracked separately;
+   * this closes the escalation now.
+   */
+  private assertMayGrantRole(role: UserRole): void {
+    const privileged = role === UserRole.PARTNER || role === UserRole.ADMIN;
+    if (!privileged) return;
+
+    const actorRole = getUserRole();
+    if (actorRole !== UserRole.PARTNER) {
+      throw new ForbiddenException(
+        `Only a PARTNER can grant the ${role} role`,
+      );
+    }
+  }
+
+  /**
    * Update a user's profile fields.
    * If role changes, records a UserRoleHistory entry.
    */
@@ -140,13 +165,20 @@ export class UserService extends FirmScopedService {
     userId: string,
     dto: UpdateUserDto,
   ): Promise<UserResponseDto> {
-    // Find the user (firm-scoped, soft-delete filtered)
-    const user = await this.prisma.user.findUniqueOrThrow({
+    // findUnique, not findUniqueOrThrow: the latter raises a raw Prisma
+    // NotFoundError that is not an HttpException, so a user id from another
+    // firm came back as a 500 instead of a 404.
+    const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
 
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
     // Record role change if role is changing
     if (dto.role !== undefined && dto.role !== user.role) {
+      this.assertMayGrantRole(dto.role);
       await this.prisma.userRoleHistory.create({
         data: {
           firmId: this.getFirmId(),
@@ -188,10 +220,16 @@ export class UserService extends FirmScopedService {
    * - Invalidates all user sessions
    */
   async deactivateUser(userId: string): Promise<DeactivateUserResponseDto> {
-    // Find the user (firm-scoped, soft-delete filtered)
-    const user = await this.prisma.user.findUniqueOrThrow({
+    // findUnique, not findUniqueOrThrow: the latter raises a raw Prisma
+    // NotFoundError that is not an HttpException, so a user id from another
+    // firm came back as a 500 instead of a 404.
+    const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     if (!user.isActive) {
       throw new BadRequestException('User is already deactivated');
@@ -247,6 +285,36 @@ export class UserService extends FirmScopedService {
       user: { id: userId, isActive: false },
       openTasksCount,
     };
+  }
+
+  /**
+   * Reactivate a previously deactivated user.
+   *
+   * Deactivation had no inverse, so a user switched off by mistake was locked
+   * out permanently with no route back. Sessions are not restored — the user
+   * signs in again, which is the safer default.
+   */
+  async reactivateUser(userId: string): Promise<UserResponseDto> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.isActive) {
+      throw new BadRequestException('User is already active');
+    }
+
+    const updated = await this.prisma.user.update({
+      where: { id: userId },
+      data: { isActive: true, updatedBy: this.getUserId() },
+      select: USER_SELECT,
+    });
+
+    this.logger.log(`User reactivated: ${userId}`);
+    return this.toUserResponse(updated);
   }
 
   /**

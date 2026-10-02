@@ -7,6 +7,7 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
+import { IsNotBeforeField } from '../../common/validators/is-after-date.validator';
 
 export class UpdateEngagementDto {
   @IsOptional()
@@ -25,6 +26,7 @@ export class UpdateEngagementDto {
 
   @IsOptional()
   @IsDateString()
+  @IsNotBeforeField('periodStart')
   periodEnd?: string;
 
   @IsOptional()

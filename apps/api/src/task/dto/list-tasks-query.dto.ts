@@ -9,6 +9,8 @@ import {
   IsDateString,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
+import { TaskPriority, TaskStatus } from '@ca-practice-os/shared';
+import { IsEnumList } from '../../common/validators/is-enum-list.validator';
 
 export class ListTasksQueryDto {
   @IsOptional()
@@ -51,12 +53,12 @@ export class ListTasksQueryDto {
 
   /** Comma-separated TaskStatus values, e.g. "TO_DO,IN_PROGRESS" */
   @IsOptional()
-  @IsString()
+  @IsEnumList(TaskStatus)
   status?: string;
 
   /** Comma-separated TaskPriority values, e.g. "HIGH,URGENT" */
   @IsOptional()
-  @IsString()
+  @IsEnumList(TaskPriority)
   priority?: string;
 
   @IsOptional()

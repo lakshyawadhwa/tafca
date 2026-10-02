@@ -7,6 +7,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { LeaveType } from '@ca-practice-os/shared';
+import { IsNotBeforeField } from '../../common/validators/is-after-date.validator';
 
 export class CreateLeaveDto {
   @IsEnum(LeaveType)
@@ -16,6 +17,7 @@ export class CreateLeaveDto {
   startDate!: string;
 
   @IsDateString()
+  @IsNotBeforeField('startDate')
   endDate!: string;
 
   @IsOptional()

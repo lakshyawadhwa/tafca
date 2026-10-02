@@ -57,4 +57,12 @@ export class UserController {
   ): Promise<DeactivateUserResponseDto> {
     return this.userService.deactivateUser(id);
   }
+
+  @Patch(':id/reactivate')
+  @Roles(UserRole.PARTNER, UserRole.ADMIN)
+  async reactivateUser(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<UserResponseDto> {
+    return this.userService.reactivateUser(id);
+  }
 }
