@@ -61,13 +61,9 @@
       granted: !!p['task:create'],
     });
 
-    lines.push({
-      label: 'Credentials',
-      value: p['credentials:view']
-        ? `access for ${describeScope(p['credentials:view'])}`
-        : 'no access to client logins',
-      granted: !!p['credentials:view'],
-    });
+    // The credential locker is not built yet (no CredentialModule in the API),
+    // so the matrix's credentials entries would promise a feature that does not
+    // exist. Left out until it ships.
 
     return lines;
   });

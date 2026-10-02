@@ -21,8 +21,10 @@ import {
   REGEX,
   LIMITS,
 } from '@ca-practice-os/shared';
+import { TrimmedString } from '../../common/validators/trim.transform';
 
 export class CreateClientDto {
+  @TrimmedString()
   @IsString()
   @MinLength(2)
   @MaxLength(200)

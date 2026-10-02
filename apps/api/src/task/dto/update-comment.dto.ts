@@ -7,9 +7,11 @@ import {
   ArrayMaxSize,
 } from 'class-validator';
 import { LIMITS } from '@ca-practice-os/shared';
+import { TrimmedString } from '../../common/validators/trim.transform';
 
 export class UpdateCommentDto {
   @IsOptional()
+  @TrimmedString()
   @IsString()
   @MaxLength(LIMITS.COMMENT_MAX_LENGTH)
   body?: string;

@@ -20,7 +20,9 @@ export class RecentlyDeletedController {
   }
 
   @Post(':entityType/:entityId/restore')
-  @Roles(UserRole.PARTNER)
+  // ADMIN can delete records and list the bin, so withholding restore left it
+  // able to remove things it could not put back.
+  @Roles(UserRole.PARTNER, UserRole.ADMIN)
   async restore(
     @Param('entityType') entityType: string,
     @Param('entityId') entityId: string,

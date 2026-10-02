@@ -7,7 +7,7 @@ import {
   Max,
   IsDateString,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 
 export class ListActionLogQueryDto {
   @IsOptional()
@@ -16,6 +16,11 @@ export class ListActionLogQueryDto {
 
   @IsOptional()
   @IsString()
+  // Stored lowercase, so "Task" silently matched nothing and read as an empty
+  // audit trail rather than a bad filter value.
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.toLowerCase().trim() : value,
+  )
   entityType?: string;
 
   @IsOptional()

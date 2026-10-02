@@ -13,8 +13,10 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { TaskPriority, LIMITS } from '@ca-practice-os/shared';
+import { TrimmedString } from '../../common/validators/trim.transform';
 
 export class InitialChecklistItemDto {
+  @TrimmedString()
   @IsString()
   @IsNotEmpty()
   @MaxLength(300)
@@ -26,6 +28,7 @@ export class InitialChecklistItemDto {
 }
 
 export class CreateTaskDto {
+  @TrimmedString()
   @IsString()
   @IsNotEmpty()
   @MaxLength(LIMITS.TASK_TITLE_MAX_LENGTH)

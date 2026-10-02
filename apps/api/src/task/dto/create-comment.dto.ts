@@ -8,8 +8,10 @@ import {
   ArrayMaxSize,
 } from 'class-validator';
 import { LIMITS } from '@ca-practice-os/shared';
+import { TrimmedString } from '../../common/validators/trim.transform';
 
 export class CreateCommentDto {
+  @TrimmedString()
   @IsString()
   @IsNotEmpty()
   @MaxLength(LIMITS.COMMENT_MAX_LENGTH)

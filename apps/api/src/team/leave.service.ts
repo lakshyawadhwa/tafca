@@ -87,7 +87,7 @@ export class LeaveService extends FirmScopedService {
       },
     });
 
-    return this.toDto(record, new Map());
+    return this.toDto(record, await this.buildUserMap(record.userId, record.approvedBy));
   }
 
   /**
@@ -194,7 +194,7 @@ export class LeaveService extends FirmScopedService {
         this.logger.error(`Failed to emit leave notifications: ${err}`),
       );
 
-    return this.toDto(updated, new Map());
+    return this.toDto(updated, await this.buildUserMap(updated.userId, updated.approvedBy));
   }
 
   /**
@@ -230,7 +230,7 @@ export class LeaveService extends FirmScopedService {
       },
     });
 
-    return this.toDto(updated, new Map());
+    return this.toDto(updated, await this.buildUserMap(updated.userId, updated.approvedBy));
   }
 
   /**
@@ -273,7 +273,7 @@ export class LeaveService extends FirmScopedService {
       },
     });
 
-    return this.toDto(updated, new Map());
+    return this.toDto(updated, await this.buildUserMap(updated.userId, updated.approvedBy));
   }
 
   // ───────────────────────── Private Helpers ─────────────────────────
@@ -319,6 +319,24 @@ export class LeaveService extends FirmScopedService {
         },
       });
     }
+  }
+
+  /**
+   * Resolves the names a LeaveDto needs. The write paths used to pass an empty
+   * map, so create/approve/reject/cancel all answered "Unknown User" with a
+   * null approver while the list endpoint showed the same record correctly.
+   */
+  private async buildUserMap(
+    ...userIds: Array<string | null | undefined>
+  ): Promise<Map<string, string>> {
+    const ids = [...new Set(userIds.filter((id): id is string => !!id))];
+    if (ids.length === 0) return new Map();
+
+    const users = await this.unscopedPrisma.user.findMany({
+      where: { id: { in: ids } },
+      select: { id: true, fullName: true },
+    });
+    return new Map(users.map((u) => [u.id, u.fullName]));
   }
 
   private toDto(record: any, userMap: Map<string, string>): LeaveDto {
