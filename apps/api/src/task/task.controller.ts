@@ -30,6 +30,7 @@ import {
   TaskListResponseDto,
   ActivityListResponseDto,
 } from './dto/task-response.dto';
+import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 
 @Controller('tasks')
 export class TaskController {
@@ -44,6 +45,7 @@ export class TaskController {
   // ───────────────────────── Task CRUD ─────────────────────────
 
   @Post()
+  @RequirePermission('task', 'create')
   @HttpCode(HttpStatus.CREATED)
   async createTask(
     @Body() dto: CreateTaskDto,
@@ -52,6 +54,7 @@ export class TaskController {
   }
 
   @Get()
+  @RequirePermission('task', 'view')
   async listTasks(
     @Query() query: ListTasksQueryDto,
   ): Promise<TaskListResponseDto> {
@@ -59,6 +62,7 @@ export class TaskController {
   }
 
   @Get(':id')
+  @RequirePermission('task', 'view')
   async getTask(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<TaskResponseDto> {
@@ -66,6 +70,7 @@ export class TaskController {
   }
 
   @Patch(':id')
+  @RequirePermission('task', 'edit')
   async updateTask(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateTaskDto,
@@ -74,6 +79,7 @@ export class TaskController {
   }
 
   @Patch(':id/status')
+  @RequirePermission('task', 'status_change')
   async changeTaskStatus(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ChangeTaskStatusDto,
@@ -82,6 +88,7 @@ export class TaskController {
   }
 
   @Delete(':id')
+  @RequirePermission('task', 'delete')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteTask(
     @Param('id', ParseUUIDPipe) id: string,
@@ -90,6 +97,7 @@ export class TaskController {
   }
 
   @Get(':id/activity')
+  @RequirePermission('task', 'view')
   async getActivity(
     @Param('id', ParseUUIDPipe) id: string,
     @Query('page') page?: string,
@@ -105,6 +113,7 @@ export class TaskController {
   // ───────────────────────── Checklist Sub-resource ─────────────────────────
 
   @Post(':taskId/checklist')
+  @RequirePermission('checklist', 'create')
   @HttpCode(HttpStatus.CREATED)
   async addChecklistItem(
     @Param('taskId', ParseUUIDPipe) taskId: string,
@@ -114,6 +123,7 @@ export class TaskController {
   }
 
   @Get(':taskId/checklist')
+  @RequirePermission('checklist', 'view')
   async listChecklistItems(
     @Param('taskId', ParseUUIDPipe) taskId: string,
   ) {
@@ -121,6 +131,7 @@ export class TaskController {
   }
 
   @Patch(':taskId/checklist/:id')
+  @RequirePermission('checklist', 'edit')
   async updateChecklistItem(
     @Param('taskId', ParseUUIDPipe) taskId: string,
     @Param('id', ParseUUIDPipe) id: string,
@@ -130,6 +141,7 @@ export class TaskController {
   }
 
   @Delete(':taskId/checklist/:id')
+  @RequirePermission('checklist', 'delete')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteChecklistItem(
     @Param('taskId', ParseUUIDPipe) taskId: string,
@@ -141,6 +153,7 @@ export class TaskController {
   // ───────────────────────── Dependency Sub-resource ─────────────────────────
 
   @Post(':taskId/dependencies')
+  @RequirePermission('dependency', 'create')
   @HttpCode(HttpStatus.CREATED)
   async addDependency(
     @Param('taskId', ParseUUIDPipe) taskId: string,
@@ -150,6 +163,7 @@ export class TaskController {
   }
 
   @Get(':taskId/dependencies')
+  @RequirePermission('dependency', 'view')
   async getDependencies(
     @Param('taskId', ParseUUIDPipe) taskId: string,
   ) {
@@ -157,6 +171,7 @@ export class TaskController {
   }
 
   @Delete(':taskId/dependencies/:dependsOnTaskId')
+  @RequirePermission('dependency', 'delete')
   @HttpCode(HttpStatus.NO_CONTENT)
   async removeDependency(
     @Param('taskId', ParseUUIDPipe) taskId: string,
@@ -168,6 +183,7 @@ export class TaskController {
   // ───────────────────────── Comment Sub-resource ─────────────────────────
 
   @Post(':taskId/comments')
+  @RequirePermission('comment', 'create')
   @HttpCode(HttpStatus.CREATED)
   async addComment(
     @Param('taskId', ParseUUIDPipe) taskId: string,
@@ -190,6 +206,7 @@ export class TaskController {
   }
 
   @Patch(':taskId/comments/:id')
+  @RequirePermission('comment', 'edit')
   async updateComment(
     @Param('taskId', ParseUUIDPipe) taskId: string,
     @Param('id', ParseUUIDPipe) id: string,
@@ -199,6 +216,7 @@ export class TaskController {
   }
 
   @Delete(':taskId/comments/:id')
+  @RequirePermission('comment', 'delete')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteComment(
     @Param('taskId', ParseUUIDPipe) taskId: string,

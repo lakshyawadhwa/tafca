@@ -12,6 +12,13 @@ import {
 } from '@ca-practice-os/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { FirmScopedService } from '../common/base/firm-scoped.service';
+import { PermissionService } from '../permission/permission.service';
+import {
+  assertCanAccess,
+  currentActor,
+  taskScopeWhere,
+  withScope,
+} from '../permission/permission-scope.helper';
 import { TaskActivityService } from './task-activity.service';
 import { TaskNotificationHelper } from './task-notification.helper';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -126,8 +133,29 @@ export class TaskService extends FirmScopedService {
     prismaService: PrismaService,
     private readonly activityService: TaskActivityService,
     private readonly notificationHelper: TaskNotificationHelper,
+    private readonly permissionService: PermissionService,
   ) {
     super(prismaService);
+  }
+
+  /**
+   * Record-level check for scoped roles. The guard runs before the task is
+   * loaded, so it can only verify the role holds the permission at all; this
+   * confirms the user is entitled to this particular task.
+   */
+  private async assertTaskAccess(
+    task: {
+      createdBy?: string | null;
+      assigneeId?: string | null;
+      reviewerId?: string | null;
+    },
+    action: 'view' | 'edit' | 'delete' | 'status_change' | 'assign',
+  ): Promise<void> {
+    const actor = currentActor();
+    await assertCanAccess(this.permissionService, actor, 'task', action, {
+      ownerId: task.createdBy ?? null,
+      assigneeIds: [task.assigneeId, task.reviewerId, task.createdBy],
+    });
   }
 
   // ───────────────────────── Create ─────────────────────────
@@ -278,6 +306,8 @@ export class TaskService extends FirmScopedService {
       throw new NotFoundException('Task not found');
     }
 
+    await this.assertTaskAccess(task as any, 'view');
+
     return this.toTaskResponse(task);
   }
 
@@ -344,18 +374,29 @@ export class TaskService extends FirmScopedService {
       where.status = { notIn: [TaskStatus.DONE, TaskStatus.CANCELLED] };
     }
 
+    const actor = currentActor();
+    const viewScope = await this.permissionService.getScope(
+      actor.firmId,
+      actor.role,
+      'task',
+      'view',
+    );
+    const scopedWhere = viewScope
+      ? withScope(where, taskScopeWhere(viewScope, actor.id))
+      : where;
+
     const skip = (page - 1) * limit;
     const orderBy = { [sortBy]: sortOrder };
 
     const [data, total] = await Promise.all([
       this.prisma.task.findMany({
-        where,
+        where: scopedWhere,
         skip,
         take: limit,
         orderBy,
         select: TASK_LIST_SELECT,
       }),
-      this.prisma.task.count({ where }),
+      this.prisma.task.count({ where: scopedWhere }),
     ]);
 
     return {
@@ -386,11 +427,23 @@ export class TaskService extends FirmScopedService {
         priority: true,
         engagementId: true,
         clientId: true,
+        createdBy: true,
       },
     });
 
     if (!existing) {
       throw new NotFoundException('Task not found');
+    }
+
+    await this.assertTaskAccess(existing, 'edit');
+
+    // Reassigning is a separate permission from editing: roles like ARTICLE may
+    // edit their own task but must not hand work to someone else.
+    const isReassigning =
+      (dto.assigneeId !== undefined && dto.assigneeId !== existing.assigneeId) ||
+      (dto.reviewerId !== undefined && dto.reviewerId !== existing.reviewerId);
+    if (isReassigning) {
+      await this.assertTaskAccess(existing, 'assign');
     }
 
     const userId = this.getUserId();
@@ -528,12 +581,15 @@ export class TaskService extends FirmScopedService {
         reviewerId: true,
         engagementId: true,
         clientId: true,
+        createdBy: true,
       },
     });
 
     if (!task) {
       throw new NotFoundException('Task not found');
     }
+
+    await this.assertTaskAccess(task, 'status_change');
 
     const currentStatus = task.status as TaskStatus;
     const targetStatus = dto.status;
@@ -623,12 +679,19 @@ export class TaskService extends FirmScopedService {
   async deleteTask(id: string): Promise<void> {
     const task = await this.prisma.task.findUnique({
       where: { id },
-      select: { id: true },
+      select: {
+        id: true,
+        createdBy: true,
+        assigneeId: true,
+        reviewerId: true,
+      },
     });
 
     if (!task) {
       throw new NotFoundException('Task not found');
     }
+
+    await this.assertTaskAccess(task, 'delete');
 
     await this.prisma.task.update({
       where: { id },

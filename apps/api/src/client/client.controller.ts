@@ -22,12 +22,14 @@ import {
 } from './dto/client-response.dto';
 import { CreateGstNumberDto } from './dto/create-gst-number.dto';
 import { UpdateGstNumberDto } from './dto/update-gst-number.dto';
+import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 
 @Controller('clients')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Get()
+  @RequirePermission('client', 'view')
   async listClients(
     @Query() query: ListClientsQueryDto,
   ): Promise<PaginatedClientsResponseDto> {
@@ -35,6 +37,7 @@ export class ClientController {
   }
 
   @Post()
+  @RequirePermission('client', 'create')
   @HttpCode(HttpStatus.CREATED)
   async createClient(
     @Body() dto: CreateClientDto,
@@ -43,6 +46,7 @@ export class ClientController {
   }
 
   @Get(':id')
+  @RequirePermission('client', 'view')
   async getClient(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<ClientResponseDto> {
@@ -50,6 +54,7 @@ export class ClientController {
   }
 
   @Patch(':id')
+  @RequirePermission('client', 'edit')
   async updateClient(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateClientDto,
@@ -58,6 +63,7 @@ export class ClientController {
   }
 
   @Delete(':id')
+  @RequirePermission('client', 'delete')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteClient(
     @Param('id', ParseUUIDPipe) id: string,
@@ -68,6 +74,7 @@ export class ClientController {
   // ───────────────────────── GST Number CRUD ─────────────────────────
 
   @Post(':id/gst-numbers')
+  @RequirePermission('client', 'edit')
   @HttpCode(HttpStatus.CREATED)
   async addGstNumber(
     @Param('id', ParseUUIDPipe) clientId: string,
@@ -77,6 +84,7 @@ export class ClientController {
   }
 
   @Patch(':id/gst-numbers/:gstId')
+  @RequirePermission('client', 'edit')
   async updateGstNumber(
     @Param('id', ParseUUIDPipe) clientId: string,
     @Param('gstId', ParseUUIDPipe) gstId: string,
@@ -86,6 +94,7 @@ export class ClientController {
   }
 
   @Delete(':id/gst-numbers/:gstId')
+  @RequirePermission('client', 'edit')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteGstNumber(
     @Param('id', ParseUUIDPipe) clientId: string,

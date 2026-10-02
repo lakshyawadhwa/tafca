@@ -8,6 +8,13 @@ import {
 import { UserRole, EngagementStatus, EntityType } from '@ca-practice-os/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { FirmScopedService } from '../common/base/firm-scoped.service';
+import { PermissionService } from '../permission/permission.service';
+import {
+  assertCanAccess,
+  clientScopeWhere,
+  currentActor,
+  withScope,
+} from '../permission/permission-scope.helper';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { ListClientsQueryDto } from './dto/list-clients-query.dto';
@@ -42,6 +49,7 @@ const CLIENT_SELECT = {
   assignedJuniorId: true,
   assignedArticleId: true,
   onboardedAt: true,
+  createdBy: true,
   createdAt: true,
   updatedAt: true,
 } as const;
@@ -84,8 +92,27 @@ const ASSIGNMENT_ROLE_MAP: Record<string, UserRole> = {
 export class ClientService extends FirmScopedService {
   private readonly logger = new Logger(ClientService.name);
 
-  constructor(prismaService: PrismaService) {
+  constructor(
+    prismaService: PrismaService,
+    private readonly permissionService: PermissionService,
+  ) {
     super(prismaService);
+  }
+
+  /**
+   * The role matrix may limit a user to their assigned clients. The guard has
+   * already confirmed the role holds the permission; this narrows it to the
+   * records they are entitled to.
+   */
+  private async clientScope(action: 'view' | 'edit' | 'delete') {
+    const actor = currentActor();
+    const scope = await this.permissionService.getScope(
+      actor.firmId,
+      actor.role,
+      'client',
+      action,
+    );
+    return { actor, scope };
   }
 
   /**
@@ -188,12 +215,17 @@ export class ClientService extends FirmScopedService {
       ];
     }
 
+    const { actor, scope } = await this.clientScope('view');
+    const scopedWhere = scope
+      ? withScope(where, clientScopeWhere(scope, actor.id))
+      : where;
+
     const skip = (page - 1) * limit;
     const orderBy = { [sortBy]: sortOrder };
 
     const [data, total] = await Promise.all([
       this.prisma.client.findMany({
-        where,
+        where: scopedWhere,
         skip,
         take: limit,
         orderBy,
@@ -202,7 +234,7 @@ export class ClientService extends FirmScopedService {
           _count: { select: { engagements: true, tasks: true } },
         },
       }),
-      this.prisma.client.count({ where }),
+      this.prisma.client.count({ where: scopedWhere }),
     ]);
 
     return {
@@ -233,7 +265,35 @@ export class ClientService extends FirmScopedService {
       throw new NotFoundException('Client not found');
     }
 
+    await this.assertClientAccess(client, 'view');
+
     return this.toClientResponse(client);
+  }
+
+  /**
+   * Record-level check for scoped roles. The guard cannot do this — it runs
+   * before the record is loaded and so cannot know who it is assigned to.
+   */
+  private async assertClientAccess(
+    client: {
+      createdBy?: string | null;
+      assignedPartnerId?: string | null;
+      assignedManagerId?: string | null;
+      assignedJuniorId?: string | null;
+      assignedArticleId?: string | null;
+    },
+    action: 'view' | 'edit' | 'delete',
+  ): Promise<void> {
+    const actor = currentActor();
+    await assertCanAccess(this.permissionService, actor, 'client', action, {
+      ownerId: client.createdBy ?? null,
+      assigneeIds: [
+        client.assignedPartnerId,
+        client.assignedManagerId,
+        client.assignedJuniorId,
+        client.assignedArticleId,
+      ],
+    });
   }
 
   /**
@@ -247,12 +307,22 @@ export class ClientService extends FirmScopedService {
     // Verify client exists
     const existing = await this.prisma.client.findUnique({
       where: { id },
-      select: { id: true, displayName: true },
+      select: {
+        id: true,
+        displayName: true,
+        createdBy: true,
+        assignedPartnerId: true,
+        assignedManagerId: true,
+        assignedJuniorId: true,
+        assignedArticleId: true,
+      },
     });
 
     if (!existing) {
       throw new NotFoundException('Client not found');
     }
+
+    await this.assertClientAccess(existing, 'edit');
 
     // Check displayName uniqueness if it's being changed
     if (dto.displayName !== undefined && dto.displayName !== existing.displayName) {
@@ -307,12 +377,21 @@ export class ClientService extends FirmScopedService {
     // Verify client exists
     const client = await this.prisma.client.findUnique({
       where: { id },
-      select: { id: true },
+      select: {
+        id: true,
+        createdBy: true,
+        assignedPartnerId: true,
+        assignedManagerId: true,
+        assignedJuniorId: true,
+        assignedArticleId: true,
+      },
     });
 
     if (!client) {
       throw new NotFoundException('Client not found');
     }
+
+    await this.assertClientAccess(client, 'delete');
 
     // Check for active engagements (ACTIVE or ON_HOLD)
     const activeEngagementCount = await this.prisma.engagement.count({

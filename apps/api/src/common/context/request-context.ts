@@ -3,6 +3,8 @@ import { AsyncLocalStorage } from 'async_hooks';
 export interface RequestContext {
   firmId: string;
   userId: string;
+  /** Empty before the JWT guard has run, or for public routes. */
+  role: string;
   requestId: string;
 }
 
@@ -28,4 +30,8 @@ export function getUserId(): string {
 
 export function getRequestId(): string {
   return getRequestContext().requestId;
+}
+
+export function getUserRole(): string {
+  return getRequestContext().role;
 }

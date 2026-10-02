@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { FirmScopeGuard } from './auth/guards/firm-scope.guard';
+import { PermissionGuard } from './auth/guards/permission.guard';
 import { RequestContextMiddleware } from './common/context/request-context.middleware';
 import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
 import { UserModule } from './user/user.module';
@@ -62,6 +63,8 @@ import { ComplianceModule } from './compliance/compliance.module';
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_GUARD, useClass: FirmScopeGuard },
+    // Last: needs request.user from JwtAuthGuard to resolve the role matrix.
+    { provide: APP_GUARD, useClass: PermissionGuard },
     { provide: APP_INTERCEPTOR, useClass: ActionLogInterceptor },
   ],
 })

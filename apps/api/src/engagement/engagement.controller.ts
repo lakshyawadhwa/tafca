@@ -19,12 +19,14 @@ import {
   EngagementResponseDto,
   PaginatedEngagementsResponseDto,
 } from './dto/engagement-response.dto';
+import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 
 @Controller('engagements')
 export class EngagementController {
   constructor(private readonly engagementService: EngagementService) {}
 
   @Get()
+  @RequirePermission('engagement', 'view')
   async listEngagements(
     @Query() query: ListEngagementsQueryDto,
   ): Promise<PaginatedEngagementsResponseDto> {
@@ -32,6 +34,7 @@ export class EngagementController {
   }
 
   @Post()
+  @RequirePermission('engagement', 'create')
   @HttpCode(HttpStatus.CREATED)
   async createEngagement(
     @Body() dto: CreateEngagementDto,
@@ -40,6 +43,7 @@ export class EngagementController {
   }
 
   @Get(':id')
+  @RequirePermission('engagement', 'view')
   async getEngagement(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<EngagementResponseDto> {
@@ -47,6 +51,7 @@ export class EngagementController {
   }
 
   @Patch(':id')
+  @RequirePermission('engagement', 'edit')
   async updateEngagement(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateEngagementDto,
@@ -55,6 +60,7 @@ export class EngagementController {
   }
 
   @Patch(':id/status')
+  @RequirePermission('engagement', 'status_change')
   async changeEngagementStatus(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ChangeEngagementStatusDto,

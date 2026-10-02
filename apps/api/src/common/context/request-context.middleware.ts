@@ -9,6 +9,7 @@ export class RequestContextMiddleware implements NestMiddleware {
     const user = (req as any).user;
     let firmId = user?.firmId || '';
     let userId = user?.userId || user?.sub || '';
+    let role = user?.role || '';
 
     // If no user yet (pre-guard), try to extract from JWT for Prisma extension
     if (!firmId) {
@@ -21,6 +22,7 @@ export class RequestContextMiddleware implements NestMiddleware {
           );
           firmId = decoded.firmId || '';
           userId = decoded.sub || '';
+          role = decoded.role || '';
         } catch {
           /* ignore -- guard will handle validation */
         }
@@ -30,6 +32,7 @@ export class RequestContextMiddleware implements NestMiddleware {
     const context = {
       firmId,
       userId,
+      role,
       requestId: (req.headers['x-request-id'] as string) || randomUUID(),
     };
     requestContextStorage.run(context, next);
