@@ -64,7 +64,7 @@
   // Clients for the pickers (single generous page).
   const clientsQuery = createQuery(
     toStore(() => ({
-      queryKey: ['clients-all'],
+      queryKey: ['clients', 'all'],
       queryFn: () => api(`/clients?page=1&limit=100`),
     })),
   );

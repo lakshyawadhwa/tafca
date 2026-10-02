@@ -41,7 +41,7 @@
   let newEngagementTypeId = $state('');
 
   const clients = createQuery({
-    queryKey: ['clients-picker'],
+    queryKey: ['clients', 'picker'],
     queryFn: () => api('/clients?limit=100'),
   });
 

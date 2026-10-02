@@ -9,6 +9,12 @@ import {
 import { Request, Response } from 'express';
 import { getRequestId } from '../context/request-context';
 
+/**
+ * Unhandled errors are only detailed outside production. Read once at module
+ * load: NODE_ENV does not change while the process is alive.
+ */
+const exposeInternals = process.env.NODE_ENV !== 'production';
+
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger('ExceptionFilter');
@@ -34,8 +40,15 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         error = exception.name;
       }
     } else if (exception instanceof Error) {
-      message = exception.message;
-      error = exception.name;
+      // A non-HttpException reaching here is an unhandled fault. Its message can
+      // carry internals (Prisma echoes the failing query, constraint names and
+      // local file paths), so outside production we surface it to make the bug
+      // obvious, and in production we return the generic text and keep the
+      // detail in the logs, reachable via request_id.
+      if (exposeInternals) {
+        message = exception.message;
+        error = exception.name;
+      }
     }
 
     let requestId: string;

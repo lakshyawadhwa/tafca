@@ -27,13 +27,13 @@
   });
 
   const clients = createQuery({
-    queryKey: ['clients-picker'],
+    queryKey: ['clients', 'picker'],
     queryFn: () => api('/clients?limit=100'),
   });
 
   // Engagements are scoped to the picked client, so this refetches when it changes.
   const engagements = createQuery(toStore(() => ({
-    queryKey: ['engagements-picker', clientId],
+    queryKey: ['engagements', 'picker', clientId],
     queryFn: () => api(`/engagements?clientId=${clientId}&limit=100`),
     enabled: !!clientId,
   })));

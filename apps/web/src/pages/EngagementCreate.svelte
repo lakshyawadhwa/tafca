@@ -101,7 +101,7 @@
 
   // Clients picker (only needed when not prefilled)
   const clients = createQuery({
-    queryKey: ['clients-picker'],
+    queryKey: ['clients', 'picker'],
     queryFn: () => api('/clients?limit=100'),
     enabled: !prefillClientId,
     staleTime: 5 * 60 * 1000,
