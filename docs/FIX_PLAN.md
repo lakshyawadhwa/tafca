@@ -23,7 +23,7 @@ read it top to bottom, then check `git log` for what actually landed.
 
 ## P0 — security and data integrity
 
-### P0-1 Enforce the role permission matrix  — TODO
+### P0-1 Enforce the role permission matrix — **DONE** (1162ffc)
 `PermissionService` implements the matrix and is never called. 32 of 46 mutation
 endpoints have no guard. An ARTICLE can delete any client.
 Approach: a guard that consults `PermissionService.can()` using route metadata,
@@ -129,3 +129,4 @@ shared per origin, so two roles cannot be driven in parallel in one browser.
 | When | Item | What happened |
 |---|---|---|
 | 2026-10-03 | — | Plan created from QA report. Nothing fixed yet. |
+| 2026-10-03 | P0-1 | DONE. PermissionGuard + @RequirePermission, scope helper, record checks in client/task services. Verified live: ARTICLE create/view/edit/delete unassigned client all 403; list scoping 3 of 11 clients, 10 of 17 tasks. |
