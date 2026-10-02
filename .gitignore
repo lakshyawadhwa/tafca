@@ -16,3 +16,8 @@ dist/
 .vercel/
 .vercel
 .env*
+
+# Prisma migrations are the source of truth for the DB and MUST be committed.
+# Overrides a global `*.sql` ignore, which silently kept them out of the repo
+# and left `prisma migrate deploy` on Vercel with nothing to apply.
+!apps/api/prisma/migrations/**/*.sql
