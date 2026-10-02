@@ -130,6 +130,11 @@ export class ClientService extends FirmScopedService {
 
     // Check displayName uniqueness within firm (case-insensitive)
     await this.assertDisplayNameUnique(dto.displayName);
+    await this.assertStatutoryIdsUnique({
+      pan: dto.pan,
+      tan: dto.tan,
+      cin: dto.cin,
+    });
 
     // Validate role assignments
     await this.validateAssignments(dto);
@@ -328,6 +333,11 @@ export class ClientService extends FirmScopedService {
     if (dto.displayName !== undefined && dto.displayName !== existing.displayName) {
       await this.assertDisplayNameUnique(dto.displayName, id);
     }
+
+    await this.assertStatutoryIdsUnique(
+      { pan: dto.pan, tan: dto.tan, cin: dto.cin },
+      id,
+    );
 
     // Validate role assignments for any assignment fields provided
     await this.validateAssignments(dto);
@@ -583,6 +593,45 @@ export class ClientService extends FirmScopedService {
    * Check that displayName is unique within the firm (case-insensitive).
    * Optionally exclude a specific client ID (for updates).
    */
+  /**
+   * PAN, TAN and CIN are statutory identifiers — two clients in one firm must
+   * not share one. Checked case-insensitively because the UI upper-cases on
+   * entry but the API accepts either. A partial unique index backs each of
+   * these at the database level; this check exists to return a clear 409
+   * instead of a constraint violation.
+   */
+  private async assertStatutoryIdsUnique(
+    ids: { pan?: string | null; tan?: string | null; cin?: string | null },
+    excludeId?: string,
+  ): Promise<void> {
+    const fields: Array<['pan' | 'tan' | 'cin', string, string]> = [
+      ['pan', 'PAN', 'PAN'],
+      ['tan', 'TAN', 'TAN'],
+      ['cin', 'CIN', 'CIN'],
+    ];
+
+    for (const [field, label] of fields.map(([f, l]) => [f, l] as const)) {
+      const value = ids[field];
+      if (!value) continue;
+
+      const where: Record<string, any> = {
+        [field]: { equals: value, mode: 'insensitive' },
+      };
+      if (excludeId) where.id = { not: excludeId };
+
+      const existing = await this.prisma.client.findFirst({
+        where,
+        select: { displayName: true },
+      });
+
+      if (existing) {
+        throw new ConflictException(
+          `${label} ${value} is already used by client "${existing.displayName}"`,
+        );
+      }
+    }
+  }
+
   private async assertDisplayNameUnique(
     displayName: string,
     excludeId?: string,

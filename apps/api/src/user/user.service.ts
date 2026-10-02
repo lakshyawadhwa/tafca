@@ -98,13 +98,16 @@ export class UserService extends FirmScopedService {
   async createUser(dto: CreateUserDto): Promise<UserResponseDto> {
     const normalizedEmail = dto.email.toLowerCase().trim();
 
-    // Check email uniqueness within firm (firm scoping is automatic)
-    const existing = await this.prisma.user.findFirst({
-      where: { email: normalizedEmail },
+    // Email is the login key and login looks it up across all firms, so it has
+    // to be globally unique — a firm-scoped check here would let two firms hold
+    // the same address and leave one of those accounts unreachable.
+    // auth.service.register() applies the same rule.
+    const existing = await this.unscopedPrisma.user.findFirst({
+      where: { email: normalizedEmail, deletedAt: null },
     });
 
     if (existing) {
-      throw new ConflictException('Email already exists in this firm');
+      throw new ConflictException('Email already registered');
     }
 
     // Hash password

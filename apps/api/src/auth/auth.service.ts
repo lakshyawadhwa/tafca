@@ -60,6 +60,20 @@ export class AuthService {
       throw new ConflictException('Email already registered');
     }
 
+    // Firm names are how people identify each other across the platform, so
+    // they must not collide. Case-insensitive: "Sharma & Co" and "sharma & co"
+    // are the same firm to a human.
+    const existingFirm = await this.prisma.unscoped.firm.findFirst({
+      where: {
+        name: { equals: dto.firmName.trim(), mode: 'insensitive' },
+        deletedAt: null,
+      },
+    });
+
+    if (existingFirm) {
+      throw new ConflictException('A firm with this name already exists');
+    }
+
     // Hash password
     const passwordHash = await bcrypt.hash(
       dto.password,
