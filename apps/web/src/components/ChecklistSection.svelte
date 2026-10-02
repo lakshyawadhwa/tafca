@@ -262,6 +262,7 @@
         type="text"
         bind:value={addLabel}
         onkeydown={onAddKeydown}
+        maxlength="300"
         placeholder="Item label..."
         disabled={addPending}
         class="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"

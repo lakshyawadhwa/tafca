@@ -70,6 +70,11 @@
 
   function handleCreateLeave(e: Event) {
     e.preventDefault();
+    // The API rejects an inverted range; say so before spending a round trip.
+    if (startDate && endDate && endDate < startDate) {
+      addToast('End date cannot be before the start date', 'error');
+      return;
+    }
     const data: Record<string, any> = { leaveType, startDate, endDate };
     if (reason) data.reason = reason;
     $createLeave.mutate(data);

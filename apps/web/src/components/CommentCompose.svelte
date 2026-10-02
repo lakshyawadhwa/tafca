@@ -177,6 +177,7 @@
       bind:value={body}
       oninput={handleInput}
       {placeholder}
+      maxlength="5000"
       rows={replyMode ? 2 : 3}
       class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
     ></textarea>

@@ -2,6 +2,7 @@
   import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
   import { toStore } from 'svelte/store';
   import { EntityType, ConstitutionType, ClientStatus, UserRole, REGEX } from '@ca-practice-os/shared';
+  import { validateTan, validateCin, validateEmail, validatePhone, collectErrors, parseApiFieldErrors } from '../lib/validation';
   import { api, ApiError } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
@@ -71,6 +72,23 @@
 
   function onPanBlur() {
     panError = validatePan(pan);
+  }
+
+  /** Format rules the API enforces on the optional identity/contact fields. */
+  function validateOptionalFields(): Record<string, string> {
+    return collectErrors({
+      tan: [tan, validateTan],
+      cin: [cin, validateCin],
+      primaryContactEmail: [primaryContactEmail, validateEmail],
+      primaryContactPhone: [primaryContactPhone, validatePhone],
+    });
+  }
+
+  function checkField(field: string, value: string, check: (v: string) => string) {
+    const message = check(value);
+    fieldErrors = message
+      ? { ...fieldErrors, [field]: message }
+      : Object.fromEntries(Object.entries(fieldErrors).filter(([k]) => k !== field));
   }
 
   function addTag() {
@@ -162,10 +180,10 @@
       if (err instanceof ApiError) {
         if (err.status === 409) {
           fieldErrors = { displayName: 'A client with this name already exists in your firm' };
-        } else if (err.status === 400 && Array.isArray(err.body?.errors)) {
-          const fe: Record<string, string> = {};
-          for (const e of err.body.errors) fe[e.field] = e.message;
-          fieldErrors = fe;
+        } else if (err.status === 400) {
+          const fe = parseApiFieldErrors(err);
+          if (Object.keys(fe).length) fieldErrors = fe;
+          else globalError = err.message;
         } else {
           globalError = err.message;
         }
@@ -182,6 +200,9 @@
 
     const panErr = validatePan(pan);
     if (panErr) { panError = panErr; return; }
+
+    const optionalErrors = validateOptionalFields();
+    if (Object.keys(optionalErrors).length) { fieldErrors = optionalErrors; return; }
 
     const data: Record<string, any> = { displayName: displayName.trim(), entityType, status, tags };
     if (legalName.trim()) data.legalName = legalName.trim();
@@ -292,16 +313,26 @@
           <div>
             <label for="tan" class="block text-sm font-medium text-gray-700 mb-1">TAN</label>
             <input id="tan" type="text" bind:value={tan} maxlength="10" placeholder="ABCD01234E"
-              class="w-full rounded border border-gray-300 px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            <p class="text-xs text-gray-400 mt-1">For TDS deductors</p>
+              onblur={() => checkField('tan', tan, validateTan)}
+              class="w-full rounded border {fieldErrors.tan ? 'border-red-400' : 'border-gray-300'} px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            {#if fieldErrors.tan}
+              <p class="text-xs text-red-500 mt-1">{fieldErrors.tan}</p>
+            {:else}
+              <p class="text-xs text-gray-400 mt-1">For TDS deductors</p>
+            {/if}
           </div>
 
           {#if isCorporate}
             <div>
               <label for="cin" class="block text-sm font-medium text-gray-700 mb-1">CIN</label>
               <input id="cin" type="text" bind:value={cin} maxlength="21"
-                class="w-full rounded border border-gray-300 px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              <p class="text-xs text-gray-400 mt-1">Company/LLP Identification Number</p>
+                onblur={() => checkField('cin', cin, validateCin)}
+                class="w-full rounded border {fieldErrors.cin ? 'border-red-400' : 'border-gray-300'} px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              {#if fieldErrors.cin}
+                <p class="text-xs text-red-500 mt-1">{fieldErrors.cin}</p>
+              {:else}
+                <p class="text-xs text-gray-400 mt-1">Company/LLP Identification Number</p>
+              {/if}
             </div>
           {/if}
         </div>
@@ -370,12 +401,22 @@
           <div>
             <label for="contactEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input id="contactEmail" type="email" bind:value={primaryContactEmail}
-              class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              onblur={() => checkField('primaryContactEmail', primaryContactEmail, validateEmail)}
+              class="w-full rounded border {fieldErrors.primaryContactEmail ? 'border-red-400' : 'border-gray-300'} px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            {#if fieldErrors.primaryContactEmail}
+              <p class="text-xs text-red-500 mt-1">{fieldErrors.primaryContactEmail}</p>
+            {/if}
           </div>
           <div>
             <label for="contactPhone" class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-            <input id="contactPhone" type="text" bind:value={primaryContactPhone} placeholder="+91XXXXXXXXXX"
-              class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input id="contactPhone" type="tel" bind:value={primaryContactPhone} placeholder="+919876543210"
+              onblur={() => checkField('primaryContactPhone', primaryContactPhone, validatePhone)}
+              class="w-full rounded border {fieldErrors.primaryContactPhone ? 'border-red-400' : 'border-gray-300'} px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            {#if fieldErrors.primaryContactPhone}
+              <p class="text-xs text-red-500 mt-1">{fieldErrors.primaryContactPhone}</p>
+            {:else}
+              <p class="text-xs text-gray-400 mt-1">Country code required, no spaces</p>
+            {/if}
           </div>
         </div>
       </div>

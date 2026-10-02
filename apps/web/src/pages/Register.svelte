@@ -3,6 +3,7 @@
   import { setAuth } from '../lib/auth.svelte';
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
+  import { validateEmail, validatePassword, validateLength, collectErrors } from '../lib/validation';
 
   let firmName = $state('');
   let fullName = $state('');
@@ -13,6 +14,16 @@
 
   async function handleSubmit(e: Event) {
     e.preventDefault();
+
+    // Mirrors RegisterDto so a rejected signup never costs a round trip.
+    const invalid = Object.values(collectErrors({
+      firmName: [firmName, validateLength('Firm name', 1, 200)],
+      fullName: [fullName, validateLength('Full name', 2, 100)],
+      email: [email, (v) => (v.trim() ? validateEmail(v) : 'Email is required')],
+      password: [password, validatePassword],
+    }));
+    if (invalid.length) { error = invalid[0]; return; }
+
     error = '';
     loading = true;
     try {

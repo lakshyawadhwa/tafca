@@ -3,6 +3,8 @@
   import { getUser } from '../lib/auth.svelte';
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
+  import RoleGuide from '../components/RoleGuide.svelte';
+  import { validatePan, validatePhone, validateEmail, validatePassword, validateLength, collectErrors } from '../lib/validation';
   import { UserRole, EntityType } from '@ca-practice-os/shared';
 
   const user = $derived(getUser());
@@ -67,7 +69,19 @@
     { value: EntityType.SOCIETY, label: 'Society' },
   ];
 
+  /** Mirrors UpdateFirmProfileDto so a typo is caught before the request. */
+  function firmProfileErrors(): Record<string, string> {
+    return collectErrors({
+      pan: [firmPan, validatePan],
+      phone: [firmPhone, validatePhone],
+      email: [firmEmail, validateEmail],
+    });
+  }
+
   async function saveFirmProfile() {
+    const invalid = Object.values(firmProfileErrors());
+    if (invalid.length) { error = invalid[0]; return; }
+
     loading = true;
     error = '';
     try {
@@ -92,6 +106,14 @@
   }
 
   async function inviteTeamMember() {
+    // Mirrors CreateUserDto: name 2-100, valid email, password 8-128.
+    const invalid = Object.values(collectErrors({
+      fullName: [memberName, validateLength('Full name', 2, 100)],
+      email: [memberEmail, (v) => (v.trim() ? validateEmail(v) : 'Email is required')],
+      password: [memberPassword, validatePassword],
+    }));
+    if (invalid.length) { error = invalid[0]; return; }
+
     loading = true;
     error = '';
     try {
@@ -114,6 +136,13 @@
   }
 
   async function addFirstClient() {
+    // Mirrors CreateClientDto: name 2-200, PAN format when supplied.
+    const invalid = Object.values(collectErrors({
+      displayName: [clientName, validateLength('Client name', 2, 200)],
+      pan: [clientPan, validatePan],
+    }));
+    if (invalid.length) { error = invalid[0]; return; }
+
     loading = true;
     error = '';
     try {
@@ -220,7 +249,7 @@
                   type="tel"
                   bind:value={firmPhone}
                   class={inputClass}
-                  placeholder="+91 98765 43210"
+                  placeholder="+919876543210"
                 />
               </div>
               <div>
@@ -319,6 +348,8 @@
                 />
               </div>
             </div>
+
+            <RoleGuide role={memberRole} />
 
             <div class="flex items-center justify-between pt-4">
               <button

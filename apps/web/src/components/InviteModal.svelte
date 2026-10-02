@@ -3,6 +3,8 @@
   import { UserRole } from '@ca-practice-os/shared';
   import { api } from '../lib/api';
   import { addToast } from '../lib/toast.svelte';
+  import RoleGuide from './RoleGuide.svelte';
+  import { validateEmail, validateLength, collectErrors, parseApiFieldErrors } from '../lib/validation';
 
   let { onClose }: { onClose: () => void } = $props();
 
@@ -12,6 +14,7 @@
   let email = $state('');
   let role = $state<string>(UserRole.JUNIOR_CA);
 
+  let fieldErrors = $state<Record<string, string>>({});
   let inviteUrl = $state<string | null>(null);
   let expiresAt = $state<string | null>(null);
   let copied = $state(false);
@@ -25,12 +28,26 @@
       inviteUrl = data.inviteUrl;
       expiresAt = data.expiresAt;
     },
-    onError: (err: any) => addToast(err.message ?? 'Failed to create invite', 'error'),
+    onError: (err: any) => {
+      // Show server validation next to the field rather than as a bare toast.
+      const fe = parseApiFieldErrors(err);
+      if (Object.keys(fe).length) fieldErrors = fe;
+      else addToast(err.message ?? 'Failed to create invite', 'error');
+    },
   });
 
   function handleSubmit(e: Event) {
     e.preventDefault();
-    $createInvite.mutate({ fullName: name, email, role });
+
+    // Mirrors CreateInviteDto: name 2-100, valid email.
+    const errors = collectErrors({
+      fullName: [name, validateLength('Full name', 2, 100)],
+      email: [email, (v) => (v.trim() ? validateEmail(v) : 'Email is required')],
+    });
+    fieldErrors = errors;
+    if (Object.keys(errors).length) return;
+
+    $createInvite.mutate({ fullName: name.trim(), email: email.trim().toLowerCase(), role });
   }
 
   async function copyUrl() {
@@ -63,8 +80,11 @@
             required
             minlength="2"
             maxlength="100"
-            class="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+            class="w-full rounded border {fieldErrors.fullName ? 'border-red-400' : 'border-gray-300'} px-3 py-2 text-sm"
           />
+          {#if fieldErrors.fullName}
+            <p class="text-xs text-red-500 mt-1">{fieldErrors.fullName}</p>
+          {/if}
         </div>
         <div>
           <label for="invEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -73,8 +93,11 @@
             type="email"
             bind:value={email}
             required
-            class="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+            class="w-full rounded border {fieldErrors.email ? 'border-red-400' : 'border-gray-300'} px-3 py-2 text-sm"
           />
+          {#if fieldErrors.email}
+            <p class="text-xs text-red-500 mt-1">{fieldErrors.email}</p>
+          {/if}
         </div>
         <div>
           <label for="invRole" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
@@ -83,6 +106,9 @@
               <option value={r}>{r.replace(/_/g, ' ')}</option>
             {/each}
           </select>
+          <div class="mt-2">
+            <RoleGuide {role} />
+          </div>
         </div>
         <p class="text-xs text-gray-500">
           Generates an invite link. The member sets their own password on first visit.
