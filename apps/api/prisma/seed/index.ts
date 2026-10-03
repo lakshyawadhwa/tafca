@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import { seedEngagementTypes } from './engagement-types';
 import { seedStatutoryDeadlines } from './statutory-deadlines';
 import { seedTaskTemplates } from './task-templates';
-import { seedFirmRolePermissions } from './role-permissions';
 
 const prisma = new PrismaClient();
 
@@ -14,7 +13,10 @@ async function main() {
   await seedEngagementTypes(prisma, systemUserId);
   await seedStatutoryDeadlines(prisma);
   await seedTaskTemplates(prisma, systemUserId);
-  await seedFirmRolePermissions(prisma);
+  // Role permissions are intentionally NOT seeded. The code matrix in
+  // DEFAULT_ROLE_PERMISSIONS governs every firm, and PermissionService falls
+  // back to it when a firm has no rows. Seeding rows here would reintroduce the
+  // two-sources-of-truth problem that migration 20261003060000 removed.
 
   console.log('Seed complete.');
 }
