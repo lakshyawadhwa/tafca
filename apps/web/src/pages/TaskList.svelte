@@ -8,6 +8,7 @@
   import ClientMark from '../components/ClientMark.svelte';
   import { getUser } from '../lib/auth.svelte';
   import { can } from '../lib/permissions';
+  import { isOverdue } from '../lib/due';
 
   const currentUser = $derived(getUser());
 
@@ -130,11 +131,6 @@
     return new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
   }
 
-  function isOverdue(dueDate: string | null, status: string): boolean {
-    if (!dueDate || status === 'DONE' || status === 'CANCELLED') return false;
-    return new Date(dueDate) < new Date();
-  }
-
   const canCreate = $derived(can('task', 'create'));
 </script>
 
@@ -213,15 +209,15 @@
       {/if}
     </div>
   {:else}
-    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-      <table class="w-full text-sm">
+    <div class="bg-white rounded-lg border border-gray-200 overflow-x-auto">
+      <table class="w-full text-sm table-roomy">
         <thead>
           <tr class="border-b border-gray-100 text-left text-gray-500 text-xs uppercase tracking-wide">
             <th class="px-4 py-3 font-medium">Title</th>
             <th class="px-4 py-3 font-medium">Status</th>
             <th class="px-4 py-3 font-medium">Priority</th>
-            <th class="px-4 py-3 font-medium hidden md:table-cell">Assignee</th>
-            <th class="px-4 py-3 font-medium hidden md:table-cell">Client</th>
+            <th class="px-4 py-3 font-medium hidden lg:table-cell">Assignee</th>
+            <th class="px-4 py-3 font-medium hidden lg:table-cell">Client</th>
             <th class="px-4 py-3 font-medium">Due</th>
           </tr>
         </thead>
@@ -229,7 +225,11 @@
           {#each $tasks.data.data as task (task.id)}
             <tr
               onclick={() => navigate(`/tasks/${task.id}`)}
-              class="border-b border-gray-50 hover:bg-gray-50 cursor-pointer {isOverdue(task.dueDate, task.status) ? 'is-overdue' : ''}"
+              onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/tasks/${task.id}`); } }}
+              tabindex="0"
+              role="button"
+              aria-label="Open task {task.title}{isOverdue(task.dueDate, task.status) ? ' (overdue)' : ''}"
+              class="row-link border-b border-gray-50 hover:bg-gray-50 cursor-pointer {isOverdue(task.dueDate, task.status) ? 'is-overdue' : ''}"
             >
               <td class="px-4 py-3 font-medium text-gray-900 max-w-xs truncate">
                 {task.title}
@@ -247,10 +247,10 @@
                   {task.priority}
                 </span>
               </td>
-              <td class="px-4 py-3 hidden md:table-cell text-gray-600">
+              <td class="px-4 py-3 hidden lg:table-cell text-gray-600">
                 {task.assignee?.fullName ?? '-'}
               </td>
-              <td class="px-4 py-3 hidden md:table-cell text-gray-600">
+              <td class="px-4 py-3 hidden lg:table-cell text-gray-600">
                 {#if task.client}
                   <span class="flex items-center gap-2 min-w-0">
                     <ClientMark id={task.client.id} name={task.client.displayName} size={18} />

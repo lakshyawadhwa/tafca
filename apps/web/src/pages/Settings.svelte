@@ -3,6 +3,7 @@
   import { EngagementCategory } from '@ca-practice-os/shared';
   import { api } from '../lib/api';
   import { addToast } from '../lib/toast.svelte';
+  import ConfirmTypeDialog from '../components/ConfirmTypeDialog.svelte';
   import { getUser } from '../lib/auth.svelte';
   import InviteModal from '../components/InviteModal.svelte';
   import PendingInvitesList from '../components/PendingInvitesList.svelte';
@@ -25,12 +26,17 @@
 
   let showInvite = $state(false);
 
+  // Deactivation signs the person out of every session and takes their access
+  // away, so it asks for the user's name to be typed rather than a single click.
+  let pendingDeactivation = $state<{ id: string; fullName: string } | null>(null);
+
   const deactivateUser = createMutation({
     mutationFn: (userId: string) =>
       api(`/users/${userId}/deactivate`, { method: 'PATCH' }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['users'] });
       addToast('User deactivated', 'success');
+      pendingDeactivation = null;
     },
     onError: (err: any) => addToast(err.message, 'error'),
   });
@@ -118,7 +124,7 @@
               {#if !u.isActive}
                 <span class="text-xs text-gray-400">Inactive</span>
               {:else if isAdmin && u.id !== currentUser?.id}
-                <button onclick={() => $deactivateUser.mutate(u.id)} class="text-xs text-red-500 hover:underline">Deactivate</button>
+                <button onclick={() => (pendingDeactivation = { id: u.id, fullName: u.fullName })} class="text-xs text-red-500 hover:underline">Deactivate</button>
               {/if}
             </div>
           </div>
@@ -201,3 +207,14 @@
 {#if showInvite}
   <InviteModal onClose={() => (showInvite = false)} />
 {/if}
+
+<ConfirmTypeDialog
+  open={!!pendingDeactivation}
+  title="Deactivate {pendingDeactivation?.fullName ?? ''}?"
+  body="They will be signed out of every session and lose access immediately. Work already assigned to them stays where it is. You can reactivate them later."
+  phrase={pendingDeactivation?.fullName ?? ''}
+  confirmLabel="Deactivate"
+  busy={$deactivateUser.isPending}
+  onConfirm={() => pendingDeactivation && $deactivateUser.mutate(pendingDeactivation.id)}
+  onCancel={() => (pendingDeactivation = null)}
+/>

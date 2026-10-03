@@ -121,17 +121,17 @@
   {:else if $engagements.data?.data?.length === 0}
     <p class="text-sm text-gray-500 py-8 text-center">No engagements found.</p>
   {:else if $engagements.data}
-    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-      <table class="w-full text-sm">
+    <div class="bg-white rounded-lg border border-gray-200 overflow-x-auto">
+      <table class="w-full text-sm table-roomy">
         <thead>
           <tr class="border-b border-gray-100 text-left text-gray-500 text-xs uppercase tracking-wide">
             <th class="pl-4 pr-0 py-3 font-medium w-9"><span class="sr-only">Client</span></th>
             <th class="px-3 py-3 font-medium">Name</th>
             <th class="px-4 py-3 font-medium">Client</th>
-            <th class="px-4 py-3 font-medium hidden md:table-cell">Type</th>
+            <th class="px-4 py-3 font-medium hidden lg:table-cell">Type</th>
             <th class="px-4 py-3 font-medium">Status</th>
-            <th class="px-4 py-3 font-medium hidden md:table-cell">Tasks</th>
-            <th class="px-4 py-3 font-medium hidden md:table-cell">Period</th>
+            <th class="px-4 py-3 font-medium hidden lg:table-cell">Tasks</th>
+            <th class="px-4 py-3 font-medium hidden lg:table-cell">Period</th>
           </tr>
         </thead>
         <tbody>
@@ -150,7 +150,7 @@
                   {eng.client.displayName}
                 </button>
               </td>
-              <td class="px-4 py-3 hidden md:table-cell text-gray-600 text-xs">
+              <td class="px-4 py-3 hidden lg:table-cell text-gray-600 text-xs">
                 <span class="flex items-center gap-2 min-w-0">
                   <CategoryChip category={eng.engagementType.category} />
                   <span class="truncate">{eng.engagementType.name}</span>
@@ -161,8 +161,8 @@
                   {eng.status.replace(/_/g, ' ')}
                 </span>
               </td>
-              <td class="px-4 py-3 hidden md:table-cell text-gray-600">{eng.taskProgress.done}/{eng.taskProgress.total}</td>
-              <td class="px-4 py-3 hidden md:table-cell text-gray-600 text-xs">{eng.periodLabel ?? formatDate(eng.periodStart)}</td>
+              <td class="px-4 py-3 hidden lg:table-cell text-gray-600">{eng.taskProgress.done}/{eng.taskProgress.total}</td>
+              <td class="px-4 py-3 hidden lg:table-cell text-gray-600 text-xs">{eng.periodLabel ?? formatDate(eng.periodStart)}</td>
             </tr>
           {/each}
         </tbody>

@@ -320,3 +320,8 @@
 /* Visually hidden but available to screen readers — used for the monogram
    column header, which has no visible label. */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* A dense table must be able to scroll rather than clip: losing the Due column
+   off the right edge is worse than a scrollbar. */
+.overflow-x-auto{overflow-x:auto;overflow-y:hidden}
+@media (min-width:1024px){.lg\:table-cell{display:table-cell}}

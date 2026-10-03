@@ -223,7 +223,7 @@
 </script>
 
 <div class="max-w-2xl">
-  <button onclick={() => guardedNavigate(isEdit ? `/clients/${id}` : '/clients')} class="text-sm text-gray-500 hover:text-gray-700 mb-2">&larr; Back</button>
+  <button onclick={() => guardedNavigate(isEdit ? `/clients/${id}` : '/clients')} class="text-sm text-gray-500 hover:text-gray-700 mb-2">&larr; {isEdit ? 'Client' : 'Clients'}</button>
   <h1 class="text-2xl font-bold text-gray-900 mb-6">{isEdit ? 'Edit Client' : 'New Client'}</h1>
 
   {#if isEdit && $existing.isLoading}
@@ -455,7 +455,7 @@
         </div>
       </div>
 
-      <div class="flex justify-end gap-2">
+      <div class="form-actions flex justify-end gap-2">
         <button type="button" onclick={() => guardedNavigate(isEdit ? `/clients/${id}` : '/clients')}
           class="px-4 py-2 text-sm rounded border border-gray-300 hover:bg-gray-50">
           Cancel

@@ -116,8 +116,8 @@
   {:else if $leaves.data?.data?.length === 0}
     <p class="text-sm text-gray-500 py-8 text-center">No leave requests found.</p>
   {:else if $leaves.data}
-    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-      <table class="w-full text-sm">
+    <div class="bg-white rounded-lg border border-gray-200 overflow-x-auto">
+      <table class="w-full text-sm table-roomy">
         <thead>
           <tr class="border-b border-gray-100 text-left text-gray-500 text-xs uppercase tracking-wide">
             <th class="px-4 py-3 font-medium">Name</th>

@@ -116,20 +116,23 @@
 
     <!-- Summary cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <!-- A count only takes its alarm colour when there is something to be
+           alarmed about. Zero overdue is good news; rendering it in red taught
+           people to ignore red. -->
       <div class="bg-white rounded-lg border border-gray-200 p-4">
-        <p class="text-2xl font-bold text-red-600">{d.taskSummary.overdue}</p>
+        <p class="text-2xl font-bold {d.taskSummary.overdue > 0 ? 'text-red-600' : 'text-gray-300'}">{d.taskSummary.overdue}</p>
         <p class="text-xs text-gray-500">Overdue</p>
       </div>
       <div class="bg-white rounded-lg border border-gray-200 p-4">
-        <p class="text-2xl font-bold text-amber-600">{d.taskSummary.dueToday}</p>
+        <p class="text-2xl font-bold {d.taskSummary.dueToday > 0 ? 'text-amber-600' : 'text-gray-300'}">{d.taskSummary.dueToday}</p>
         <p class="text-xs text-gray-500">Due Today</p>
       </div>
       <div class="bg-white rounded-lg border border-gray-200 p-4">
-        <p class="text-2xl font-bold text-blue-600">{d.taskSummary.dueThisWeek}</p>
+        <p class="text-2xl font-bold {d.taskSummary.dueThisWeek > 0 ? 'text-gray-900' : 'text-gray-300'}">{d.taskSummary.dueThisWeek}</p>
         <p class="text-xs text-gray-500">Due This Week</p>
       </div>
       <div class="bg-white rounded-lg border border-gray-200 p-4">
-        <p class="text-2xl font-bold text-purple-600">{d.taskSummary.inReview}</p>
+        <p class="text-2xl font-bold {d.taskSummary.inReview > 0 ? 'text-gray-900' : 'text-gray-300'}">{d.taskSummary.inReview}</p>
         <p class="text-xs text-gray-500">In Review</p>
       </div>
     </div>

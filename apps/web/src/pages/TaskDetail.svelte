@@ -6,6 +6,7 @@
   import { navigate } from '../lib/router.svelte';
   import { addToast } from '../lib/toast.svelte';
   import { track } from '../lib/analytics';
+  import { isOverdue } from '../lib/due';
   import ChecklistSection from '../components/ChecklistSection.svelte';
   import DependencySection from '../components/DependencySection.svelte';
   import CommentSection from '../components/CommentSection.svelte';
@@ -214,7 +215,12 @@
           <!-- Due Date -->
           <div>
             <span class="text-xs text-gray-500 block mb-1">Due Date</span>
-            <p class="text-sm text-gray-800">{formatDate(t.dueDate)}</p>
+            <p class="text-sm {isOverdue(t.dueDate, t.status) ? 'text-red-600 font-medium' : 'text-gray-800'}">
+              {formatDate(t.dueDate)}
+              {#if isOverdue(t.dueDate, t.status)}
+                <span class="text-xs">· Overdue</span>
+              {/if}
+            </p>
           </div>
 
           <!-- Client -->

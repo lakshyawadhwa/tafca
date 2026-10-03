@@ -138,24 +138,28 @@
       {/if}
     </div>
   {:else}
-    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-      <table class="w-full text-sm">
+    <div class="bg-white rounded-lg border border-gray-200 overflow-x-auto">
+      <table class="w-full text-sm table-roomy">
         <thead>
           <tr class="border-b border-gray-100 text-left text-gray-500 text-xs uppercase tracking-wide">
             <th class="pl-4 pr-0 py-3 font-medium w-9"><span class="sr-only">Client</span></th>
             <th class="px-3 py-3 font-medium">Name</th>
             <th class="px-4 py-3 font-medium">Entity Type</th>
             <th class="px-4 py-3 font-medium">Status</th>
-            <th class="px-4 py-3 font-medium hidden md:table-cell">PAN</th>
-            <th class="px-4 py-3 font-medium hidden md:table-cell">Engagements</th>
-            <th class="px-4 py-3 font-medium hidden md:table-cell">Tasks</th>
+            <th class="px-4 py-3 font-medium hidden lg:table-cell">PAN</th>
+            <th class="px-4 py-3 font-medium hidden lg:table-cell">Engagements</th>
+            <th class="px-4 py-3 font-medium hidden lg:table-cell">Tasks</th>
           </tr>
         </thead>
         <tbody>
           {#each $clients.data.data as client (client.id)}
             <tr
               onclick={() => navigate(`/clients/${client.id}`)}
-              class="border-b border-gray-50 hover:bg-gray-50 cursor-pointer"
+              onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/clients/${client.id}`); } }}
+              tabindex="0"
+              role="button"
+              aria-label="Open client {client.displayName}"
+              class="row-link border-b border-gray-50 hover:bg-gray-50 cursor-pointer"
             >
               <td class="pl-4 pr-0 py-3">
                 <ClientMark id={client.id} name={client.displayName} />
@@ -167,9 +171,9 @@
                   {client.status}
                 </span>
               </td>
-              <td class="px-4 py-3 hidden md:table-cell text-gray-600 font-mono text-xs">{client.pan ?? '-'}</td>
-              <td class="px-4 py-3 hidden md:table-cell text-gray-600">{client._count?.engagements ?? 0}</td>
-              <td class="px-4 py-3 hidden md:table-cell text-gray-600">{client._count?.tasks ?? 0}</td>
+              <td class="px-4 py-3 hidden lg:table-cell text-gray-600 font-mono text-xs">{client.pan ?? '-'}</td>
+              <td class="px-4 py-3 hidden lg:table-cell text-gray-600">{client._count?.engagements ?? 0}</td>
+              <td class="px-4 py-3 hidden lg:table-cell text-gray-600">{client._count?.tasks ?? 0}</td>
             </tr>
           {/each}
         </tbody>

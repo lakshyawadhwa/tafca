@@ -376,3 +376,50 @@ nav button.bg-blue-50 .nav-icon {
 .rail-toggle[data-collapsed='true'] svg {
   transform: rotate(180deg);
 }
+
+/* Enough for the four columns that survive below 1024px — title, status,
+   priority and due — to stay readable. Scrolling is the fallback for genuinely
+   narrow screens, not the normal case on a half-width laptop window. */
+.table-roomy {
+  min-width: 560px;
+}
+
+/* A clickable row is a real control, so it takes focus and shows it. The ring
+   is drawn inside the row because an outline on a <tr> is clipped by the
+   table's own overflow. */
+tr.row-link:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+/* The submit on a long form stays reachable instead of living below five
+   sections of fields. */
+.form-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin: 0 -2px;
+  padding: 12px 2px;
+  background: linear-gradient(
+    to top,
+    var(--canvas) 72%,
+    color-mix(in srgb, var(--canvas) 0%, transparent)
+  );
+}
+
+/* Below 1024px the table is down to its four essential columns, so the
+   generous desktop cell padding is what pushes Due off the edge. Tightening it
+   there lets the whole row fit without scrolling on a half-width window. */
+@media (max-width: 1023px) {
+  .table-roomy th,
+  .table-roomy td {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+/* A date that wraps to two lines reads as two values. */
+.table-roomy th:last-child,
+.table-roomy td:last-child {
+  white-space: nowrap;
+}
