@@ -125,7 +125,8 @@
       <table class="w-full text-sm">
         <thead>
           <tr class="border-b border-gray-100 text-left text-gray-500 text-xs uppercase tracking-wide">
-            <th class="px-4 py-3 font-medium">Name</th>
+            <th class="pl-4 pr-0 py-3 font-medium w-9"><span class="sr-only">Client</span></th>
+            <th class="px-3 py-3 font-medium">Name</th>
             <th class="px-4 py-3 font-medium">Client</th>
             <th class="px-4 py-3 font-medium hidden md:table-cell">Type</th>
             <th class="px-4 py-3 font-medium">Status</th>
@@ -136,15 +137,17 @@
         <tbody>
           {#each $engagements.data.data as eng (eng.id)}
             <tr class="border-b border-gray-50 hover:bg-gray-50">
-              <td class="px-4 py-3 font-medium text-gray-900">
+              <td class="pl-4 pr-0 py-3">
+                <ClientMark id={eng.client.id} name={eng.client.displayName} />
+              </td>
+              <td class="px-3 py-3 font-medium text-gray-900">
                 <button onclick={() => navigate(`/engagements/${eng.id}`)} class="hover:text-blue-600 text-left">
                   {eng.name}
                 </button>
               </td>
               <td class="px-4 py-3">
-                <button onclick={() => navigate(`/clients/${eng.client.id}`)} class="text-blue-600 hover:underline text-sm flex items-center gap-2 min-w-0">
-                  <ClientMark id={eng.client.id} name={eng.client.displayName} size={18} />
-                  <span class="truncate">{eng.client.displayName}</span>
+                <button onclick={() => navigate(`/clients/${eng.client.id}`)} class="text-blue-600 hover:underline text-sm text-left">
+                  {eng.client.displayName}
                 </button>
               </td>
               <td class="px-4 py-3 hidden md:table-cell text-gray-600 text-xs">

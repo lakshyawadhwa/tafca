@@ -142,7 +142,8 @@
       <table class="w-full text-sm">
         <thead>
           <tr class="border-b border-gray-100 text-left text-gray-500 text-xs uppercase tracking-wide">
-            <th class="px-4 py-3 font-medium">Name</th>
+            <th class="pl-4 pr-0 py-3 font-medium w-9"><span class="sr-only">Client</span></th>
+            <th class="px-3 py-3 font-medium">Name</th>
             <th class="px-4 py-3 font-medium">Entity Type</th>
             <th class="px-4 py-3 font-medium">Status</th>
             <th class="px-4 py-3 font-medium hidden md:table-cell">PAN</th>
@@ -156,12 +157,10 @@
               onclick={() => navigate(`/clients/${client.id}`)}
               class="border-b border-gray-50 hover:bg-gray-50 cursor-pointer"
             >
-              <td class="px-4 py-3 font-medium text-gray-900">
-                <span class="flex items-center gap-2">
-                  <ClientMark id={client.id} name={client.displayName} />
-                  <span class="truncate">{client.displayName}</span>
-                </span>
+              <td class="pl-4 pr-0 py-3">
+                <ClientMark id={client.id} name={client.displayName} />
               </td>
+              <td class="px-3 py-3 font-medium text-gray-900">{client.displayName}</td>
               <td class="px-4 py-3 text-gray-600 text-xs">{client.entityType.replace(/_/g, ' ')}</td>
               <td class="px-4 py-3">
                 <span class="text-xs px-2 py-0.5 rounded-full font-medium {statusColors[client.status] ?? ''}">
