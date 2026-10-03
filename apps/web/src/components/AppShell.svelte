@@ -4,6 +4,7 @@
   import { navigate, getPath } from '../lib/router.svelte';
   import { api } from '../lib/api';
   import { cycleTheme, getThemePreference } from '../lib/theme.svelte';
+  import NavIcon from './NavIcon.svelte';
   import type { UserRole } from '@ca-practice-os/shared';
 
   let { children }: { children: Snippet } = $props();
@@ -22,18 +23,19 @@
   interface NavItem {
     label: string;
     path: string;
+    icon: string;
     roles?: UserRole[];
   }
 
   const navItems: NavItem[] = [
-    { label: 'Dashboard', path: '/' },
-    { label: 'Tasks', path: '/tasks' },
-    { label: 'Clients', path: '/clients' },
-    { label: 'Engagements', path: '/engagements' },
-    { label: 'Compliance', path: '/compliance' },
-    { label: 'Team', path: '/team' },
-    { label: 'Settings', path: '/settings', roles: ['PARTNER', 'ADMIN'] as UserRole[] },
-    { label: 'Audit Log', path: '/audit-log', roles: ['PARTNER', 'ADMIN'] as UserRole[] },
+    { label: 'Dashboard', path: '/', icon: 'dashboard' },
+    { label: 'Tasks', path: '/tasks', icon: 'tasks' },
+    { label: 'Clients', path: '/clients', icon: 'clients' },
+    { label: 'Engagements', path: '/engagements', icon: 'engagements' },
+    { label: 'Compliance', path: '/compliance', icon: 'compliance' },
+    { label: 'Team', path: '/team', icon: 'team' },
+    { label: 'Settings', path: '/settings', icon: 'settings', roles: ['PARTNER', 'ADMIN'] as UserRole[] },
+    { label: 'Audit Log', path: '/audit-log', icon: 'audit', roles: ['PARTNER', 'ADMIN'] as UserRole[] },
   ];
 
   const visibleNav = $derived(
@@ -77,8 +79,16 @@
       {#if !sidebarCollapsed}
         <span class="font-semibold text-gray-900 text-sm truncate">tafCA</span>
       {/if}
-      <button onclick={() => (sidebarCollapsed = !sidebarCollapsed)} class="hidden md:block text-gray-400 hover:text-gray-600">
-        {sidebarCollapsed ? '\u25B6' : '\u25C0'}
+      <button
+        onclick={() => (sidebarCollapsed = !sidebarCollapsed)}
+        class="rail-toggle hidden md:inline-flex"
+        data-collapsed={sidebarCollapsed}
+        aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14.5 6.5L9 12l5.5 5.5" />
+        </svg>
       </button>
     </div>
 
@@ -86,10 +96,12 @@
       {#each visibleNav as item}
         <button
           onclick={() => handleNav(item.path)}
-          class="w-full text-left px-4 py-2 text-sm transition-colors
+          class="w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-3
                  {isActive(item.path) ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}"
+          title={sidebarCollapsed ? item.label : undefined}
         >
-          {sidebarCollapsed ? item.label[0] : item.label}
+          <NavIcon name={item.icon} />
+          {#if !sidebarCollapsed}<span class="truncate">{item.label}</span>{/if}
         </button>
       {/each}
     </nav>

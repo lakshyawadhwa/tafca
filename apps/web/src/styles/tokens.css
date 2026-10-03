@@ -4,64 +4,89 @@
    Colour is named by role, never by hue, so a value changes in one place and
    the dark theme is a straight re-declaration of the same names.
 
-   The neutral palette leans very slightly green rather than the usual blue-grey.
-   The accent is a deep seal green — it reads as official and "filed" in an
-   accounting context, and it leaves red to mean exactly one thing: a deadline
-   in trouble. Colour is scarce on purpose. On a screen a CA stares at for eight
-   hours during filing season, the only thing that should raise its voice is a
-   due date.
+   Palette is the firm's own: Baltic Blue #145886 and Jade Green #55b848 on
+   Carbon Black #1d1d1d neutrals. Blue leads — primary actions, links, active
+   nav. Jade means settled: filed, done, on track, and never a plain action, so
+   it keeps that meaning wherever it appears. Red stays reserved for a deadline
+   in trouble.
+
+   Every role keeps its hue family across both themes; only lightness moves, so
+   nothing changes meaning when the theme flips. Where a brand colour cannot
+   clear contrast as text, the theme carries a separate text cut rather than
+   bending the brand value.
    ========================================================================== */
-
 :root {
-  /* Surfaces, back to front */
-  --canvas: #f5f7f6;
-  --surface: #ffffff;
-  --surface-sunken: #fafbfa;
-  --surface-hover: #f2f4f3;
-  --overlay: rgb(17 24 21 / 0.32);
+  /* Surfaces, back to front.
+     Canvas is a soft grey so white cards visibly float rather than dissolving
+     into the page — the sidebar stays light, so separation has to come from
+     the ground. */
+  --canvas: #f2f3f4;
+  --surface: #fffcff;
+  --surface-sunken: #f8f9fa;
+  --surface-hover: #eef0f1;
+  --overlay: rgb(29 29 29 / 0.34);
 
-  /* Hairlines */
-  --border: #e4e8e5;
-  --border-strong: #d2d8d4;
+  /* Hairlines, from Alabaster */
+  --border: #e4e5e7;
+  --border-strong: #d2d4d6;
 
-  /* Text, descending emphasis */
-  --ink: #16201c;
-  --ink-2: #41504a;
-  --ink-3: #6a7873;
-  --ink-4: #6f7974;
-  --ink-inverse: #ffffff;
+  /* Text — Carbon Black and neutral charcoals. No colour cast. */
+  --ink: #1d1d1d;
+  --ink-2: #44474a;
+  --ink-3: #6b6f73;
+  --ink-4: #70747a;
+  --ink-inverse: #fffcff;
 
-  /* Accent — primary actions, selection, links */
-  --accent: #0e6a5a;
-  --accent-hover: #0a5447;
-  --accent-ink: #ffffff;
-  --accent-soft: #e7f2ef;
-  --accent-border: #b8d8d0;
+  /* Accent — Baltic Blue. Primary actions, links, active nav.
+     7.4:1 on Snow, and safe as a fill with white text. */
+  --accent: #145886;
+  --accent-hover: #0f466c;
+  --accent-ink: #fffcff;
+  --accent-soft: #e8f0f6;
+  --accent-border: #a9c7db;
 
-  /* Status. Red is reserved for overdue and destructive acts. */
-  --danger: #b4241a;
-  --danger-hover: #951c14;
-  --danger-soft: #fdf0ee;
-  --danger-border: #f2c9c4;
+  /* Positive — Jade Green. Means filed, done, on track; never a plain action.
+     Jade is 2.5:1 on Snow so it is a FILL here; --success-text is the
+     darkened cut used when the same meaning has to be carried by text. */
+  --success: #55b848;
+  --success-text: #3d8a34;
+  --success-soft: #ecf7ea;
+  --success-border: #b6e0ae;
 
-  --warn: #a35a05;
-  --warn-soft: #fdf4e7;
+  /* Trouble. Red is reserved for overdue and destructive acts. */
+  --danger: #c0392b;
+  --danger-hover: #a32e22;
+  --danger-soft: #fbeceb;
+  --danger-border: #eec5c1;
 
-  --success: #0a6b45;
-  --success-soft: #e8f4ee;
+  /* Approaching. Darkened from the brand amber to clear AA on Snow. */
+  --warn: #9c6200;
+  --warn-soft: #fdf3e3;
+  --warn-border: #e8cfa4;
 
-  --info: #1a5aa8;
-  --info-soft: #eaf1fa;
+  --info: #145886;
+  --info-soft: #e8f0f6;
 
-  --accent-purple: #6239a8;
+  --accent-purple: #5f4b9b;
+
+  /* Client monograms. Deliberately muted — an identity marker must never read
+     as an alert. Each is ~5:1 with white text. Hue family is shared with the
+     dark theme so a client keeps its colour identity across themes. */
+  --mono-1: #5b6b7a;
+  --mono-2: #8a6250;
+  --mono-3: #5c7355;
+  --mono-4: #6e5a78;
+  --mono-5: #87703f;
+  --mono-6: #4a6f73;
+  --mono-7: #5a6194;
 
   /* Elevation, kept shallow — a dense data tool, not a card gallery */
-  --shadow-sm: 0 1px 2px rgb(16 24 20 / 0.05);
-  --shadow-md: 0 2px 6px rgb(16 24 20 / 0.07), 0 1px 2px rgb(16 24 20 / 0.04);
-  --shadow-lg: 0 10px 28px rgb(16 24 20 / 0.12), 0 2px 6px rgb(16 24 20 / 0.06);
+  --shadow-sm: 0 1px 2px rgb(29 29 29 / 0.06);
+  --shadow-md: 0 2px 6px rgb(29 29 29 / 0.08), 0 1px 2px rgb(29 29 29 / 0.04);
+  --shadow-lg: 0 10px 28px rgb(29 29 29 / 0.14), 0 2px 6px rgb(29 29 29 / 0.07);
 
-  --ring: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
-  --ring-danger: 0 0 0 3px color-mix(in srgb, var(--danger) 20%, transparent);
+  --ring: 0 0 0 3px color-mix(in srgb, var(--accent) 24%, transparent);
+  --ring-danger: 0 0 0 3px color-mix(in srgb, var(--danger) 22%, transparent);
 
   /* Radii — three steps, assigned by role rather than sprinkled */
   --radius-sm: 5px;
@@ -94,48 +119,63 @@
 
 /* ---------------------------------------------------------------------------
    Dark theme. Not an inversion — surfaces lift with lightness the way they do
-   in daylight, and the accent is brightened because the same green turns muddy
-   against a dark ground.
+   in daylight. Each role keeps the hue it has in light mode so meaning is
+   preserved; only lightness changes to clear contrast on a carbon ground.
    ------------------------------------------------------------------------- */
 :root[data-theme='dark'] {
-  --canvas: #10140f;
-  --surface: #171c19;
-  --surface-sunken: #131815;
-  --surface-hover: #1f2622;
-  --overlay: rgb(0 0 0 / 0.55);
+  --canvas: #141516;
+  --surface: #1d1d1d;
+  --surface-sunken: #191a1a;
+  --surface-hover: #262728;
+  --overlay: rgb(0 0 0 / 0.58);
 
-  --border: #2a322d;
-  --border-strong: #3a443e;
+  --border: #313233;
+  --border-strong: #434546;
 
-  --ink: #e9efeb;
-  --ink-2: #b8c4bd;
-  --ink-3: #8b9a93;
-  --ink-4: #909d96;
-  --ink-inverse: #10140f;
+  --ink: #ededee;
+  --ink-2: #bdc0c2;
+  --ink-3: #94989b;
+  --ink-4: #909497;
+  --ink-inverse: #1d1d1d;
 
-  --accent: #3fb79c;
-  --accent-hover: #55c7ae;
-  --accent-ink: #08201b;
-  --accent-soft: #16302a;
-  --accent-border: #2b584e;
+  /* Baltic Blue is only 2.3:1 on carbon, so the same blue is lifted rather
+     than replaced — still unmistakably the brand hue. */
+  --accent: #4d9ed4;
+  --accent-hover: #6fb4e2;
+  --accent-ink: #10222e;
+  --accent-soft: #15293a;
+  --accent-border: #2d5a7c;
 
-  --danger: #f08b80;
-  --danger-hover: #f7a79e;
-  --danger-soft: #2e1a18;
-  --danger-border: #5c312c;
+  /* Jade reaches 6.7:1 on carbon, so here it can carry text directly. */
+  --success: #55b848;
+  --success-text: #6cc95f;
+  --success-soft: #16281a;
+  --success-border: #2f5a2c;
 
-  --warn: #e0a35c;
-  --warn-soft: #2d2112;
+  --danger: #e8695c;
+  --danger-hover: #f08b80;
+  --danger-soft: #2d1a18;
+  --danger-border: #5a302c;
 
-  --success: #5bbd8c;
-  --success-soft: #162b20;
+  --warn: #d79b43;
+  --warn-soft: #2b2113;
+  --warn-border: #574a2b;
 
-  --info: #76a9ea;
-  --info-soft: #152338;
+  --info: #4d9ed4;
+  --info-soft: #15293a;
 
-  --accent-purple: #a98ae0;
+  --accent-purple: #9b89d4;
 
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
-  --shadow-md: 0 2px 6px rgb(0 0 0 / 0.45), 0 1px 2px rgb(0 0 0 / 0.3);
-  --shadow-lg: 0 14px 34px rgb(0 0 0 / 0.55), 0 3px 8px rgb(0 0 0 / 0.4);
+  /* Same seven hues, lifted. A client keeps its colour identity across themes. */
+  --mono-1: #8595a4;
+  --mono-2: #b78b78;
+  --mono-3: #869d7f;
+  --mono-4: #9b86a5;
+  --mono-5: #b29a67;
+  --mono-6: #74999d;
+  --mono-7: #868dc0;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.45);
+  --shadow-md: 0 2px 6px rgb(0 0 0 / 0.5), 0 1px 2px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 14px 34px rgb(0 0 0 / 0.6), 0 3px 8px rgb(0 0 0 / 0.45);
 }

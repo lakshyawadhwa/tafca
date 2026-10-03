@@ -5,6 +5,7 @@
   import { TaskStatus, TaskPriority, UserRole } from '@ca-practice-os/shared';
   import { api } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
+  import ClientMark from '../components/ClientMark.svelte';
   import { getUser } from '../lib/auth.svelte';
   import { can } from '../lib/permissions';
 
@@ -228,7 +229,7 @@
           {#each $tasks.data.data as task (task.id)}
             <tr
               onclick={() => navigate(`/tasks/${task.id}`)}
-              class="border-b border-gray-50 hover:bg-gray-50 cursor-pointer"
+              class="border-b border-gray-50 hover:bg-gray-50 cursor-pointer {isOverdue(task.dueDate, task.status) ? 'is-overdue' : ''}"
             >
               <td class="px-4 py-3 font-medium text-gray-900 max-w-xs truncate">
                 {task.title}
@@ -250,7 +251,14 @@
                 {task.assignee?.fullName ?? '-'}
               </td>
               <td class="px-4 py-3 hidden md:table-cell text-gray-600">
-                {task.client?.displayName ?? '-'}
+                {#if task.client}
+                  <span class="flex items-center gap-2 min-w-0">
+                    <ClientMark id={task.client.id} name={task.client.displayName} size={18} />
+                    <span class="truncate">{task.client.displayName}</span>
+                  </span>
+                {:else}
+                  -
+                {/if}
               </td>
               <td class="px-4 py-3 {isOverdue(task.dueDate, task.status) ? 'text-red-600 font-medium' : 'text-gray-600'}">
                 {formatDate(task.dueDate)}

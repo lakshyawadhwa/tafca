@@ -315,3 +315,5 @@
 .text-purple-700{color:var(--accent-purple)}
 .bg-purple-50{background-color:color-mix(in srgb,var(--accent-purple) 12%,var(--surface))}
 .bg-gray-800{background-color:var(--ink-2)}
+.md\:inline-flex{display:none}
+@media (min-width:768px){.md\:inline-flex{display:inline-flex}}

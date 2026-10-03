@@ -283,3 +283,96 @@ nav button:not(.bg-blue-50):hover {
 .theme-toggle:hover svg {
   transform: rotate(12deg);
 }
+
+/* ---------------------------------------------------------------------------
+   Identity markers
+   Three dimensions, three channels, so none of them competes: urgency owns
+   saturated colour, category owns the acronym, a client owns its monogram.
+   ------------------------------------------------------------------------- */
+.client-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--mark-size, 20px);
+  height: var(--mark-size, 20px);
+  border-radius: var(--radius-sm);
+  background: var(--mark-hue);
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  /* Figures and letters sit optically centred in a box this small. */
+  padding-top: 0.5px;
+  user-select: none;
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  color: var(--ink-2);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* A row whose deadline has passed earns a red edge. The only row-level colour
+   in the product, so it cannot be confused with anything else. */
+tr.is-overdue td:first-child {
+  box-shadow: inset 2px 0 0 var(--danger);
+}
+
+/* ---------------------------------------------------------------------------
+   Navigation icons
+   Sized to the cap height of the label so the pair reads as one object.
+   ------------------------------------------------------------------------- */
+.nav-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--ink-4);
+  transition: color var(--dur-1) var(--ease);
+}
+
+nav button:hover .nav-icon {
+  color: var(--ink-2);
+}
+
+nav button.bg-blue-50 .nav-icon {
+  color: var(--accent);
+}
+
+/* The collapse control. A chevron that turns, rather than two glyphs swapped. */
+.rail-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-4);
+  transition: background-color var(--dur-1) var(--ease),
+    color var(--dur-1) var(--ease);
+}
+
+.rail-toggle:hover {
+  background: var(--surface-hover);
+  color: var(--ink-2);
+}
+
+.rail-toggle svg {
+  width: 15px;
+  height: 15px;
+  transition: transform var(--dur-2) var(--ease);
+}
+
+.rail-toggle[data-collapsed='true'] svg {
+  transform: rotate(180deg);
+}

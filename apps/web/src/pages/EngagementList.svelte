@@ -5,6 +5,8 @@
   import { api } from '../lib/api';
   import { addToast } from '../lib/toast.svelte';
   import { navigate } from '../lib/router.svelte';
+  import ClientMark from '../components/ClientMark.svelte';
+  import CategoryChip from '../components/CategoryChip.svelte';
   import { can } from '../lib/permissions';
 
   const qc = useQueryClient();
@@ -140,11 +142,17 @@
                 </button>
               </td>
               <td class="px-4 py-3">
-                <button onclick={() => navigate(`/clients/${eng.client.id}`)} class="text-blue-600 hover:underline text-sm">
-                  {eng.client.displayName}
+                <button onclick={() => navigate(`/clients/${eng.client.id}`)} class="text-blue-600 hover:underline text-sm flex items-center gap-2 min-w-0">
+                  <ClientMark id={eng.client.id} name={eng.client.displayName} size={18} />
+                  <span class="truncate">{eng.client.displayName}</span>
                 </button>
               </td>
-              <td class="px-4 py-3 hidden md:table-cell text-gray-600 text-xs">{eng.engagementType.name}</td>
+              <td class="px-4 py-3 hidden md:table-cell text-gray-600 text-xs">
+                <span class="flex items-center gap-2 min-w-0">
+                  <CategoryChip category={eng.engagementType.category} />
+                  <span class="truncate">{eng.engagementType.name}</span>
+                </span>
+              </td>
               <td class="px-4 py-3">
                 <span class="text-xs px-2 py-0.5 rounded-full font-medium {statusColors[eng.status] ?? ''}">
                   {eng.status.replace(/_/g, ' ')}

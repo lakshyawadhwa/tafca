@@ -5,6 +5,7 @@
   import { ClientStatus } from '@ca-practice-os/shared';
   import { api } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
+  import ClientMark from '../components/ClientMark.svelte';
   import { can } from '../lib/permissions';
 
   // URL-synced filter state
@@ -155,7 +156,12 @@
               onclick={() => navigate(`/clients/${client.id}`)}
               class="border-b border-gray-50 hover:bg-gray-50 cursor-pointer"
             >
-              <td class="px-4 py-3 font-medium text-gray-900">{client.displayName}</td>
+              <td class="px-4 py-3 font-medium text-gray-900">
+                <span class="flex items-center gap-2">
+                  <ClientMark id={client.id} name={client.displayName} />
+                  <span class="truncate">{client.displayName}</span>
+                </span>
+              </td>
               <td class="px-4 py-3 text-gray-600 text-xs">{client.entityType.replace(/_/g, ' ')}</td>
               <td class="px-4 py-3">
                 <span class="text-xs px-2 py-0.5 rounded-full font-medium {statusColors[client.status] ?? ''}">

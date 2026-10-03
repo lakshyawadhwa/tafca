@@ -8,6 +8,7 @@
   } from '@ca-practice-os/shared';
   import { api, ApiError } from '../lib/api';
   import { navigate } from '../lib/router.svelte';
+  import CategoryChip from '../components/CategoryChip.svelte';
   import { addToast } from '../lib/toast.svelte';
 
   const qc = useQueryClient();
@@ -253,8 +254,9 @@
                 <div class="flex items-center gap-3 px-3 py-2 text-sm">
                   <div class="flex-1 min-w-0">
                     <div class="font-medium text-gray-900 truncate">{item.deadlineName}</div>
-                    <div class="text-gray-500 truncate">
-                      {item.clientName} · {item.periodLabel} · {item.category}
+                    <div class="text-gray-500 truncate flex items-center gap-2">
+                      <CategoryChip category={item.category} />
+                      <span class="truncate">{item.clientName} · {item.periodLabel}</span>
                     </div>
                   </div>
                   {#if item.isOverdue}
