@@ -108,7 +108,17 @@ double-deactivate 400; no floor on dueDate. Low value, batch them later.
 One test per resource: log in as JUNIOR_CA, hit list/get/edit/delete on a record that is
 not theirs, assert 403 or filtered. This is what would have caught P0-1.
 
-### P3-2 Browser testing per role — **PARTIAL** (1f11a38) — ARTICLE pass done, found engagement scoping gap + 2 UI gates. MANAGER / JUNIOR_CA / ADMIN passes still pending.
+### P3-2 Browser testing per role — **DONE**
+ARTICLE (1f11a38) found the engagement scoping gap and two UI affordances that
+led to a 403. MANAGER, JUNIOR_CA and ADMIN passes all clean:
+
+| Role | Nav | Clients | Tasks | Create buttons |
+|---|---|---|---|---|
+| MANAGER | no Settings/Audit | 10 (all) | 17 (all) | Client, Engagement, Task |
+| JUNIOR_CA | no Settings/Audit | 3 (assigned) | 4 (assigned) | Task only |
+| ADMIN | full nav | 10 (all) | 17 (all) | all; 4 deactivate controls |
+
+No console errors, no broken pages, scoping matches the matrix in every case.
 API coverage exists; the UI does not. Must be sequential: the JWT lives in `localStorage`,
 shared per origin, so two roles cannot be driven in parallel in one browser.
 
@@ -116,7 +126,7 @@ shared per origin, so two roles cannot be driven in parallel in one browser.
 
 ## New — found while changing the assign policy
 
-### N-1 Permission cache has no invalidation hook — TODO
+### N-1 Permission cache has no invalidation hook — **CLOSED, not applicable**
 `PermissionService` caches resolved scopes in memory and `invalidate()` exists
 but nothing calls it. Changing `firm_role_permissions` therefore has no effect
 until the API restarts — which cost real debugging time when the task:assign
@@ -124,6 +134,22 @@ grant appeared to do nothing. This matters more than it looks: the table exists
 precisely so a firm can override permissions from a future admin UI, and that
 UI will silently appear broken. Call `invalidate(firmId)` wherever those rows
 are written, or drop the cache to a short TTL.
+
+**Closed 2026-10-03.** Per-firm permission overrides are out of scope, and
+nothing writes `firm_role_permissions` at runtime — the only access in
+`apps/api/src` is a single `findUnique` read in PermissionService, registration
+does not seed rows, and `invalidate()` has no caller outside a test. So the
+cache cannot go stale in normal operation. It only bit during development
+because a migration changed rows while the server was already running, and a
+real deploy restarts the process anyway. Re-open this the day per-firm
+overrides are built.
+
+**Related, still true:** `firm_role_permissions` is now a second source of
+truth. Firms seeded earlier hold rows; firms created since run on the code
+defaults. They agree today, but editing `role-permissions.ts` later would be
+silently ignored by the seeded firms. Cleanest resolution while the feature is
+skipped is to delete the seeded rows so the code matrix is authoritative —
+deferred because it deletes production data and should be a deliberate call.
 
 ---
 
@@ -169,3 +195,7 @@ running API before moving on.
 pushed to main and will deploy on the next Vercel build.
 | 2026-10-03 | policy | Task assignment opened to every role (user decision); clients/engagements confirmed senior-only. Closed an assign-on-create hole in passing. Migration applied to prod. |
 | 2026-10-03 | N-1 | FOUND, not fixed. Permission cache never invalidated — permission changes need an API restart. |
+| 2026-10-03 | P3-2 | DONE. MANAGER, JUNIOR_CA and ADMIN browser passes all clean; scoping matches the matrix, no console errors. |
+| 2026-10-03 | N-1 | CLOSED as not applicable — nothing writes the permission table at runtime. Flagged the two-sources-of-truth risk for a later decision. |
+| 2026-10-03 | UX | Laws-of-UX review fixes landed (65892c8): 900px column clipping, task-detail overdue signal, zero-state colouring, keyboard rows, focus ring, sticky form actions. |
+| 2026-10-03 | UX | Type-to-confirm dialog on user deactivation, paste blocked. |
