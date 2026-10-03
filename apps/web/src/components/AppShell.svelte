@@ -3,11 +3,18 @@
   import { getUser, clearAuth } from '../lib/auth.svelte';
   import { navigate, getPath } from '../lib/router.svelte';
   import { api } from '../lib/api';
+  import { cycleTheme, getThemePreference } from '../lib/theme.svelte';
   import type { UserRole } from '@ca-practice-os/shared';
 
   let { children }: { children: Snippet } = $props();
 
   const user = $derived(getUser());
+  const themePreference = $derived(getThemePreference());
+  const themeLabel = $derived(
+    themePreference === 'system'
+      ? 'Theme: follows your system'
+      : `Theme: ${themePreference}`,
+  );
   const currentPath = $derived(getPath());
   let sidebarCollapsed = $state(false);
   let mobileOpen = $state(false);
@@ -102,13 +109,41 @@
         &#9776;
       </button>
       <div class="flex-1"></div>
+      <button
+        type="button"
+        onclick={cycleTheme}
+        class="theme-toggle"
+        title={themeLabel}
+        aria-label={themeLabel}
+      >
+        {#if themePreference === 'dark'}
+          <!-- moon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+          </svg>
+        {:else if themePreference === 'light'}
+          <!-- sun -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+          </svg>
+        {:else}
+          <!-- half-filled: following the system -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none" />
+          </svg>
+        {/if}
+      </button>
       <span class="text-sm text-gray-600 truncate">{user?.fullName}</span>
       <span class="text-xs text-gray-400 bg-gray-100 rounded px-2 py-0.5">{user?.role}</span>
     </header>
 
     <!-- Page content -->
     <main class="flex-1 overflow-y-auto p-6">
-      {@render children()}
+      {#key currentPath}
+        <div class="page-enter">{@render children()}</div>
+      {/key}
     </main>
   </div>
 </div>

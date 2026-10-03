@@ -1,0 +1,141 @@
+/* ============================================================================
+   Design tokens
+   ----------------------------------------------------------------------------
+   Colour is named by role, never by hue, so a value changes in one place and
+   the dark theme is a straight re-declaration of the same names.
+
+   The neutral palette leans very slightly green rather than the usual blue-grey.
+   The accent is a deep seal green — it reads as official and "filed" in an
+   accounting context, and it leaves red to mean exactly one thing: a deadline
+   in trouble. Colour is scarce on purpose. On a screen a CA stares at for eight
+   hours during filing season, the only thing that should raise its voice is a
+   due date.
+   ========================================================================== */
+
+:root {
+  /* Surfaces, back to front */
+  --canvas: #f5f7f6;
+  --surface: #ffffff;
+  --surface-sunken: #fafbfa;
+  --surface-hover: #f2f4f3;
+  --overlay: rgb(17 24 21 / 0.32);
+
+  /* Hairlines */
+  --border: #e4e8e5;
+  --border-strong: #d2d8d4;
+
+  /* Text, descending emphasis */
+  --ink: #16201c;
+  --ink-2: #41504a;
+  --ink-3: #6a7873;
+  --ink-4: #6f7974;
+  --ink-inverse: #ffffff;
+
+  /* Accent — primary actions, selection, links */
+  --accent: #0e6a5a;
+  --accent-hover: #0a5447;
+  --accent-ink: #ffffff;
+  --accent-soft: #e7f2ef;
+  --accent-border: #b8d8d0;
+
+  /* Status. Red is reserved for overdue and destructive acts. */
+  --danger: #b4241a;
+  --danger-hover: #951c14;
+  --danger-soft: #fdf0ee;
+  --danger-border: #f2c9c4;
+
+  --warn: #a35a05;
+  --warn-soft: #fdf4e7;
+
+  --success: #0a6b45;
+  --success-soft: #e8f4ee;
+
+  --info: #1a5aa8;
+  --info-soft: #eaf1fa;
+
+  --accent-purple: #6239a8;
+
+  /* Elevation, kept shallow — a dense data tool, not a card gallery */
+  --shadow-sm: 0 1px 2px rgb(16 24 20 / 0.05);
+  --shadow-md: 0 2px 6px rgb(16 24 20 / 0.07), 0 1px 2px rgb(16 24 20 / 0.04);
+  --shadow-lg: 0 10px 28px rgb(16 24 20 / 0.12), 0 2px 6px rgb(16 24 20 / 0.06);
+
+  --ring: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+  --ring-danger: 0 0 0 3px color-mix(in srgb, var(--danger) 20%, transparent);
+
+  /* Radii — three steps, assigned by role rather than sprinkled */
+  --radius-sm: 5px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  /* Type */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  /* Identifiers (PAN, GSTIN) and figures, where column alignment carries meaning */
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.875rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-4xl: 2.125rem;
+
+  /* Motion. Short enough to read as response, not as animation. */
+  --ease: cubic-bezier(0.2, 0.6, 0.3, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-1: 110ms;
+  --dur-2: 170ms;
+  --dur-3: 260ms;
+}
+
+/* ---------------------------------------------------------------------------
+   Dark theme. Not an inversion — surfaces lift with lightness the way they do
+   in daylight, and the accent is brightened because the same green turns muddy
+   against a dark ground.
+   ------------------------------------------------------------------------- */
+:root[data-theme='dark'] {
+  --canvas: #10140f;
+  --surface: #171c19;
+  --surface-sunken: #131815;
+  --surface-hover: #1f2622;
+  --overlay: rgb(0 0 0 / 0.55);
+
+  --border: #2a322d;
+  --border-strong: #3a443e;
+
+  --ink: #e9efeb;
+  --ink-2: #b8c4bd;
+  --ink-3: #8b9a93;
+  --ink-4: #909d96;
+  --ink-inverse: #10140f;
+
+  --accent: #3fb79c;
+  --accent-hover: #55c7ae;
+  --accent-ink: #08201b;
+  --accent-soft: #16302a;
+  --accent-border: #2b584e;
+
+  --danger: #f08b80;
+  --danger-hover: #f7a79e;
+  --danger-soft: #2e1a18;
+  --danger-border: #5c312c;
+
+  --warn: #e0a35c;
+  --warn-soft: #2d2112;
+
+  --success: #5bbd8c;
+  --success-soft: #162b20;
+
+  --info: #76a9ea;
+  --info-soft: #152338;
+
+  --accent-purple: #a98ae0;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 2px 6px rgb(0 0 0 / 0.45), 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 14px 34px rgb(0 0 0 / 0.55), 0 3px 8px rgb(0 0 0 / 0.4);
+}

@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import './app.css';
   import { QueryClientProvider } from '@tanstack/svelte-query';
   import { queryClient } from './lib/query';
   import { addRoute, getMatch, getPath, replace } from './lib/router.svelte';

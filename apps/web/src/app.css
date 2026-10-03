@@ -1,6 +1,8 @@
-@import 'tailwindcss';
-
-/* Restore cursor:pointer on interactive elements (Tailwind preflight removes it) */
-button, [role="button"], a, select, summary, [onclick] {
-  cursor: pointer;
-}
+/* tafCA stylesheet. Plain CSS, no framework.
+   Load order matters: tokens define the vocabulary, base sets the defaults,
+   utilities are the layout vocabulary used in markup, components refine the
+   specific controls last so they win on equal specificity. */
+@import './styles/tokens.css';
+@import './styles/base.css';
+@import './styles/utilities.css';
+@import './styles/components.css';

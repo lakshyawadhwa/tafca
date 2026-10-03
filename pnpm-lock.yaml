@@ -148,15 +148,9 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^5.1.1
         version: 5.1.1(svelte@5.55.1)(vite@6.4.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1))
-      '@tailwindcss/vite':
-        specifier: ^4.1.4
-        version: 4.2.2(vite@6.4.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1))
       svelte:
         specifier: ^5.28.2
         version: 5.55.1
-      tailwindcss:
-        specifier: ^4.1.4
-        version: 4.2.2
       typescript:
         specifier: ^5.8.3
         version: 5.9.3

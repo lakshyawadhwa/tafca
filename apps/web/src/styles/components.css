@@ -1,0 +1,285 @@
+/* ============================================================================
+   Component refinements
+   ----------------------------------------------------------------------------
+   These attach to the markup the app already has, so no layout changes are
+   needed. They do the work that utility classes cannot: real control states,
+   motion that responds to action, and a consistent focus treatment.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   Form controls
+   One shared treatment so every input on every page agrees. Borders sit a step
+   stronger than hairlines — a field has to read as a place you can type.
+   ------------------------------------------------------------------------- */
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+input[type='date'],
+input[type='search'],
+input[type='tel'],
+input[type='url'],
+textarea,
+select {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  transition: border-color var(--dur-1) var(--ease),
+    box-shadow var(--dur-1) var(--ease), background-color var(--dur-1) var(--ease);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-4);
+}
+
+input:hover:not(:disabled):not(:focus),
+textarea:hover:not(:disabled):not(:focus),
+select:hover:not(:disabled):not(:focus) {
+  border-color: var(--ink-4);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--ring);
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background: var(--surface-sunken);
+  color: var(--ink-4);
+}
+
+/* A field the server or client rejected. Paired with the inline message the
+   forms already render, so the colour is not carrying the meaning alone. */
+input.border-red-400,
+textarea.border-red-400,
+select.border-red-400 {
+  border-color: var(--danger);
+}
+
+input.border-red-400:focus,
+textarea.border-red-400:focus {
+  box-shadow: var(--ring-danger);
+}
+
+/* Native controls follow the accent instead of the browser default blue. */
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--accent);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+/* Date fields render their own icon; keep it from fighting the dark theme. */
+:root[data-theme='dark'] input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+}
+
+/* `select[class]` rather than bare `select`: the markup sets its own horizontal
+   padding with a utility class, which would otherwise win and let long option
+   text run underneath the caret. */
+select[class] {
+  padding-right: 30px;
+}
+
+select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%),
+    linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+  background-position: calc(100% - 15px) center, calc(100% - 10px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+/* ---------------------------------------------------------------------------
+   Buttons
+   Identified by the classes already in the markup rather than a new API.
+   The press state is the main addition: a button should feel like it took the
+   click, which matters more than any hover colour.
+   ------------------------------------------------------------------------- */
+button,
+[role='button'] {
+  transition: background-color var(--dur-1) var(--ease),
+    border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease),
+    box-shadow var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
+}
+
+button:not(:disabled):active,
+[role='button']:not(:disabled):active {
+  transform: translateY(0.5px);
+}
+
+/* Primary — the accent fill. */
+button.bg-blue-600,
+a.bg-blue-600 {
+  box-shadow: var(--shadow-sm);
+}
+
+button.bg-blue-600:hover:not(:disabled),
+a.bg-blue-600:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Destructive keeps the same shape, only the colour role differs. */
+button.bg-red-600:hover:not(:disabled) {
+  background-color: var(--danger-hover);
+}
+
+/* Secondary — bordered. */
+button.border-gray-300:hover:not(:disabled) {
+  background-color: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+/* ---------------------------------------------------------------------------
+   Surfaces
+   The app's cards are `bg-white rounded-lg border`. Softening the border and
+   adding a shallow shadow lifts them off the canvas without the heavy drop
+   shadow that makes a dashboard look like a deck of cards.
+   ------------------------------------------------------------------------- */
+.bg-white.border,
+.bg-white.rounded-lg,
+.bg-white.rounded {
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------------------------------------------------------------------------
+   Tables
+   Rows are the primary object in this product — most work starts by finding a
+   row and clicking it. So the hover state is deliberate and the header is
+   anchored rather than scrolling away.
+   ------------------------------------------------------------------------- */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+thead th {
+  font-weight: 500;
+  color: var(--ink-3);
+  background: var(--surface-sunken);
+  white-space: nowrap;
+}
+
+tbody tr {
+  transition: background-color var(--dur-1) var(--ease);
+}
+
+tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+/* Identifiers and dates line up column to column. */
+td.font-mono,
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+   Status pills
+   Already rendered as `rounded-full` with a soft background. Tightening the
+   type makes them read as labels rather than buttons.
+   ------------------------------------------------------------------------- */
+.rounded-full.text-xs {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Overlays and dialogs
+   The backdrop fades, the dialog rises. Both are responses to an action the
+   user just took, which is the only kind of motion this interface uses.
+   ------------------------------------------------------------------------- */
+.fixed.inset-0 {
+  animation: fade-in var(--dur-2) var(--ease) both;
+  backdrop-filter: blur(2px);
+}
+
+.fixed.inset-0 > .bg-white {
+  animation: dialog-in var(--dur-2) var(--ease-out) both;
+}
+
+/* ---------------------------------------------------------------------------
+   Navigation
+   The active item is marked by a rail on the leading edge rather than a filled
+   block, so the eye can find "where am I" without the sidebar turning into a
+   stack of buttons.
+   ------------------------------------------------------------------------- */
+nav button {
+  position: relative;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--dur-1) var(--ease),
+    color var(--dur-1) var(--ease);
+}
+
+nav button.bg-blue-50 {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+nav button.bg-blue-50::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  translate: 0 -50%;
+  width: 3px;
+  height: 18px;
+  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  background: var(--accent);
+}
+
+nav button:not(.bg-blue-50):hover {
+  background: var(--surface-hover);
+}
+
+/* ---------------------------------------------------------------------------
+   Progress
+   Used for engagement and checklist completion. The eased width change makes
+   progress feel earned when a checklist item is ticked.
+   ------------------------------------------------------------------------- */
+.bg-blue-600.h-1,
+.bg-blue-600.h-1\.5,
+.bg-blue-600.h-2 {
+  transition: width var(--dur-3) var(--ease-out);
+  border-radius: var(--radius-full);
+}
+
+/* ---------------------------------------------------------------------------
+   Theme toggle
+   ------------------------------------------------------------------------- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-3);
+  transition: background-color var(--dur-1) var(--ease),
+    color var(--dur-1) var(--ease);
+}
+
+.theme-toggle:hover {
+  background: var(--surface-hover);
+  color: var(--ink);
+}
+
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--dur-3) var(--ease-out);
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(12deg);
+}
