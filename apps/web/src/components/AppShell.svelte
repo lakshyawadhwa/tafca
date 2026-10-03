@@ -35,7 +35,7 @@
     { label: 'Compliance', path: '/compliance', icon: 'compliance' },
     { label: 'Team', path: '/team', icon: 'team' },
     { label: 'Settings', path: '/settings', icon: 'settings', roles: ['PARTNER', 'ADMIN'] as UserRole[] },
-    { label: 'Audit Log', path: '/audit-log', icon: 'audit', roles: ['PARTNER', 'ADMIN'] as UserRole[] },
+    { label: 'Audit Log', path: '/audit-log', icon: 'audit', roles: ['PARTNER', 'ADMIN', 'MANAGER'] as UserRole[] },
   ];
 
   const visibleNav = $derived(
